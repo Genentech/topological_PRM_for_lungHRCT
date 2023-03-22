@@ -8,5 +8,5 @@ config["inFiles"] = {
     "mask": "path/to/mask.nii.gz",
 }
 
-with open("config/config.ini", "w") as f:
+with open("config/config_demo.ini", "w") as f:
     config.write(f)
