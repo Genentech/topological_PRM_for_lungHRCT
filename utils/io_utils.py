@@ -44,3 +44,11 @@ def saveAsNii(inArray: np.array, path: str, pixDims=None):
 
     If pixel dimensions provided, add those to nifti header
     """
+    # if pixel dimensions provided, add them to nifti header
+    header = nib.Nifti1Header()
+    if pixDims:
+        header["pixdim"][1:4] = pixDims
+
+    # create nifti image and save it
+    outNiiImg = nib.Nifti1Image(inArray, np.eye(4), header)
+    nib.save(outNiiImg, path)
