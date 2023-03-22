@@ -63,3 +63,26 @@ class Subject(object):
         self.inspRegArrayFilt = img_utils.medFilt(
             self.inspRegArray, constants.prePrmProcessing.MEDFILT_KERNEL_SIZE
         )
+
+    def excludeVoxels(self):
+        """Exclude voxels above and below certain thresholds.
+
+        Exclude voxels from mask that fall above upperThresh
+        to minimize the contribution of blood vessels and airways.
+        """
+
+        # exclude voxels in filtered expiratory image
+        self.maskArray[
+            self.expArrayFilt < constants.prePrmProcessing.EXCLUDE_VOX_LOWERTHRESH
+        ] = 0
+        self.maskArray[
+            self.expArrayFilt > constants.prePrmProcessing.EXCLUDE_VOX_UPPERTHRESH
+        ] = 0
+
+        # exclude voxels in filtered inspiratory image
+        self.maskArray[
+            self.inspRegArrayFilt < constants.prePrmProcessing.EXCLUDE_VOX_LOWERTHRESH
+        ] = 0
+        self.maskArray[
+            self.inspRegArrayFilt > constants.prePrmProcessing.EXCLUDE_VOX_UPPERTHRESH
+        ] = 0
