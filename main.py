@@ -9,7 +9,7 @@ from subject_classmap import Subject
 # read config file
 config = ConfigParser()
 config.read("config/config.txt")
-
+import argparse
 
 def prmMapping(config):
     subject = Subject(config)
