@@ -7,14 +7,16 @@ import scipy
 
 
 def readFiles(path: str):
-    """Read file from path as np.array.
+    """Read in image as np.array.
 
     Args:
         path (str): path of file
 
     Returns:
         outArray (np.array): image contents of file
+        pixDims (np.array): pixel dimensions (in mm), if available
 
+    If pixel dimensions available, extract them.
     Supported file formats: .nii
     """
 
@@ -23,8 +25,22 @@ def readFiles(path: str):
 
     # check if file is .nii and read accordingly
     if ".nii" in fName:
-        outArray = np.array(nib.load(path).dataobj)
+        niiImg = nib.load(path)
+        pixDims = niiImg.header["pixdim"][1:4]
+        outArray = np.array(niiImg.dataobj)
     else:
         logging.warning("Registered HRCT file format is unsupported, must be .nii")
 
-    return outArray
+    return outArray, pixDims
+
+
+def saveAsNii(inArray: np.array, path: str, pixDims=None):
+    """Save np.array as nifti to path.
+
+    Args:
+        inArray (np.array): array to be saved as nifti
+        path (str): path to save nifti to
+        pixDims (np.array): optional argument speficying image pixel dimensions
+
+    If pixel dimensions provided, add those to nifti header
+    """

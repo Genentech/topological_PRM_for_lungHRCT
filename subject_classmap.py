@@ -14,6 +14,7 @@ class Subject(object):
         expArray (np.array): expiratory HRCT in HU
         inspRegArray (np.array): inspiratory hrct in HU registered to expiratory HRCT
         maskArray (np.array): segmentation of thoracic cavity
+        pixDims (np.array): pixel dimenstions in mm
         expArrayFilt (np.array): expiratory image with median filter applied
         inspRegArrayFilt (np.array): inspiratory image with median filter applied
         self.normArray (np.array): image denoting normal regions from PRM
@@ -27,6 +28,7 @@ class Subject(object):
         self.expArray = np.array([])
         self.inspRegArray = np.array([])
         self.maskArray = np.array([])
+        self.pixDims = np.array([])
         self.expArrayFilt = np.array([])
         self.inspRegArrayFilt = np.array([])
         self.normArray = np.array([])
@@ -38,9 +40,9 @@ class Subject(object):
 
         Read in files containing expiratory and inspiratory HRCTs and mask (.nii).
         """
-        self.expArray = io_utils.readFiles(self.config["inFiles"]["exp"])
-        self.inspRegArray = io_utils.readFiles(self.config["inFiles"]["insp_reg"])
-        self.maskArray = io_utils.readFiles(self.config["inFiles"]["mask"])
+        self.expArray, self.pixDims = io_utils.readFiles(self.config["inFiles"]["exp"])
+        self.inspRegArray, _ = io_utils.readFiles(self.config["inFiles"]["insp_reg"])
+        self.maskArray, _ = io_utils.readFiles(self.config["inFiles"]["mask"])
 
     def dimOutsideVoxels(self):
         """Dim voxels outside of thoracic cavity."""
