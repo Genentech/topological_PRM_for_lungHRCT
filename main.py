@@ -23,6 +23,7 @@ def prmMapping(config):
     subject.orientImages()
     subject.applyMedFilts()
     subject.excludeVoxels()
+    subject.classifyVoxelsPrm()
     logging.info("PRM complete")
 
 

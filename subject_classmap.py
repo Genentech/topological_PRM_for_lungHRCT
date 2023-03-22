@@ -16,6 +16,9 @@ class Subject(object):
         maskArray (np.array): segmentation of thoracic cavity
         expArrayFilt (np.array): expiratory image with median filter applied
         inspRegArrayFilt (np.array): inspiratory image with median filter applied
+        self.normArray (np.array): image denoting normal regions from PRM
+        self.emphArray (np.array): image denoting emphysema regions from PRM
+        self.fSadArray (np.array): image denoting regions of non-emphysematous air trapping from PRM
     """
 
     def __init__(self, config):
@@ -26,6 +29,9 @@ class Subject(object):
         self.maskArray = np.array([])
         self.expArrayFilt = np.array([])
         self.inspRegArrayFilt = np.array([])
+        self.normArray = np.array([])
+        self.emphArray = np.array([])
+        self.fSadArray = np.array([])
 
     def readCtFiles(self):
         """Read in files and convert to np.array.
@@ -67,8 +73,8 @@ class Subject(object):
     def excludeVoxels(self):
         """Exclude voxels above and below certain thresholds.
 
-        Exclude voxels from mask that fall above upperThresh
-        to minimize the contribution of blood vessels and airways.
+        Exclude voxels from mask that fall above upperThresh to
+        minimize the contribution of blood vessels and airways.
         """
 
         # exclude voxels in filtered expiratory image
@@ -86,3 +92,37 @@ class Subject(object):
         self.maskArray[
             self.inspRegArrayFilt > constants.prePrmProcessing.EXCLUDE_VOX_UPPERTHRESH
         ] = 0
+
+    def classifyVoxelsPrm(self):
+        """Create maps of emph, fSAD, and norm voxeles.
+
+        Classify voxels into emph, fSAD, or normal based on
+        expiratory and inspiratory images and HU thresholds.
+        """
+
+        # get indices of normal, emph, and fSAD regions within mask
+        normIdx = np.argwhere(
+            (self.expArrayFilt > constants.prmThresholds.EXP_THRESH)
+            & (self.inspRegArrayFilt > constants.prmThresholds.INSP_THRESH)
+            & (self.maskArray >= 1)
+        )
+        emphIdx = np.argwhere(
+            (self.expArrayFilt < constants.prmThresholds.EXP_THRESH)
+            & (self.inspRegArrayFilt < constants.prmThresholds.INSP_THRESH)
+            & (self.maskArray >= 1)
+        )
+        fSadIdx = np.argwhere(
+            (self.expArrayFilt < constants.prmThresholds.EXP_THRESH)
+            & (self.inspRegArrayFilt > constants.prmThresholds.INSP_THRESH)
+            & (self.maskArray >= 1)
+        )
+
+        # fill arrays with zeros
+        self.normArray = np.zeros(self.expArrayFilt.shape)
+        self.emphArray = np.zeros(self.expArrayFilt.shape)
+        self.fSadArray = np.zeros(self.expArrayFilt.shape)
+
+        # set regions of interest =1
+        self.normArray[normIdx[:, 0], normIdx[:, 1], normIdx[:, 2]] = 1
+        self.emphArray[emphIdx[:, 0], emphIdx[:, 1], emphIdx[:, 2]] = 1
+        self.fSadArray[fSadIdx[:, 0], fSadIdx[:, 1], fSadIdx[:, 2]] = 1

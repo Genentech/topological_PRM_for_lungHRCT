@@ -15,3 +15,15 @@ class prePrmProcessing(object):
     MEDFILT_KERNEL_SIZE = 3
     EXCLUDE_VOX_LOWERTHRESH = -1000
     EXCLUDE_VOX_UPPERTHRESH = -500
+
+
+class prmThresholds(object):
+    """Thresholds for expiratory and inspiratory images that define PRM regions.
+
+    Attributes:
+        EXP_THRESH (float): HU value marking experitaroy threshold for PRM classification
+        INSP_THRESH (float): HU value marking inspiratory threshold for PRM classification
+    """
+
+    EXP_THRESH = -856
+    INSP_THRESH = -950
