@@ -51,7 +51,7 @@ env.bak/
 venv.bak/
 
 # vs code
-#.vs/*
+.vs/*
 
 # ignore config files except demo
 config/**
