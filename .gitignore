@@ -50,9 +50,6 @@ ENV/
 env.bak/
 venv.bak/
 
-# vs code
-.vs/*
-
 # ignore config files except demo
 config/**
 !config/config_demo.ini
