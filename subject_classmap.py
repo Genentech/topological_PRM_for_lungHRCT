@@ -151,4 +151,4 @@ class Subject(object):
         # save arrays as niftis
         io_utils.saveAsNii(self.normArray, normArrayOutPath, self.pixDims)
         io_utils.saveAsNii(self.emphArray, emphArrayOutPath, self.pixDims)
-        io_utils.saveAsNii(self.fSadArray.fSadArrayOutPath, self.pixDims)
+        io_utils.saveAsNii(self.fSadArray, fSadArrayOutPath, self.pixDims)
