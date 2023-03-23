@@ -27,3 +27,17 @@ class prmThresholds(object):
 
     EXP_THRESH = -856
     INSP_THRESH = -950
+
+
+class outFileNames(object):
+    """Establish standard file names for output.
+
+    Attributes:
+        PRM_NORM (str): file name for map of norm regions from PRM
+        PRM_EMPH (str): file name for map of emph regions from PRM
+        PRM_FSAD (str): file name for map of fSAD regions from PRM
+    """
+
+    PRM_NORM = "prm_norm"
+    PRM_EMPH = "prm_emph"
+    PRM_FSAD = "prm_fsad"

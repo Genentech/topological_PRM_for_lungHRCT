@@ -20,6 +20,9 @@ def readFiles(path: str):
     Supported file formats: .nii
     """
 
+    # initialize pixDims array
+    pixDims = np.array([])
+
     # extract file name from path
     fName = path.split("/")[-1]
 

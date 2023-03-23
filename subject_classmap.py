@@ -4,6 +4,7 @@ import numpy as np
 
 import constants
 from utils import img_utils, io_utils
+from os.path import join
 
 
 class Subject(object):
@@ -40,9 +41,9 @@ class Subject(object):
 
         Read in files containing expiratory and inspiratory HRCTs and mask (.nii).
         """
-        self.expArray, self.pixDims = io_utils.readFiles(self.config["inFiles"]["exp"])
-        self.inspRegArray, _ = io_utils.readFiles(self.config["inFiles"]["insp_reg"])
-        self.maskArray, _ = io_utils.readFiles(self.config["inFiles"]["mask"])
+        self.expArray, self.pixDims = io_utils.readFiles(self.config["io"]["inFileExp"])
+        self.inspRegArray, _ = io_utils.readFiles(self.config["io"]["inFileInspReg"])
+        self.maskArray, _ = io_utils.readFiles(self.config["io"]["inFileMask"])
 
     def dimOutsideVoxels(self):
         """Dim voxels outside of thoracic cavity."""
@@ -128,3 +129,10 @@ class Subject(object):
         self.normArray[normIdx[:, 0], normIdx[:, 1], normIdx[:, 2]] = 1
         self.emphArray[emphIdx[:, 0], emphIdx[:, 1], emphIdx[:, 2]] = 1
         self.fSadArray[fSadIdx[:, 0], fSadIdx[:, 1], fSadIdx[:, 2]] = 1
+
+    def savePrmNiis(self):
+        """Save PRM maps as niftis."""
+        normArrayOutPath = self.config["io"]["outDir"] + 
+        io_utils.saveAsNii(
+            self.normArray, 
+        )
