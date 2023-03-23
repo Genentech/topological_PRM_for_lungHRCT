@@ -24,6 +24,7 @@ def prmMapping(config):
     subject.applyMedFilts()
     subject.excludeVoxels()
     subject.classifyVoxelsPrm()
+    subject.savePrmNiis()
     logging.info("PRM complete")
 
 

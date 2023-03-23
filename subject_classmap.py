@@ -1,10 +1,11 @@
 """Class for generating HRCT PRM and topoligcal maps of the lungs."""
+from os.path import join
+
 import nibabel as nib
 import numpy as np
 
 import constants
 from utils import img_utils, io_utils
-from os.path import join
 
 
 class Subject(object):
@@ -132,7 +133,22 @@ class Subject(object):
 
     def savePrmNiis(self):
         """Save PRM maps as niftis."""
-        normArrayOutPath = self.config["io"]["outDir"] + 
-        io_utils.saveAsNii(
-            self.normArray, 
+
+        # create path + file names
+        normArrayOutPath = join(
+            self.config["io"]["outDir"],
+            constants.outFileNames.PRM_NORM + self.config["subjInfo"]["subjID"],
         )
+        emphArrayOutPath = join(
+            self.config["io"]["outDir"],
+            constants.outFileNames.PRM_EMPH + self.config["subjInfo"]["subjID"],
+        )
+        fSadArrayOutPath = join(
+            self.config["io"]["outDir"],
+            constants.outFileNames.PRM_FSAD + self.config["subjInfo"]["subjID"],
+        )
+
+        # save arrays as niftis
+        io_utils.saveAsNii(self.normArray, normArrayOutPath, self.pixDims)
+        io_utils.saveAsNii(self.emphArray, emphArrayOutPath, self.pixDims)
+        io_utils.saveAsNii(self.fSadArray.fSadArrayOutPath, self.pixDims)
