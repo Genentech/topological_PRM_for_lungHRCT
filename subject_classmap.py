@@ -20,8 +20,9 @@ class Subject(object):
         expArrayFilt (np.array): expiratory image with median filter applied
         inspRegArrayFilt (np.array): inspiratory image with median filter applied
         self.normArray (np.array): image denoting normal regions from PRM
-        self.emphArray (np.array): image denoting emphysema regions from PRM
         self.fSadArray (np.array): image denoting regions of non-emphysematous air trapping from PRM
+        self.emphArray (np.array): image denoting emphysema regions from PRM
+        self.emptEmphArray (np.array): image denoting regions of "emptying emphysema" from PRM
     """
 
     def __init__(self, config):
@@ -34,8 +35,9 @@ class Subject(object):
         self.expArrayFilt = np.array([])
         self.inspRegArrayFilt = np.array([])
         self.normArray = np.array([])
-        self.emphArray = np.array([])
         self.fSadArray = np.array([])
+        self.emphArray = np.array([])
+        self.emptEmphArray = np.array([])
 
     def readCtFiles(self):
         """Read in files and convert to np.array.
@@ -110,26 +112,26 @@ class Subject(object):
             & (self.inspRegArrayFilt > constants.prmThresholds.INSP_THRESH)
             & (self.maskArray >= 1)
         )
-        emphIdx = np.argwhere(
-            (self.expArrayFilt < constants.prmThresholds.EXP_THRESH)
-            & (self.inspRegArrayFilt < constants.prmThresholds.INSP_THRESH)
-            & (self.maskArray >= 1)
-        )
         fSadIdx = np.argwhere(
             (self.expArrayFilt < constants.prmThresholds.EXP_THRESH)
             & (self.inspRegArrayFilt > constants.prmThresholds.INSP_THRESH)
             & (self.maskArray >= 1)
         )
+        emphIdx = np.argwhere(
+            (self.expArrayFilt < constants.prmThresholds.EXP_THRESH)
+            & (self.inspRegArrayFilt < constants.prmThresholds.INSP_THRESH)
+            & (self.maskArray >= 1)
+        )
 
         # fill arrays with zeros
         self.normArray = np.zeros(self.expArrayFilt.shape)
-        self.emphArray = np.zeros(self.expArrayFilt.shape)
         self.fSadArray = np.zeros(self.expArrayFilt.shape)
+        self.emphArray = np.zeros(self.expArrayFilt.shape)
 
         # set regions of interest =1
         self.normArray[normIdx[:, 0], normIdx[:, 1], normIdx[:, 2]] = 1
-        self.emphArray[emphIdx[:, 0], emphIdx[:, 1], emphIdx[:, 2]] = 1
         self.fSadArray[fSadIdx[:, 0], fSadIdx[:, 1], fSadIdx[:, 2]] = 1
+        self.emphArray[emphIdx[:, 0], emphIdx[:, 1], emphIdx[:, 2]] = 1
 
     def savePrmNiis(self):
         """Save PRM maps as niftis."""
