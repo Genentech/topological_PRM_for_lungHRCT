@@ -45,6 +45,7 @@ class outFileNames(object):
         PRM_FSAD (str): file name for map of fSAD regions from PRM
         PRM_EMPH (str): file name for map of emph regions from PRM
         PRM_EMPTEMPH (str): file name for map of emptying emph regions from PRM
+        PRM_ALL (str): file name for map of all regions from PRM
 
     Intended that subject ID will be appended to file name.
     """
@@ -53,3 +54,4 @@ class outFileNames(object):
     PRM_FSAD = "prm_fsad_"
     PRM_EMPH = "prm_emph_"
     PRM_EMPTEMPH = "prm_emptemph_"
+    PRM_ALL = "prm_all_"

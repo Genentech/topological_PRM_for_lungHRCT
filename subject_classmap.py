@@ -12,7 +12,9 @@ class Subject(object):
     """Class for generating HRCT PRM and topological maps.
 
     Attributes:
-        config (ConfigParser):
+        config (ConfigParser): configuration file
+        subjID (str): subject ID
+        outDir (str): main directory to save output files to
         expArray (np.array): expiratory HRCT in HU
         inspRegArray (np.array): inspiratory hrct in HU registered to expiratory HRCT
         maskArray (np.array): segmentation of thoracic cavity
@@ -29,6 +31,8 @@ class Subject(object):
     def __init__(self, config):
         """Initialize Subject object."""
         self.config = config
+        self.subjID = config["subjInfo"]["subjID"]
+        self.outDir = config["io"]["outDir"]
         self.expArray = np.array([])
         self.inspRegArray = np.array([])
         self.maskArray = np.array([])
@@ -162,20 +166,24 @@ class Subject(object):
 
         # create path + file names
         normArrayOutPath = join(
-            self.config["io"]["outDir"],
-            constants.outFileNames.PRM_NORM + self.config["subjInfo"]["subjID"],
+            self.outDir,
+            constants.outFileNames.PRM_NORM + self.subjID,
         )
         fSadArrayOutPath = join(
-            self.config["io"]["outDir"],
-            constants.outFileNames.PRM_FSAD + self.config["subjInfo"]["subjID"],
+            self.outDir,
+            constants.outFileNames.PRM_FSAD + self.subjID,
         )
         emphArrayOutPath = join(
-            self.config["io"]["outDir"],
-            constants.outFileNames.PRM_EMPH + self.config["subjInfo"]["subjID"],
+            self.outDir,
+            constants.outFileNames.PRM_EMPH + self.subjID,
         )
         emptEmphArrayOutPath = join(
-            self.config["io"]["outDir"],
-            constants.outFileNames.PRM_EMPTEMPH + self.config["subjInfo"]["subjID"],
+            self.outDir,
+            constants.outFileNames.PRM_EMPTEMPH + self.subjID,
+        )
+        prmAllArrayOutPath = join(
+            self.outDir,
+            constants.outFileNames.PRM_ALL + self.subjID,
         )
 
         # save arrays as niftis
@@ -183,3 +191,4 @@ class Subject(object):
         io_utils.saveAsNii(self.fSadArray, fSadArrayOutPath, self.pixDims)
         io_utils.saveAsNii(self.emphArray, emphArrayOutPath, self.pixDims)
         io_utils.saveAsNii(self.emptEmphArray, emptEmphArrayOutPath, self.pixDims)
+        io_utils.saveAsNii(self.prmAllArray, prmAllArrayOutPath, self.pixDims)
