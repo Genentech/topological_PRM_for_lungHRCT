@@ -38,6 +38,7 @@ class Subject(object):
         self.fSadArray = np.array([])
         self.emphArray = np.array([])
         self.emptEmphArray = np.array([])
+        self.prmAllArray = np.array([])
 
     def readCtFiles(self):
         """Read in files and convert to np.array.
@@ -106,7 +107,7 @@ class Subject(object):
         expiratory and inspiratory images and HU thresholds.
         """
 
-        # get indices of normal, emph, and fSAD regions within mask
+        # get indices of normal, fSAD, emph, and emptying emph regions within mask
         normIdx = np.argwhere(
             (self.expArrayFilt > constants.prmThresholds.EXP_THRESH)
             & (self.inspRegArrayFilt > constants.prmThresholds.INSP_THRESH)
@@ -122,16 +123,23 @@ class Subject(object):
             & (self.inspRegArrayFilt < constants.prmThresholds.INSP_THRESH)
             & (self.maskArray >= 1)
         )
+        emptEmphIdx = np.argwhere(
+            (self.expArrayFilt > constants.prmThresholds.EXP_THRESH)
+            & (self.inspRegArrayFilt < constants.prmThresholds.INSP_THRESH)
+            & (self.maskArray >= 1)
+        )
 
         # fill arrays with zeros
         self.normArray = np.zeros(self.expArrayFilt.shape)
         self.fSadArray = np.zeros(self.expArrayFilt.shape)
         self.emphArray = np.zeros(self.expArrayFilt.shape)
+        self.emptEmphArray = np.zeros(self.expArrayFilt.shape)
 
         # set regions of interest =1
         self.normArray[normIdx[:, 0], normIdx[:, 1], normIdx[:, 2]] = 1
         self.fSadArray[fSadIdx[:, 0], fSadIdx[:, 1], fSadIdx[:, 2]] = 1
         self.emphArray[emphIdx[:, 0], emphIdx[:, 1], emphIdx[:, 2]] = 1
+        self.emptEmphArray[emptEmphIdx[:, 0], emptEmphIdx[:, 1], emptEmphIdx[:, 2]] = 1
 
     def savePrmNiis(self):
         """Save PRM maps as niftis."""
@@ -141,16 +149,21 @@ class Subject(object):
             self.config["io"]["outDir"],
             constants.outFileNames.PRM_NORM + self.config["subjInfo"]["subjID"],
         )
-        emphArrayOutPath = join(
-            self.config["io"]["outDir"],
-            constants.outFileNames.PRM_EMPH + self.config["subjInfo"]["subjID"],
-        )
         fSadArrayOutPath = join(
             self.config["io"]["outDir"],
             constants.outFileNames.PRM_FSAD + self.config["subjInfo"]["subjID"],
         )
+        emphArrayOutPath = join(
+            self.config["io"]["outDir"],
+            constants.outFileNames.PRM_EMPH + self.config["subjInfo"]["subjID"],
+        )
+        emptEmphArrayOutPath = join(
+            self.config["io"]["outDir"],
+            constants.outFileNames.PRM_EMPTEMPH + self.config["subjInfo"]["subjID"],
+        )
 
         # save arrays as niftis
         io_utils.saveAsNii(self.normArray, normArrayOutPath, self.pixDims)
-        io_utils.saveAsNii(self.emphArray, emphArrayOutPath, self.pixDims)
         io_utils.saveAsNii(self.fSadArray, fSadArrayOutPath, self.pixDims)
+        io_utils.saveAsNii(self.emphArray, emphArrayOutPath, self.pixDims)
+        io_utils.saveAsNii(self.emptEmphArray, emptEmphArrayOutPath, self.pixDims)
