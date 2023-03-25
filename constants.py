@@ -17,16 +17,24 @@ class prePrmProcessing(object):
     EXCLUDE_VOX_UPPERTHRESH = -500
 
 
-class prmThresholds(object):
-    """Thresholds for expiratory and inspiratory images that define PRM regions.
+class prmProcessing(object):
+    """Constants for creating PRM maps.
 
     Attributes:
         EXP_THRESH (float): HU value marking experitaroy threshold for PRM classification
         INSP_THRESH (float): HU value marking inspiratory threshold for PRM classification
+        CLASSIFICATION_NUM_NORM (int): number assigned to PRM norm voxels in combined PRM map
+        CLASSIFICATION_NUM_FSAD (int): number assigned to PRM fSAD voxels in combined PRM map
+        CLASSIFICATION_NUM_EMPH (int): number assigned to PRM emph voxels in combined PRM map
+        CLASSIFICATION_NUM_EMPTEMPH (int): number assigned to PRM emptying emph voxels in combined PRM map
     """
 
     EXP_THRESH = -856
     INSP_THRESH = -950
+    CLASSIFICATION_NUM_NORM = 1
+    CLASSIFICATION_NUM_FSAD = 2
+    CLASSIFICATION_NUM_EMPH = 3
+    CLASSIFICATION_NUM_EMPTEMPH = 4
 
 
 class outFileNames(object):
@@ -36,6 +44,7 @@ class outFileNames(object):
         PRM_NORM (str): file name for map of norm regions from PRM
         PRM_FSAD (str): file name for map of fSAD regions from PRM
         PRM_EMPH (str): file name for map of emph regions from PRM
+        PRM_EMPTEMPH (str): file name for map of emptying emph regions from PRM
 
     Intended that subject ID will be appended to file name.
     """

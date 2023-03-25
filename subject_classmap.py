@@ -23,6 +23,7 @@ class Subject(object):
         self.fSadArray (np.array): image denoting regions of non-emphysematous air trapping from PRM
         self.emphArray (np.array): image denoting emphysema regions from PRM
         self.emptEmphArray (np.array): image denoting regions of "emptying emphysema" from PRM
+        self.prmAllArray (np.array): image denoting all four voxel classifications from PRM
     """
 
     def __init__(self, config):
@@ -101,31 +102,31 @@ class Subject(object):
         ] = 0
 
     def classifyVoxelsPrm(self):
-        """Create maps of emph, fSAD, and norm voxeles.
+        """Create maps of norm, fSAD, emph, and emptying emph voxels.
 
-        Classify voxels into emph, fSAD, or normal based on
+        Classify voxels into norm, fSAD, emph, or emptying emph based on
         expiratory and inspiratory images and HU thresholds.
         """
 
         # get indices of normal, fSAD, emph, and emptying emph regions within mask
         normIdx = np.argwhere(
-            (self.expArrayFilt > constants.prmThresholds.EXP_THRESH)
-            & (self.inspRegArrayFilt > constants.prmThresholds.INSP_THRESH)
+            (self.expArrayFilt > constants.prmProcessing.EXP_THRESH)
+            & (self.inspRegArrayFilt > constants.prmProcessing.INSP_THRESH)
             & (self.maskArray >= 1)
         )
         fSadIdx = np.argwhere(
-            (self.expArrayFilt < constants.prmThresholds.EXP_THRESH)
-            & (self.inspRegArrayFilt > constants.prmThresholds.INSP_THRESH)
+            (self.expArrayFilt < constants.prmProcessing.EXP_THRESH)
+            & (self.inspRegArrayFilt > constants.prmProcessing.INSP_THRESH)
             & (self.maskArray >= 1)
         )
         emphIdx = np.argwhere(
-            (self.expArrayFilt < constants.prmThresholds.EXP_THRESH)
-            & (self.inspRegArrayFilt < constants.prmThresholds.INSP_THRESH)
+            (self.expArrayFilt < constants.prmProcessing.EXP_THRESH)
+            & (self.inspRegArrayFilt < constants.prmProcessing.INSP_THRESH)
             & (self.maskArray >= 1)
         )
         emptEmphIdx = np.argwhere(
-            (self.expArrayFilt > constants.prmThresholds.EXP_THRESH)
-            & (self.inspRegArrayFilt < constants.prmThresholds.INSP_THRESH)
+            (self.expArrayFilt > constants.prmProcessing.EXP_THRESH)
+            & (self.inspRegArrayFilt < constants.prmProcessing.INSP_THRESH)
             & (self.maskArray >= 1)
         )
 
@@ -134,12 +135,27 @@ class Subject(object):
         self.fSadArray = np.zeros(self.expArrayFilt.shape)
         self.emphArray = np.zeros(self.expArrayFilt.shape)
         self.emptEmphArray = np.zeros(self.expArrayFilt.shape)
+        self.prmAllArray = np.zeros(self.expArrayFilt.shape)
 
-        # set regions of interest =1
+        # for individual classification arrays, set regions of interest =1
         self.normArray[normIdx[:, 0], normIdx[:, 1], normIdx[:, 2]] = 1
         self.fSadArray[fSadIdx[:, 0], fSadIdx[:, 1], fSadIdx[:, 2]] = 1
         self.emphArray[emphIdx[:, 0], emphIdx[:, 1], emphIdx[:, 2]] = 1
         self.emptEmphArray[emptEmphIdx[:, 0], emptEmphIdx[:, 1], emptEmphIdx[:, 2]] = 1
+
+        # for combined classification, set each region to different number (using IMBIO standard)
+        self.prmAllArray[
+            normIdx[:, 0], normIdx[:, 1], normIdx[:, 2]
+        ] = constants.prmProcessing.CLASSIFICATION_NUM_NORM
+        self.prmAllArray[
+            fSadIdx[:, 0], fSadIdx[:, 1], fSadIdx[:, 2]
+        ] = constants.prmProcessing.CLASSIFICATION_NUM_FSAD
+        self.prmAllArray[
+            emphIdx[:, 0], emphIdx[:, 1], emphIdx[:, 2]
+        ] = constants.prmProcessing.CLASSIFICATION_NUM_EMPH
+        self.prmAllArray[
+            emptEmphIdx[:, 0], emptEmphIdx[:, 1], emptEmphIdx[:, 2]
+        ] = constants.prmProcessing.CLASSIFICATION_NUM_EMPTEMPH
 
     def savePrmNiis(self):
         """Save PRM maps as niftis."""
