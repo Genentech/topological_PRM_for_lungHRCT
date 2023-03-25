@@ -119,13 +119,13 @@ class Subject(object):
             & (self.maskArray >= 1)
         )
         fSadIdx = np.argwhere(
-            (self.expArrayFilt < constants.prmProcessing.EXP_THRESH)
+            (self.expArrayFilt <= constants.prmProcessing.EXP_THRESH)
             & (self.inspRegArrayFilt > constants.prmProcessing.INSP_THRESH)
             & (self.maskArray >= 1)
         )
         emphIdx = np.argwhere(
-            (self.expArrayFilt < constants.prmProcessing.EXP_THRESH)
-            & (self.inspRegArrayFilt < constants.prmProcessing.INSP_THRESH)
+            (self.expArrayFilt <= constants.prmProcessing.EXP_THRESH)
+            & (self.inspRegArrayFilt <= constants.prmProcessing.INSP_THRESH)
             & (self.maskArray >= 1)
         )
         emptEmphIdx = np.argwhere(
