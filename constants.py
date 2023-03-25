@@ -43,4 +43,4 @@ class outFileNames(object):
     PRM_NORM = "prm_norm_"
     PRM_FSAD = "prm_fsad_"
     PRM_EMPH = "prm_emph_"
-    PRM_EMPTEMPH = "prm_emptemph"
+    PRM_EMPTEMPH = "prm_emptemph_"
