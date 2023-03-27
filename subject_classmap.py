@@ -192,3 +192,6 @@ class Subject(object):
         io_utils.saveAsNii(self.emphArray, emphArrayOutPath, self.pixDims)
         io_utils.saveAsNii(self.emptEmphArray, emptEmphArrayOutPath, self.pixDims)
         io_utils.saveAsNii(self.prmAllArray, prmAllArrayOutPath, self.pixDims)
+
+    def genPrmColor(self):
+        

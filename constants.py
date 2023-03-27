@@ -27,6 +27,7 @@ class prmProcessing(object):
         CLASSIFICATION_NUM_FSAD (int): number assigned to PRM fSAD voxels in combined PRM map
         CLASSIFICATION_NUM_EMPH (int): number assigned to PRM emph voxels in combined PRM map
         CLASSIFICATION_NUM_EMPTEMPH (int): number assigned to PRM emptying emph voxels in combined PRM map
+        PRM_BIN2RGB (dict): dictionary mapping PRM bin number classification to RGB value
     """
 
     EXP_THRESH = -856
@@ -35,6 +36,7 @@ class prmProcessing(object):
     CLASSIFICATION_NUM_FSAD = 2
     CLASSIFICATION_NUM_EMPH = 3
     CLASSIFICATION_NUM_EMPTEMPH = 4
+    PRM_BIN2RGB = {1: [0.4, 0.8, 0], 2: [1, 1, 0], 3: [0.8, 0, 0], 4: [0.6, 0.2, 1]}
 
 
 class outFileNames(object):
