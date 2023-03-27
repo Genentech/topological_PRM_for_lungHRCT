@@ -177,7 +177,7 @@ class Subject(object):
         self.prmStats["PRM_emph_prct"] = (
             100 * np.sum(self.emphArray) / np.sum(self.maskArray)
         )
-        self.prmStats["PRM_empt_emph_prct"] = (
+        self.prmStats["PRM_emptemph_prct"] = (
             100 * np.sum(self.emptEmphArray) / np.sum(self.maskArray)
         )
 
