@@ -5,7 +5,7 @@ import nibabel as nib
 import numpy as np
 
 import constants
-from utils import img_utils, io_utils
+from utils import img_utils, io_utils, plot_utils
 
 
 class Subject(object):
@@ -202,3 +202,7 @@ class Subject(object):
         )
 
         # plot representative slice of RGB color array
+        prmAllArrayColorOutPath = join(
+            self.outDir, constants.outFileNames.PRM_ALL + "color_" + self.subjID
+        )
+        plot_utils(self.prmAllArrayColor, prmAllArrayColorOutPath)
