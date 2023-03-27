@@ -164,10 +164,6 @@ class Subject(object):
             emptEmphIdx[:, 0], emptEmphIdx[:, 1], emptEmphIdx[:, 2]
         ] = constants.prmProcessing.CLASSIFICATION_NUM_EMPTEMPH
 
-        print(f"PRM fSAD: {np.sum(self.fSadArray)/np.sum(self.maskArray)}")
-        print(f"PRM emph: {np.sum(self.emphArray)/np.sum(self.maskArray)}")
-        print(f"PRM norm: {np.sum(self.normArray)/np.sum(self.maskArray)}")
-
     def calcPrmStats(self):
         """Calculate key PRM statistics."""
 
@@ -180,6 +176,9 @@ class Subject(object):
         )
         self.prmStats["PRM_emph_prct"] = (
             100 * np.sum(self.emphArray) / np.sum(self.maskArray)
+        )
+        self.prmStats["PRM_empt_emph_prct"] = (
+            100 * np.sum(self.emptEmphArray) / np.sum(self.maskArray)
         )
 
     def savePrmNiis(self):
