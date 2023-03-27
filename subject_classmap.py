@@ -18,7 +18,6 @@ class Subject(object):
         expArray (np.array): expiratory HRCT in HU
         inspRegArray (np.array): inspiratory hrct in HU registered to expiratory HRCT
         maskArray (np.array): segmentation of thoracic cavity
-        thorCavityArray (np.array): expiratory HRCT with lung parenchyma voxels dimmed
         pixDims (np.array): pixel dimenstions in mm
         expArrayFilt (np.array): expiratory image with median filter applied
         inspRegArrayFilt (np.array): inspiratory image with median filter applied
@@ -55,9 +54,6 @@ class Subject(object):
         self.expArray, self.pixDims = io_utils.readFiles(self.config["io"]["inFileExp"])
         self.inspRegArray, _ = io_utils.readFiles(self.config["io"]["inFileInspReg"])
         self.maskArray, _ = io_utils.readFiles(self.config["io"]["inFileMask"])
-
-        # make thoracic cavity array by dimming lung parenchyma in exp CT
-        self.thorCavityArray = self.expArray[self.maskArray == 0]
 
     def dimOutsideVoxels(self):
         """Dim voxels outside of thoracic cavity."""
