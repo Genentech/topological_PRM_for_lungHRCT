@@ -203,6 +203,7 @@ class Subject(object):
 
         # plot representative slice of RGB color array
         prmAllArrayColorOutPath = join(
-            self.outDir, constants.outFileNames.PRM_ALL + "color_" + self.subjID
+            self.outDir,
+            constants.outFileNames.PRM_ALL + "color_" + self.subjID + ".png",
         )
         plot_utils.plotPrmRgbImage(self.prmAllArrayColor, prmAllArrayColorOutPath)
