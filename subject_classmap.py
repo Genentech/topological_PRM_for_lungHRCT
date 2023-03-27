@@ -54,7 +54,6 @@ class Subject(object):
         self.expArray, self.pixDims = io_utils.readFiles(self.config["io"]["inFileExp"])
         self.inspRegArray, _ = io_utils.readFiles(self.config["io"]["inFileInspReg"])
         self.maskArray, _ = io_utils.readFiles(self.config["io"]["inFileMask"])
-        print(self.expArray[0, 100, 0])
 
     def dimOutsideVoxels(self):
         """Dim voxels outside of thoracic cavity."""
