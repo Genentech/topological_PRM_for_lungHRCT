@@ -25,6 +25,7 @@ def prmMapping(config):
     subject.excludeVoxels()
     subject.classifyVoxelsPrm()
     subject.savePrmNiis()
+    subject.genPrmColor()
     logging.info("PRM complete")
 
 

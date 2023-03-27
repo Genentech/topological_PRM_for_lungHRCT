@@ -205,4 +205,4 @@ class Subject(object):
         prmAllArrayColorOutPath = join(
             self.outDir, constants.outFileNames.PRM_ALL + "color_" + self.subjID
         )
-        plot_utils(self.prmAllArrayColor, prmAllArrayColorOutPath)
+        plot_utils.plotPrmRgbImage(self.prmAllArrayColor, prmAllArrayColorOutPath)
