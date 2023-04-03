@@ -18,7 +18,6 @@ Usage:
     python /scripts/register_antspy.py --regfiles <path_to_csv> --outdir <path_to_outdir>
 """
 import argparse
-import concurrent.futures
 import time
 from os import mkdir
 from os.path import exists, join
@@ -28,7 +27,7 @@ import nibabel as nib
 import pandas as pd
 
 # set command line flags/args
-parser = argparse.ArgumentParser(description="Run batch ANTsPy registration")
+parser = argparse.ArgumentParser(description="Run ANTsPy registration")
 parser.add_argument(
     "--regfiles",
     type=str,
@@ -46,7 +45,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-def registerCOPDGene(fixedCtFile, movingCtFile, fixedMaskFile, movingMaskFile, outDir):
+def registerImages(fixedCtFile, movingCtFile, fixedMaskFile, movingMaskFile, outDir):
     """Register movingCtFile to fixedCtFile.
 
     Args:
@@ -56,7 +55,6 @@ def registerCOPDGene(fixedCtFile, movingCtFile, fixedMaskFile, movingMaskFile, o
         movingMaskFile (str): file path of moving CT mask
         outDir (str): path of directory to save output files to
     """
-
     # read in files
     fixed = ants.image_read(fixedCtFile)
     moving = ants.image_read(movingCtFile)
@@ -120,28 +118,20 @@ def main():
     # read command line args
     regFilesDf = pd.read_csv(args.regfiles)
     outDir = args.outdir
-    outDirList = [outDir for idx in range(len(regFilesDf))]
 
-    # read in csv of registration files
-    fixedCtFiles = regFilesDf["fixedCt"].tolist()
-    movingCtFiles = regFilesDf["movingCt"].tolist()
-    fixedMaskFiles = regFilesDf["fixedMask"].tolist()
-    movingMaskFiles = regFilesDf["movingMask"].tolist()
+    for idx in range(len(regFilesDf)):
+        t1 = time.perf_counter()
 
-    t1 = time.perf_counter()
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        executor.map(
-            registerCOPDGene,
-            fixedCtFiles,
-            movingCtFiles,
-            fixedMaskFiles,
-            movingMaskFiles,
-            outDirList,
-        )
-    t2 = time.perf_counter()
-    elapsedTime = t2 - t1
+        fixedCtFile = regFilesDf.loc[idx, "fixedCt"]
+        movingCtFile = regFilesDf.loc[idx, "movingCt"]
+        fixedMaskFile = regFilesDf.loc[idx, "fixedMask"]
+        movingMaskFile = regFilesDf.loc[idx, "movingMask"]
 
-    print(f"time for all registrations: {elapsedTime} seconds")
+        registerImages(fixedCtFile, movingCtFile, fixedMaskFile, movingMaskFile, outDir)
+
+        t2 = time.perf_counter()
+        elapsedTime = (t2 - t1) / 60
+        print(f"registration run time: {elapsedTime} mins.")
 
 
 if __name__ == "__main__":
