@@ -15,7 +15,7 @@ Outputs (files are saved to outDir/sid/):
     -<fixed CT file name>.<moving CT file name>.jac.nii.gz: jacobian determinant image
 
 Usage:
-    python /scripts/register_antspy.py --regfiles <path_to_csv> --outdir <path_to_outdir>
+    python scripts/register_antspy.py --regfiles <path_to_csv> --outdir <path_to_outdir>
 """
 import argparse
 import time
@@ -55,6 +55,10 @@ def registerImages(fixedCtFile, movingCtFile, fixedMaskFile, movingMaskFile, out
         movingMaskFile (str): file path of moving CT mask
         outDir (str): path of directory to save output files to
     """
+
+    movingCtFileOnly = movingCtFile.split("/")[-1]
+    print(f"beginning {movingCtFileOnly} registration")
+
     # read in files
     fixed = ants.image_read(fixedCtFile)
     moving = ants.image_read(movingCtFile)
@@ -109,8 +113,7 @@ def registerImages(fixedCtFile, movingCtFile, fixedMaskFile, movingMaskFile, out
     nib.save(movingWarpedNii, join(subjDir, movingWarpedFile))
     nib.save(jacNii, join(subjDir, jacFile))
 
-    movingCtFileOnly = movingCtFile.split("/")[-1]
-    print(f"file {movingCtFileOnly} registered")
+    print(f"{movingCtFileOnly} registered")
 
 
 def main():
