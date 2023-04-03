@@ -168,6 +168,7 @@ class Subject(object):
         """Calculate key PRM statistics."""
 
         # calculate percentage of voxels in each PRM classification
+        self.prmStats["sid"] = self.subjID
         self.prmStats["PRM_norm_prct"] = (
             100 * np.sum(self.normArray) / np.sum(self.maskArray)
         )
@@ -180,6 +181,12 @@ class Subject(object):
         self.prmStats["PRM_emptemph_prct"] = (
             100 * np.sum(self.emptEmphArray) / np.sum(self.maskArray)
         )
+
+        # create out path and save stats as csv
+        prmStatsOutPath = join(
+            self.outDir, constants.outFileNames.PRM_STATS + self.subjID
+        )
+        io_utils.saveStatsCsv(self.prmStats, prmStatsOutPath)
 
     def savePrmNiis(self):
         """Save PRM maps as niftis."""

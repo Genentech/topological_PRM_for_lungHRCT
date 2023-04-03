@@ -1,9 +1,10 @@
 """Import and export util functions."""
 import logging
+from typing import Dict
 
 import nibabel as nib
 import numpy as np
-import scipy
+import pandas as pd
 
 
 def readFiles(path: str):
@@ -55,3 +56,16 @@ def saveAsNii(inArray: np.array, path: str, pixDims=None):
     # create nifti image and save it
     outNiiImg = nib.Nifti1Image(inArray, np.eye(4), header)
     nib.save(outNiiImg, path)
+
+
+def saveStatsCsv(statsDict: Dict[str, float], path: str):
+    """Save statistics dictionary as csv.
+
+    Args:
+        statsDict (dict): dictionary containing stats names and values, first column must be "sid"
+        path (str): path to save csv to
+    """
+    # convert dict to pandas DataFrame, set index to sid, and save as csv
+    statsDf = pd.DataFrame.from_dict([statsDict])
+    statsDf.set_index("sid", inplace=True)
+    statsDf.to_csv(path)
