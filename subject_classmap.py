@@ -184,7 +184,7 @@ class Subject(object):
 
         # create out path and save stats as csv
         prmStatsOutPath = join(
-            self.outDir, constants.outFileNames.PRM_STATS + self.subjID
+            self.outDir, constants.outFileNames.PRM_STATS + self.subjID + ".csv"
         )
         io_utils.saveStatsCsv(self.prmStats, prmStatsOutPath)
 
