@@ -133,7 +133,7 @@ class Subject(object):
         )
         emptEmphIdx = np.argwhere(
             (self.expArrayFilt > constants.prmProcessing.EXP_THRESH)
-            & (self.inspRegArrayFilt < constants.prmProcessing.INSP_THRESH)
+            & (self.inspRegArrayFilt <= constants.prmProcessing.INSP_THRESH)
             & (self.maskArray >= 1)
         )
 
