@@ -168,18 +168,13 @@ class Subject(object):
         """Calculate key PRM statistics."""
 
         # calculate percentage of voxels in each PRM classification
+        numMaskVoxels = (self.maskArray > 0).sum()
         self.prmStats["sid"] = self.subjID
-        self.prmStats["PRM_norm_prct"] = (
-            100 * np.sum(self.normArray) / np.sum(self.maskArray)
-        )
-        self.prmStats["PRM_fSAD_prct"] = (
-            100 * np.sum(self.fSadArray) / np.sum(self.maskArray)
-        )
-        self.prmStats["PRM_emph_prct"] = (
-            100 * np.sum(self.emphArray) / np.sum(self.maskArray)
-        )
+        self.prmStats["PRM_norm_prct"] = 100 * np.sum(self.normArray) / numMaskVoxels
+        self.prmStats["PRM_fSAD_prct"] = 100 * np.sum(self.fSadArray) / numMaskVoxels
+        self.prmStats["PRM_emph_prct"] = 100 * np.sum(self.emphArray) / numMaskVoxels
         self.prmStats["PRM_emptemph_prct"] = (
-            100 * np.sum(self.emptEmphArray) / np.sum(self.maskArray)
+            100 * np.sum(self.emptEmphArray) / numMaskVoxels
         )
 
         # create out path and save stats as csv
