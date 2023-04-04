@@ -26,6 +26,7 @@ class Subject(object):
         self.emphArray (np.array): image denoting emphysema regions from PRM
         self.emptEmphArray (np.array): image denoting regions of "emptying emphysema" from PRM
         self.prmAllArray (np.array): image denoting all four voxel classifications from PRM
+        prmStats (dict): key PRM metrics/statistics
     """
 
     def __init__(self, config):
@@ -44,6 +45,7 @@ class Subject(object):
         self.emphArray = np.array([])
         self.emptEmphArray = np.array([])
         self.prmAllArray = np.array([])
+        self.prmStats = {}
 
     def readCtFiles(self):
         """Read in files and convert to np.array.
@@ -161,6 +163,30 @@ class Subject(object):
         self.prmAllArray[
             emptEmphIdx[:, 0], emptEmphIdx[:, 1], emptEmphIdx[:, 2]
         ] = constants.prmProcessing.CLASSIFICATION_NUM_EMPTEMPH
+
+    def calcPrmStats(self):
+        """Calculate key PRM statistics."""
+
+        # calculate percentage of voxels in each PRM classification
+        self.prmStats["sid"] = self.subjID
+        self.prmStats["PRM_norm_prct"] = (
+            100 * np.sum(self.normArray) / np.sum(self.maskArray)
+        )
+        self.prmStats["PRM_fSAD_prct"] = (
+            100 * np.sum(self.fSadArray) / np.sum(self.maskArray)
+        )
+        self.prmStats["PRM_emph_prct"] = (
+            100 * np.sum(self.emphArray) / np.sum(self.maskArray)
+        )
+        self.prmStats["PRM_emptemph_prct"] = (
+            100 * np.sum(self.emptEmphArray) / np.sum(self.maskArray)
+        )
+
+        # create out path and save stats as csv
+        prmStatsOutPath = join(
+            self.outDir, constants.outFileNames.PRM_STATS + self.subjID + ".csv"
+        )
+        io_utils.saveStatsCsv(self.prmStats, prmStatsOutPath)
 
     def savePrmNiis(self):
         """Save PRM maps as niftis."""
