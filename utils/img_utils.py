@@ -59,4 +59,8 @@ def calcMinkowskiFns(binaryImage: np.array, pixDims: np.array):
 
     # calculate global Minkowski functionals using quantimpy and store in dictionary
     globalMkFnsArray = mk.functionals(boolImage, pixDims)
-    globalMkFnsArray["vol"] = globalMkFnsArray[0]
+    globalMkFns = {}
+    globalMkFns["vol"] = globalMkFnsArray[0]
+    globalMkFns["surf_area"] = globalMkFnsArray[1]
+    globalMkFns["curv"] = globalMkFnsArray[2]
+    globalMkFns["euler"] = globalMkFnsArray[3]
