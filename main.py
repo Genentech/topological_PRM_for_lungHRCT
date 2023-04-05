@@ -30,7 +30,7 @@ def prmMapping(config):
     logging.info("PRM complete")
 
 
-def topoMapping(config):
+def topologyMapping(config):
     subject = Subject(config)
     logging.info("Topological mapping complete")
 
@@ -46,7 +46,7 @@ def main():
 
     # generate topological maps
     logging.info("Generating topological maps")
-    topoMapping(config)
+    topologyMapping(config)
 
 
 if __name__ == "__main__":

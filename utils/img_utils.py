@@ -3,6 +3,7 @@ from typing import Dict
 
 import numpy as np
 import scipy
+from quantimpy import minkowski as mk
 
 
 def medFilt(image: np.array, kernelSize: int):
@@ -39,3 +40,23 @@ def bin2rgb(binImage: np.array, colMap: Dict[int, np.ndarray]):
         rgbImage[binImage == binNum] = colMap[binNum]
 
     return rgbImage
+
+
+def calcMinkowskiFns(binaryImage: np.array, pixDims: np.array):
+    """Calculate global Minkowski functionals.
+
+    Args:
+        binaryImage (np.array): image of zeros and ones denoting PRM regions
+        pixDims (np.array): pixel dimensions of binaryImage
+
+    Returns:
+        globalMkFns (dict): dictionary containing value of global Minkowski functionals
+                            (volume, surface area, curvature, and the Euler characteristic)
+    """
+
+    # convert input binary array to boolean array
+    boolImage = np.array(binaryImage, dtype=bool)
+
+    # calculate global Minkowski functionals using quantimpy and store in dictionary
+    globalMkFnsArray = mk.functionals(boolImage, pixDims)
+    globalMkFnsArray["vol"] = globalMkFnsArray[0]

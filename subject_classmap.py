@@ -3,6 +3,7 @@ from os.path import join
 
 import nibabel as nib
 import numpy as np
+from quantimpy import minkowski as mk
 
 import constants
 from utils import img_utils, io_utils, plot_utils
@@ -229,3 +230,11 @@ class Subject(object):
             constants.outFileNames.PRM_ALL + "color_" + self.subjID + ".png",
         )
         plot_utils.plotPrmRgbImage(self.prmAllArrayColor, prmAllArrayColorOutPath)
+
+    def calcTopologyGlobal(self):
+        """Calculate global Minkowski functionals for all PRM maps.
+
+        Calculates global volume, surface area, curvature, and the Euler characteristic
+        for classification maps of all PRM regions.
+        """
+        # convert
