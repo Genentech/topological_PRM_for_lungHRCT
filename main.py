@@ -1,7 +1,9 @@
 """Run HRCT PRM + topoligcal mapping pipeline."""
 import argparse
+import glob
 import logging
 from configparser import ConfigParser
+from os.path import join
 
 from subject_classmap import Subject
 
@@ -11,7 +13,17 @@ logging.basicConfig(level=logging.INFO)
 # set command line flags/args
 parser = argparse.ArgumentParser(description="Run HRCT voxel-wise lung image analysis")
 parser.add_argument(
-    "--config", type=str, metavar="", required=True, help="configuration file path"
+    "--config",
+    type=str,
+    metavar="",
+    required=True,
+    help="single subject: config file path. batch processing: directory of config files",
+)
+parser.add_argument(
+    "--batch",
+    action="store_true",
+    required=False,
+    help="indicate to run a batch process",
 )
 args = parser.parse_args()
 
@@ -42,14 +54,33 @@ def prmTopoMapping(config):
 
 
 def main():
-    """Run PRM and topological mapping HRCT analysis."""
+    """Run PRM and topological mapping HRCT analysis.
 
-    # read in config file
-    config = ConfigParser()
-    config.read(args.config)
+    If no batch processing indicated, run analysis with single config file.
+    If batch processing indicated, run analysis on each config file in specified directory.
+    """
 
-    # run pipeline from registered HRCT files
-    prmTopoMapping(config)
+    if not args.batch:
+        # read in config file
+        config = ConfigParser()
+        config.read(args.config)
+
+        # run pipeline from registered HRCT files
+        logging.info("*****Processing subject %s*****" % config["subjInfo"]["subjID"])
+        prmTopoMapping(config)
+    else:
+        # get list of config files in specified directory
+        configList = glob.glob(join(args.config, "*.ini"))
+        for configDir in configList:
+            # read in config file
+            config = ConfigParser()
+            config.read(configDir)
+
+            # run pipeline from registered HRCT files
+            logging.info(
+                "*****Processing subject %s*****" % config["subjInfo"]["subjID"]
+            )
+            prmTopoMapping(config)
 
 
 if __name__ == "__main__":
