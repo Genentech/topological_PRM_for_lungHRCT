@@ -16,8 +16,13 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-def prmMapping(config):
+def prmTopoMapping(config):
+    """Run pipeline from registered HRCT files."""
+
     subject = Subject(config)
+
+    # generate PRM maps
+    logging.info("Generating PRM maps")
     subject.readCtFiles()
     subject.dimOutsideVoxels()
     subject.orientImages()
@@ -29,26 +34,22 @@ def prmMapping(config):
     subject.genPrmColor()
     logging.info("PRM complete")
 
-
-def topologyMapping(config):
-    subject = Subject(config)
+    # generate global and local topology metrics and maps
+    logging.info("Generating topological maps")
     subject.calcTopologyGlobal()
     subject.saveTopologyStats()
     logging.info("Topological mapping complete")
 
 
 def main():
+    """Run PRM and topological mapping HRCT analysis."""
+
     # read in config file
     config = ConfigParser()
     config.read(args.config)
 
-    # generate PRM maps
-    logging.info("Generating PRM maps")
-    prmMapping(config)
-
-    # generate topological maps
-    logging.info("Generating topological maps")
-    topologyMapping(config)
+    # run pipeline from registered HRCT files
+    prmTopoMapping(config)
 
 
 if __name__ == "__main__":

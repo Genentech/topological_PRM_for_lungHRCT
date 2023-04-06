@@ -241,7 +241,8 @@ class Subject(object):
         Calculates global volume, surface area, curvature, and the Euler characteristic
         for classification maps of all PRM regions.
         """
-
+        normShape = self.normArray.shape
+        print(f"shape of norm PRM array: {normShape}")
         # get individual dictionaries containing global mk fns for each prm region
         normTopologyGlobal = img_utils.calcGlobalMkFns(
             self.normArray, self.pixDims, "norm"
