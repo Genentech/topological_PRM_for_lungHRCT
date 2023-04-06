@@ -42,18 +42,15 @@ def bin2rgb(binImage: np.ndarray, colMap: Dict[int, np.ndarray]):
     return rgbImage
 
 
-def calcGlobalMkFns(binaryImage: np.ndarray, pixDims: np.ndarray, imgType: str):
-    """Calculate global Minkowski functionals.
+def calcMkFns(binaryImage: np.ndarray, pixDims: np.ndarray):
+    """Calculate Minkowski functionals for a binary image.
 
     Args:
         binaryImage (np.array): image of zeros and ones denoting PRM regions
         pixDims (np.array): pixel dimensions of binaryImage
-        imgType (str): string to append to dictionary entries denoting image type
-                        (e.g. emph, fSAD, norm, emptemph)
 
     Returns:
-        globalMkFnsDict (dict): dictionary containing value of global Minkowski functionals
-                            (volume, surface area, curvature, and the Euler characteristic)
+        mkFnsArray (np.array): output array from quantimpy minkowski.functionals
     """
 
     # convert input binary array to boolean array
@@ -61,19 +58,31 @@ def calcGlobalMkFns(binaryImage: np.ndarray, pixDims: np.ndarray, imgType: str):
 
     # temporarily scale pix dims up (quantimpy requires them to be >=1)
     pixDimsScale = 10
-    pixDims *= pixDimsScale
+    pixDimsRescale = pixDims * pixDimsScale
 
     # calculate global Mk fns using quantimpy and rescale to match original pixel dim units
-    globalMkFnsArray = mk.functionals(boolImage, pixDims)
-    globalMkFnsArray[0] /= pixDimsScale**3  # volume
-    globalMkFnsArray[1] /= pixDimsScale**2  # surface area
-    globalMkFnsArray[2] /= pixDimsScale  # curvature
+    mkFnsArray = np.array(mk.functionals(boolImage, pixDimsRescale))
+    mkFnsArray[0] /= pixDimsScale**3  # volume
+    mkFnsArray[1] /= pixDimsScale**2  # surface area
+    mkFnsArray[2] /= pixDimsScale  # curvature
 
-    # store in dictionary
-    globalMkFnsDict = {}
-    globalMkFnsDict["vol_global_" + imgType] = globalMkFnsArray[0]
-    globalMkFnsDict["surf_area_global_" + imgType] = globalMkFnsArray[1]
-    globalMkFnsDict["curv_global" + imgType] = globalMkFnsArray[2]
-    globalMkFnsDict["euler_global_" + imgType] = globalMkFnsArray[3]
+    return mkFnsArray
 
-    return globalMkFnsDict
+
+def createMkFnDict(mkFnsArray: np.ndarray, label: str):
+    """Create a dictionary containing Minkowski functionals.
+
+    Args:
+        mkFnsArray (np.array): output array from quantimpy minkowski.functionals
+        imgType (str): string to append to dictionary entries denoting image type
+                        (e.g. emph, fSAD, norm, emptemph)
+    """
+
+    # store in mkFnsArray in dictionary with imgType label
+    mkFnsDict = {}
+    mkFnsDict["vol_" + imgType] = mkFnsArray[0]
+    mkFnsDict["surf_area_" + imgType] = mkFnsArray[1]
+    mkFnsDict["curv_" + imgType] = mkFnsArray[2]
+    mkFnsDict["euler_" + imgType] = mkFnsArray[3]
+
+    return mkFnsDict

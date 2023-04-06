@@ -127,13 +127,13 @@ class Subject(object):
             & (self.maskArray >= 1)
         )
         fSadIdx = np.argwhere(
-            (self.expArrayFilt <= constants.prmProcessing.EXP_THRESH)
+            (self.expArrayFilt < constants.prmProcessing.EXP_THRESH)
             & (self.inspRegArrayFilt > constants.prmProcessing.INSP_THRESH)
             & (self.maskArray >= 1)
         )
         emphIdx = np.argwhere(
-            (self.expArrayFilt <= constants.prmProcessing.EXP_THRESH)
-            & (self.inspRegArrayFilt <= constants.prmProcessing.INSP_THRESH)
+            (self.expArrayFilt < constants.prmProcessing.EXP_THRESH)
+            & (self.inspRegArrayFilt < constants.prmProcessing.INSP_THRESH)
             & (self.maskArray >= 1)
         )
         emptEmphIdx = np.argwhere(
@@ -247,20 +247,20 @@ class Subject(object):
             self.normArray, self.pixDims, "norm"
         )
         fSadTopologyGlobal = img_utils.calcGlobalMkFns(
-            self.normArray, self.pixDims, "fSAD"
+            self.fSadArray, self.pixDims, "fSAD"
         )
         emphTopologyGlobal = img_utils.calcGlobalMkFns(
-            self.normArray, self.pixDims, "fSAD"
+            self.emphArray, self.pixDims, "emph"
         )
-        emptemphTopologyGlobal = img_utils.calcGlobalMkFns(
-            self.normArray, self.pixDims, "fSAD"
+        emptEmphTopologyGlobal = img_utils.calcGlobalMkFns(
+            self.emptEmphArray, self.pixDims, "emptemph"
         )
 
         # merge indivudal dictionaries
         self.topologyStatsGlobal.update(normTopologyGlobal)
         self.topologyStatsGlobal.update(fSadTopologyGlobal)
         self.topologyStatsGlobal.update(emphTopologyGlobal)
-        self.topologyStatsGlobal.update(emptemphTopologyGlobal)
+        self.topologyStatsGlobal.update(emptEmphTopologyGlobal)
 
     def saveTopologyStats(self):
         """Save combined global and local topology metrics in CSV."""
