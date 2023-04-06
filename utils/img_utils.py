@@ -74,15 +74,18 @@ def createMkFnDict(mkFnsArray: np.ndarray, label: str):
 
     Args:
         mkFnsArray (np.array): output array from quantimpy minkowski.functionals
-        imgType (str): string to append to dictionary entries denoting image type
+        label (str): string to append to dictionary entries denoting image type
                         (e.g. emph, fSAD, norm, emptemph)
+
+    Returns:
+        mkFnsDict (dict):
     """
 
-    # store in mkFnsArray in dictionary with imgType label
+    # store in mkFnsArray in dictionary with label label
     mkFnsDict = {}
-    mkFnsDict["vol_" + imgType] = mkFnsArray[0]
-    mkFnsDict["surf_area_" + imgType] = mkFnsArray[1]
-    mkFnsDict["curv_" + imgType] = mkFnsArray[2]
-    mkFnsDict["euler_" + imgType] = mkFnsArray[3]
+    mkFnsDict["vol_" + label] = mkFnsArray[0]
+    mkFnsDict["surf_area_" + label] = mkFnsArray[1]
+    mkFnsDict["curv_" + label] = mkFnsArray[2]
+    mkFnsDict["euler_" + label] = mkFnsArray[3]
 
     return mkFnsDict
