@@ -29,6 +29,7 @@ class Subject(object):
         self.prmAllArray (np.array): image denoting all four voxel classifications from PRM
         prmStats (dict): key PRM metrics/statistics
         topologyGlobal (dict): global topology (Minkowski functionals) metrics for all prm maps
+        topologyStatsLocal (dict): mean of local topology (Minkowski functionals) metrics for all prm maps
     """
 
     def __init__(self, config):
@@ -49,6 +50,7 @@ class Subject(object):
         self.prmAllArray = np.array([])
         self.prmStats = {}
         self.topologyStatsGlobal = {}
+        self.topologyStatsLocal = {}
 
     def readCtFiles(self):
         """Read in files and convert to np.array.
@@ -262,3 +264,15 @@ class Subject(object):
 
     def saveTopologyStats(self):
         """Save combined global and local topology metrics in CSV."""
+
+        # create combined dictionary with global and local topology metrics
+        topologyStats = {}
+        topologyStats["sid"] = self.subjID
+        topologyStats.update(self.topologyStatsGlobal)
+        topologyStats.update(self.topologyStatsLocal)
+
+        # save combined dictionary as CSV
+        topologyStatsOutPath = join(
+            self.outDir, constants.outFileNames.TOPO_STATS + self.subjID + ".csv"
+        )
+        io_utils.saveStatsCsv(topologyStats, topologyStatsOutPath)
