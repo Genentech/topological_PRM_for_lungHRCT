@@ -6,7 +6,7 @@ import scipy
 from quantimpy import minkowski as mk
 
 
-def medFilt(image: np.array, kernelSize: int):
+def medFilt(image: np.ndarray, kernelSize: int):
     """Apply moving 2D median filter.
 
     Args:
@@ -25,7 +25,7 @@ def medFilt(image: np.array, kernelSize: int):
     return imageFilt
 
 
-def bin2rgb(binImage: np.array, colMap: Dict[int, np.ndarray]):
+def bin2rgb(binImage: np.ndarray, colMap: Dict[int, np.ndarray]):
     """Convert image of bin numbers to rgb.
 
     Args:
@@ -42,15 +42,17 @@ def bin2rgb(binImage: np.array, colMap: Dict[int, np.ndarray]):
     return rgbImage
 
 
-def calcMinkowskiFns(binaryImage: np.array, pixDims: np.array):
+def calcGlobalMkFns(binaryImage: np.ndarray, pixDims: np.ndarray, imgType: str):
     """Calculate global Minkowski functionals.
 
     Args:
         binaryImage (np.array): image of zeros and ones denoting PRM regions
         pixDims (np.array): pixel dimensions of binaryImage
+        imgType (str): string to append to dictionary entries denoting image type
+                        (e.g. emph, fSAD, norm, emptemph)
 
     Returns:
-        globalMkFns (dict): dictionary containing value of global Minkowski functionals
+        globalMkFnsDict (dict): dictionary containing value of global Minkowski functionals
                             (volume, surface area, curvature, and the Euler characteristic)
     """
 
@@ -59,8 +61,10 @@ def calcMinkowskiFns(binaryImage: np.array, pixDims: np.array):
 
     # calculate global Minkowski functionals using quantimpy and store in dictionary
     globalMkFnsArray = mk.functionals(boolImage, pixDims)
-    globalMkFns = {}
-    globalMkFns["vol"] = globalMkFnsArray[0]
-    globalMkFns["surf_area"] = globalMkFnsArray[1]
-    globalMkFns["curv"] = globalMkFnsArray[2]
-    globalMkFns["euler"] = globalMkFnsArray[3]
+    globalMkFnsDict = {}
+    globalMkFnsDict["vol_global_" + imgType] = globalMkFnsArray[0]
+    globalMkFnsDict["surf_area_global_" + imgType] = globalMkFnsArray[1]
+    globalMkFnsDict["curv_global" + imgType] = globalMkFnsArray[2]
+    globalMkFnsDict["euler_global_" + imgType] = globalMkFnsArray[3]
+
+    return globalMkFnsDict

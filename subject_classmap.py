@@ -28,6 +28,7 @@ class Subject(object):
         self.emptEmphArray (np.array): image denoting regions of "emptying emphysema" from PRM
         self.prmAllArray (np.array): image denoting all four voxel classifications from PRM
         prmStats (dict): key PRM metrics/statistics
+        topologyGlobal (dict): global topology (Minkowski functionals) metrics for all prm maps
     """
 
     def __init__(self, config):
@@ -47,6 +48,7 @@ class Subject(object):
         self.emptEmphArray = np.array([])
         self.prmAllArray = np.array([])
         self.prmStats = {}
+        self.topologyGlobal = {}
 
     def readCtFiles(self):
         """Read in files and convert to np.array.
@@ -237,4 +239,23 @@ class Subject(object):
         Calculates global volume, surface area, curvature, and the Euler characteristic
         for classification maps of all PRM regions.
         """
-        # convert
+
+        # get individual dictionaries containing global mk fns for each prm region
+        normTopologyGlobal = img_utils.calcGlobalMkFns(
+            self.normArray, self.pixDims, "norm"
+        )
+        fSadTopologyGlobal = img_utils.calcGlobalMkFns(
+            self.normArray, self.pixDims, "fSAD"
+        )
+        emphTopologyGlobal = img_utils.calcGlobalMkFns(
+            self.normArray, self.pixDims, "fSAD"
+        )
+        emptemphTopologyGlobal = img_utils.calcGlobalMkFns(
+            self.normArray, self.pixDims, "fSAD"
+        )
+
+        # merge indivudal dictionaries
+        self.topologyGlobal.update(normTopologyGlobal)
+        self.topologyGlobal.update(fSadTopologyGlobal)
+        self.topologyGlobal.update(emphTopologyGlobal)
+        self.topologyGlobal.update(emptemphTopologyGlobal)

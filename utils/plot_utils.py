@@ -5,7 +5,7 @@ import numpy as np
 import constants
 
 
-def plotPrmRgbImage(prmRgbArray: np.array, path: str):
+def plotPrmRgbImage(prmRgbArray: np.ndarray, path: str):
     """Plot single slice of RGB color array.
 
     Args:

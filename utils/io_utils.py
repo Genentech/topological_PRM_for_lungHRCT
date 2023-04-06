@@ -38,7 +38,7 @@ def readFiles(path: str):
     return outArray, pixDims
 
 
-def saveAsNii(inArray: np.array, path: str, pixDims=None):
+def saveAsNii(inArray: np.ndarray, path: str, pixDims=None):
     """Save np.array as nifti to path.
 
     Args:
