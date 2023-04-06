@@ -59,8 +59,17 @@ def calcGlobalMkFns(binaryImage: np.ndarray, pixDims: np.ndarray, imgType: str):
     # convert input binary array to boolean array
     boolImage = np.array(binaryImage, dtype=bool)
 
-    # calculate global Minkowski functionals using quantimpy and store in dictionary
+    # temporarily scale pix dims up (quantimpy requires them to be >=1)
+    pixDimsScale = 10
+    pixDims *= pixDimsScale
+
+    # calculate global Mk fns using quantimpy and rescale to match original pixel dim units
     globalMkFnsArray = mk.functionals(boolImage, pixDims)
+    globalMkFnsArray[0] /= pixDimsScale**3  # volume
+    globalMkFnsArray[1] /= pixDimsScale**2  # surface area
+    globalMkFnsArray[2] /= pixDimsScale  # curvature
+
+    # store in dictionary
     globalMkFnsDict = {}
     globalMkFnsDict["vol_global_" + imgType] = globalMkFnsArray[0]
     globalMkFnsDict["surf_area_global_" + imgType] = globalMkFnsArray[1]
