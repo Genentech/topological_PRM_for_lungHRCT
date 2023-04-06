@@ -32,6 +32,7 @@ def prmMapping(config):
 
 def topologyMapping(config):
     subject = Subject(config)
+    subject.calcTopologyGlobal()
     logging.info("Topological mapping complete")
 
 

@@ -48,7 +48,7 @@ class Subject(object):
         self.emptEmphArray = np.array([])
         self.prmAllArray = np.array([])
         self.prmStats = {}
-        self.topologyGlobal = {}
+        self.topologyStatsGlobal = {}
 
     def readCtFiles(self):
         """Read in files and convert to np.array.
@@ -255,7 +255,10 @@ class Subject(object):
         )
 
         # merge indivudal dictionaries
-        self.topologyGlobal.update(normTopologyGlobal)
-        self.topologyGlobal.update(fSadTopologyGlobal)
-        self.topologyGlobal.update(emphTopologyGlobal)
-        self.topologyGlobal.update(emptemphTopologyGlobal)
+        self.topologyStatsGlobal.update(normTopologyGlobal)
+        self.topologyStatsGlobal.update(fSadTopologyGlobal)
+        self.topologyStatsGlobal.update(emphTopologyGlobal)
+        self.topologyStatsGlobal.update(emptemphTopologyGlobal)
+
+    def saveTopologyStats(self):
+        """Save combined global and local topology metrics in CSV."""
