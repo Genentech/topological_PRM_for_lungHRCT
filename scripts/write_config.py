@@ -11,5 +11,5 @@ config["io"] = {
     "outDir": "path/to/main/out_directory/",
 }
 
-with open("config/config_demo.ini", "w") as f:
+with open("../config/config_demo.ini", "w") as f:
     config.write(f)
