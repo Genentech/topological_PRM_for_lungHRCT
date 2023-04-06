@@ -67,25 +67,3 @@ def calcMkFns(binaryImage: np.ndarray, pixDims: np.ndarray):
     mkFnsArray[2] /= pixDimsScale  # curvature
 
     return mkFnsArray
-
-
-def createMkFnDict(mkFnsArray: np.ndarray, label: str):
-    """Create a dictionary containing Minkowski functionals.
-
-    Args:
-        mkFnsArray (np.array): output array from quantimpy minkowski.functionals
-        label (str): string to append to dictionary entries denoting image type
-                        (e.g. emph, fSAD, norm, emptemph)
-
-    Returns:
-        mkFnsDict (dict):
-    """
-
-    # store in mkFnsArray in dictionary with label label
-    mkFnsDict = {}
-    mkFnsDict["vol_" + label] = mkFnsArray[0]
-    mkFnsDict["surf_area_" + label] = mkFnsArray[1]
-    mkFnsDict["curv_" + label] = mkFnsArray[2]
-    mkFnsDict["euler_" + label] = mkFnsArray[3]
-
-    return mkFnsDict

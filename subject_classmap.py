@@ -242,25 +242,23 @@ class Subject(object):
         for classification maps of all PRM regions.
         """
 
-        # get individual dictionaries containing global mk fns for each prm region
-        normTopologyGlobal = img_utils.calcGlobalMkFns(
-            self.normArray, self.pixDims, "norm"
-        )
-        fSadTopologyGlobal = img_utils.calcGlobalMkFns(
-            self.fSadArray, self.pixDims, "fSAD"
-        )
-        emphTopologyGlobal = img_utils.calcGlobalMkFns(
-            self.emphArray, self.pixDims, "emph"
-        )
-        emptEmphTopologyGlobal = img_utils.calcGlobalMkFns(
-            self.emptEmphArray, self.pixDims, "emptemph"
-        )
+        # get individual arrays containing global mk fns for each prm region
+        normGlobal = img_utils.calcMkFns(self.normArray, self.pixDims)
+        fSadGlobal = img_utils.calcMkFns(self.fSadArray, self.pixDims)
+        emphGlobal = img_utils.calcMkFns(self.emphArray, self.pixDims)
+        emptEmphGlobal = img_utils.calcMkFns(self.emptEmphArray, self.pixDims)
+
+        # create individual dictionaries from arrays
+        normGlobalDict = io_utils.createMkFnDict(normGlobal, "global_norm")
+        fSadGlobalDict = io_utils.createMkFnDict(fSadGlobal, "global_fSAD")
+        emphGlobalDict = io_utils.createMkFnDict(emphGlobal, "global_emph")
+        emptEmphGlobalDict = io_utils.createMkFnDict(emptEmphGlobal, "global_emptemph")
 
         # merge indivudal dictionaries
-        self.topologyStatsGlobal.update(normTopologyGlobal)
-        self.topologyStatsGlobal.update(fSadTopologyGlobal)
-        self.topologyStatsGlobal.update(emphTopologyGlobal)
-        self.topologyStatsGlobal.update(emptEmphTopologyGlobal)
+        self.topologyStatsGlobal.update(normGlobalDict)
+        self.topologyStatsGlobal.update(fSadGlobalDict)
+        self.topologyStatsGlobal.update(emphGlobalDict)
+        self.topologyStatsGlobal.update(emptEmphGlobalDict)
 
     def saveTopologyStats(self):
         """Save combined global and local topology metrics in CSV."""

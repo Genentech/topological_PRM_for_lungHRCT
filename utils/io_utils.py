@@ -69,3 +69,25 @@ def saveStatsCsv(statsDict: Dict[str, float], path: str):
     statsDf = pd.DataFrame.from_dict([statsDict])
     statsDf.set_index("sid", inplace=True)
     statsDf.to_csv(path)
+
+
+def createMkFnDict(mkFnsArray: np.ndarray, label: str):
+    """Create a dictionary containing Minkowski functionals.
+
+    Args:
+        mkFnsArray (np.array): output array from quantimpy minkowski.functionals
+        label (str): string to append to dictionary entries denoting image type
+                        (e.g. emph, fSAD, norm, emptemph)
+
+    Returns:
+        mkFnsDict (dict): dictionary of Minkowski functionals
+    """
+
+    # store in mkFnsArray in dictionary with label label
+    mkFnsDict = {}
+    mkFnsDict["vol_" + label] = mkFnsArray[0]
+    mkFnsDict["surf_area_" + label] = mkFnsArray[1]
+    mkFnsDict["curv_" + label] = mkFnsArray[2]
+    mkFnsDict["euler_" + label] = mkFnsArray[3]
+
+    return mkFnsDict
