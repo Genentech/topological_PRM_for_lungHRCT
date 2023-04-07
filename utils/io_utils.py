@@ -46,7 +46,7 @@ def saveAsNii(inArray: np.ndarray, path: str, pixDims=None):
         path (str): path to save nifti to
         pixDims (np.array): optional argument speficying image pixel dimensions
 
-    If pixel dimensions provided, add those to nifti header
+    If pixel dimensions provided, add those to nifti header.
     """
     # if pixel dimensions provided, add them to nifti header
     header = nib.Nifti1Header()

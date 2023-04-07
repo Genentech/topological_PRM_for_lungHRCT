@@ -62,6 +62,12 @@ class Subject(object):
         self.inspRegArray, _ = io_utils.readFiles(self.config["io"]["inFileInspReg"])
         self.maskArray, _ = io_utils.readFiles(self.config["io"]["inFileMask"])
 
+    def normalizeAllCt(self):
+        """Normalize expiratory and inspiratory HRCTs."""
+
+        self.expArray = img_utils.normalizeCt(self.expArray, self.maskArray)
+        self.inspRegArray = img_utils.normalizeCt(self.inspRegArray, self.maskArray)
+
     def dimOutsideVoxels(self):
         """Dim voxels outside of thoracic cavity."""
         self.expArray[self.maskArray == 0] = constants.prePrmProcessing.DIM_OUTSIDE_VAL

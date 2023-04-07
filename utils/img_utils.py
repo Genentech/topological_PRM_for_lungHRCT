@@ -6,6 +6,28 @@ import scipy
 from quantimpy import minkowski as mk
 
 
+def normalizeCt(image: np.ndarray, mask: np.ndarray):
+    """Normalize CT image.
+
+    Args:
+        image (np.array): CT image to be normalized
+        mask (np.array): segmentation mask of CT image, must have same shape as image
+
+    Returns:
+        imageNorm (np.array): normalized CT image
+
+    Sets positive voxels to zero and normalizes CT based on min and max voxels in mask.
+    """
+
+    # set positive voxels to zero and normalize image
+    image[image > 0] = 0
+    minVox = min(image[mask >= 1].flatten())
+    maxVox = max(image[mask >= 1].flatten())
+    imageNorm = 1000 / (maxVox - minVox) * (image - minVox) - 1000
+
+    return imageNorm
+
+
 def medFilt(image: np.ndarray, kernelSize: int):
     """Apply moving 2D median filter.
 

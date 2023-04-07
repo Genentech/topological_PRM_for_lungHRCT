@@ -36,6 +36,7 @@ def prmTopoMapping(config):
     # generate PRM maps
     logging.info("Generating PRM maps")
     subject.readCtFiles()
+    subject.normalizeAllCt()
     subject.dimOutsideVoxels()
     subject.orientImages()
     subject.applyMedFilts()
