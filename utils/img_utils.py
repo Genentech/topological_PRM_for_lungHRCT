@@ -2,7 +2,7 @@
 from typing import Dict
 
 import numpy as np
-import scipy
+import scipy.signal
 from quantimpy import minkowski as mk
 
 
