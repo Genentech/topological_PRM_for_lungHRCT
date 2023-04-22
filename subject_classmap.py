@@ -243,7 +243,10 @@ class Subject(object):
             constants.outFileNames.PRM_ALL + "color_" + self.subjID + ".png",
         )
         plot_utils.plotPrmRgbOnCt(
-            self.expArrayPlotting, self.prmAllArray, prmAllArrayColorOutPath
+            self.expArrayPlotting,
+            self.prmAllArray,
+            constants.prmProcessing.PLOT_SLICENUM,
+            prmAllArrayColorOutPath,
         )
 
     def calcTopologyGlobal(self):

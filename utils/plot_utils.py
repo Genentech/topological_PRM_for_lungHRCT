@@ -6,12 +6,15 @@ from matplotlib import colors
 import constants
 
 
-def plotPrmRgbOnCt(ctArray: np.ndarray, prmAllArray: np.ndarray, path: str):
+def plotPrmRgbOnCt(
+    ctArray: np.ndarray, prmAllArray: np.ndarray, sliceNum: int, path: str
+):
     """Plot single slice of RGB color array overlaid on HRCT.
 
     Args:
         ctArray (np.array): HRCRT image to overlay PRGM RGB image onto
         prmAllArray (np.array): PRM image sorted into bins denoting PRM voxel classification
+        sliceNum (int): index of slice along the anterior to posterior dimension to plot
         path (str): path to save final image to
     """
 
@@ -21,12 +24,12 @@ def plotPrmRgbOnCt(ctArray: np.ndarray, prmAllArray: np.ndarray, path: str):
     norm = colors.BoundaryNorm(bounds, cmap.N)
 
     # take single slice of PRM binned image and mask out un-binned regions
-    prmAllArraySlice = prmAllArray[:, constants.prmProcessing.PLOT_SLICENUM, :]
+    prmAllArraySlice = prmAllArray[:, sliceNum, :]
     prmAllArraySlice = np.ma.masked_where(prmAllArraySlice < 1, prmAllArraySlice)
 
     # plot image overlaid on corresponding HRCT slice
     plt.figure()
-    plt.imshow(ctArray[:, constants.prmProcessing.PLOT_SLICENUM, :], cmap="gray")
+    plt.imshow(ctArray[:, sliceNum, :], cmap="gray")
     plt.imshow(prmAllArraySlice, cmap=cmap, norm=norm, alpha=0.7)
     plt.axis("off")
     plt.savefig(path, transparent=True, bbox_inches="tight", pad_inches=-0.05, dpi=600)
