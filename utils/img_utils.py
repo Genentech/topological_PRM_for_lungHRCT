@@ -56,6 +56,8 @@ def bin2rgb(binImage: np.ndarray, colMap: Dict[int, np.ndarray]):
 
     Returns:
         rgbImage (np.array): RGB image of shape (x, y, z, 3)
+
+    NOTE: this function is currently unused in the pipeline
     """
     rgbImage = np.zeros((binImage.shape[0], binImage.shape[1], binImage.shape[2], 3))
     for binNum in colMap.keys():

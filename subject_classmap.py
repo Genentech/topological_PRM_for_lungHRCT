@@ -237,17 +237,14 @@ class Subject(object):
     def genPrmColor(self):
         """Generate RGB images of PRM maps."""
 
-        # convert binned PRM array to RGB color array
-        self.prmAllArrayColor = img_utils.bin2rgb(
-            self.prmAllArray, constants.prmProcessing.PRM_BIN2RGB
-        )
-
         # plot representative slice of RGB color array
         prmAllArrayColorOutPath = join(
             self.outDir,
             constants.outFileNames.PRM_ALL + "color_" + self.subjID + ".png",
         )
-        plot_utils.plotPrmRgbImage(self.prmAllArrayColor, prmAllArrayColorOutPath)
+        plot_utils.plotPrmRgbOnCt(
+            self.expArrayPlotting, self.prmAllArray, prmAllArrayColorOutPath
+        )
 
     def calcTopologyGlobal(self):
         """Calculate global Minkowski functionals for all PRM maps.
