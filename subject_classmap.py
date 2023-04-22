@@ -17,16 +17,17 @@ class Subject(object):
         subjID (str): subject ID
         outDir (str): main directory to save output files to
         expArray (np.array): expiratory HRCT in HU
+        expArrayPlotting (np.array): expiratory HRCT in HU to use for plotting
         inspRegArray (np.array): inspiratory hrct in HU registered to expiratory HRCT
         maskArray (np.array): segmentation of thoracic cavity
         pixDims (np.array): pixel dimenstions in mm
         expArrayFilt (np.array): expiratory image with median filter applied
         inspRegArrayFilt (np.array): inspiratory image with median filter applied
-        self.normArray (np.array): image denoting normal regions from PRM
-        self.fSadArray (np.array): image denoting regions of non-emphysematous air trapping from PRM
-        self.emphArray (np.array): image denoting emphysema regions from PRM
-        self.emptEmphArray (np.array): image denoting regions of "emptying emphysema" from PRM
-        self.prmAllArray (np.array): image denoting all four voxel classifications from PRM
+        normArray (np.array): image denoting normal regions from PRM
+        fSadArray (np.array): image denoting regions of non-emphysematous air trapping from PRM
+        emphArray (np.array): image denoting emphysema regions from PRM
+        emptEmphArray (np.array): image denoting regions of "emptying emphysema" from PRM
+        prmAllArray (np.array): image denoting all four voxel classifications from PRM
         prmStats (dict): key PRM metrics/statistics
         topologyGlobal (dict): global topology (Minkowski functionals) metrics for all prm maps
         topologyStatsLocal (dict): mean of local topology (Minkowski functionals) metrics for all prm maps
@@ -38,6 +39,7 @@ class Subject(object):
         self.subjID = config["subjInfo"]["subjID"]
         self.outDir = config["io"]["outDir"]
         self.expArray = np.array([])
+        self.expArrayPlotting = np.array([])
         self.inspRegArray = np.array([])
         self.maskArray = np.array([])
         self.pixDims = np.array([])
@@ -56,11 +58,14 @@ class Subject(object):
         """Read in files and convert to np.array.
 
         Read in files containing expiratory and inspiratory HRCTs and mask (.nii).
-        Generate array denoting thoracic cavity outline.
+        Save a copy of expiratory HRCT for plotting.
         """
         self.expArray, self.pixDims = io_utils.readFiles(self.config["io"]["inFileExp"])
         self.inspRegArray, _ = io_utils.readFiles(self.config["io"]["inFileInspReg"])
         self.maskArray, _ = io_utils.readFiles(self.config["io"]["inFileMask"])
+
+        # make separate copy of expiratory HRCT to use for plotting
+        self.expArrayPlotting = np.copy(self.expArray)
 
     def normalizeAllCt(self):
         """Normalize expiratory and inspiratory HRCTs."""
@@ -81,6 +86,9 @@ class Subject(object):
         Rotate 180 degrees and reflect images
         """
         self.expArray = np.rot90(np.swapaxes(self.expArray, 0, 2), 2)[:, ::-1, :]
+        self.expArrayPlotting = np.rot90(np.swapaxes(self.expArrayPlotting, 0, 2), 2)[
+            :, ::-1, :
+        ]
         self.inspRegArray = np.rot90(np.swapaxes(self.inspRegArray, 0, 2), 2)[
             :, ::-1, :
         ]
