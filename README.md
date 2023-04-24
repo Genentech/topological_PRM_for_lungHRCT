@@ -65,7 +65,7 @@ python main.py --config <path-to-subject-config-file>
 ### 2.3 Process a batch of subjects
 First create a config file for each subejct and place them all in one directory. To process the batch of subjects, activate your virtual environment, navigate to the main program directory in terminal, and run the following command in terminal.
 ```bash
-python main.py --config <path-to-config-file-directory>
+python main.py --batch --config <path-to-config-file-directory>
 ```
 
 ## 3. Outputs
