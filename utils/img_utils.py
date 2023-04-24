@@ -112,7 +112,7 @@ def genLowResGrid(highResImgShape: np.ndarray, windowRadius: int, gridRes: int):
     x = math.ceil((highResImgShape[0] - windowRadius * 2) / gridRes) + 1
     y = math.ceil((highResImgShape[1] - windowRadius * 2) / gridRes) + 1
     z = math.ceil((highResImgShape[2] - windowRadius * 2) / gridRes) + 1
-    lowResGrid = np.zeros(x, y, z)
+    lowResGrid = np.zeros((x, y, z))
 
     return lowResGrid
 
