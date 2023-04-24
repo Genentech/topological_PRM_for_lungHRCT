@@ -16,15 +16,15 @@ The following instructions are intended for Mac and Linux systems. Prior to inst
 ### 1.1 Conda installation
 We recommend creating a virtual environment to insall the necessary Python libraries required to run this pipeline. A conda distribution is required to create a virtual environment. If conda is already installed on your system, skip this section.
 
-#### 1.1.1 Conda installation: Intel Mac and Linux systems
+##### 1.1.1 Conda installation: Intel Mac and Linux systems
 The Anaconda or Miniconda distirbution can be installed. To install the Anaconda distribution, follow the instructions in this [link](https://docs.conda.io/projects/continuumio-conda/en/latest/user-guide/install/index.html). To install the Miniconda distribution, follow the instructions in this [link](https://docs.anaconda.com/free/anaconda/install/)
 
-#### 1.1.2 Conda installation: Apple Silicon Mac
+##### 1.1.2 Conda installation: Apple Silicon Mac
 Install Miniforge using step 2 of this [link](https://caffeinedev.medium.com/how-to-install-tensorflow-on-m1-mac-8e9b91d93706)
 
 ### 1.2 Install Python packages in a virtual environment
 
-#### 1.2.1 Create a virual environment
+##### 1.2.1 Create a virual environment
 Create a conda virtual environment using the following command in terminal, where `<envName>` can be any environment name of your choosing.
 ```bash
 conda create --name <envName> python=3.9.1
@@ -38,7 +38,7 @@ To activate the environment.
 conda activate <envName>
 ```
 
-#### 1.2.2 Install Python packages
+##### 1.2.2 Install Python packages
 Before installing packages, activate the virtual environment. The list of required packages can be found in `setup/requirements.txt`. To install the pacakges, navigate to the main program directory in terminal and execute the following command.
 ```bash
 pip install -r setup/requirements.txt
