@@ -4,10 +4,12 @@
 A pipeline for analyzing inspiratory and expiratory HRCT lung images through quantitative metrics and 3D maps. Currently, this pipeline provides 3D parametric response maps (PRM) and global topology metrics for regions characterized by normal lung structure, emphysema, functional small airways disease (fSAD), and emptying emphysema.
 
 ## Table of contents
-1. [Installation](#installation)
-2. [Usage](#usage)
+1. [Installation](#1-installation)
+2. [Usage](#2-usage)
+3. [Outputs](#3-outputs)
+4. [Authors and acknowledgement](#4-authors-and-acknowledgment)
 
-## Installation
+## 1. Installation
 The following instructions are intended for Mac and Linux systems. Prior to installation, download or clone this git repository. This pipeline is written for use with Python 3.9.1.
 
 ### 1.1 Conda installation
@@ -41,7 +43,7 @@ Before installing packages, activate the virtual environment. The list of requir
 pip install -r setup/requirements.txt
 ```
 
-## Usage
+## 2. Usage
 The pipeline currently takes the following required inputs:
 - Registered inspiratory and expiratory HRCTs in hounsfield units (HU) (supported file formats: .nii)
 - Segmentation mask with positive integers denoting regions of lung parenchyma (supported file formats: .nii)
@@ -65,7 +67,7 @@ First create a config file for each subejct and place them all in one directory.
 python main.py --config <path-to-config-file-directory>
 ```
 
-## Outputs
+## 3. Outputs
 - Separate 3D PRM maps of normal lung structure, emphysema, fSAD, and emptying emphysema (.nii)
 - Combined 3D PRM map of normal lung structure, emphysema, fSAD, and emptying emphysema (.nii). PRM classifications are assigned the following values
     - normal: 1
@@ -76,9 +78,9 @@ python main.py --config <path-to-config-file-directory>
 - Percentage of lung parenchyma voxels in each PRM classification (.csv)
 - Global topology metrics for each PRM classification: volume, surface area, mean curvature length, Euler-Poincare characteristic (.csv)
 
-## Authors and acknowledgment
-Developers: Aryil Bechtel, Riqui Geng
-Credits: Laura Bell
+## 4. Authors and acknowledgment
+Developers: Aryil Bechtel, Riqui Geng<br /> 
+Credits: Laura Bell<br /> 
 Correspondence: Aryil Bechtel (bechtel.aryil@gene.com), Laura Bell (bell.laura@gene.com)
 
 ## Project status
