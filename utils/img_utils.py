@@ -203,3 +203,5 @@ def genLocalTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
                 areaMap[iIdxLowRes, jIdxLowRes, kIdxLowRes] = mkFnsArray[1]
                 curvMap[iIdxLowRes, jIdxLowRes, kIdxLowRes] = mkFnsArray[2]
                 eulerMap[iIdxLowRes, jIdxLowRes, kIdxLowRes] = mkFnsArray[3]
+
+    return volMap, areaMap, curvMap, eulerMap
