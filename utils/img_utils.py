@@ -109,9 +109,9 @@ def genLowResGrid(highResImgShape: np.ndarray, windowRadius: int, gridRes: int):
         lowResGrid (np.ndarray): low resolution array of zeros for storing output after passing moving window
                                     over high resolution image every jth voxel
     """
-    x = 1 + math.ceil(highResImgShape[0] - windowRadius * 2) / gridRes
-    y = 1 + math.ceil(highResImgShape[1] - windowRadius * 2) / gridRes
-    z = 1 + math.ceil(highResImgShape[2] - windowRadius * 2) / gridRes
+    x = math.ceil((highResImgShape[0] - windowRadius * 2) / gridRes) + 1
+    y = math.ceil((highResImgShape[1] - windowRadius * 2) / gridRes) + 1
+    z = math.ceil((highResImgShape[2] - windowRadius * 2) / gridRes) + 1
     lowResGrid = np.zeros(x, y, z)
 
     return lowResGrid
@@ -157,31 +157,33 @@ def genLocalTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
 
     # pass moving window over binaryImage every jth voxel and calculate local topology for each window
 
-    # get indices of the center of each window along each dimension
-    iIdx = range(
+    # get indices of the center of each window along each dimension in high resolution input binary image
+    iIdxHighRes = range(
         constants.topoMapping.WIND_RADIUS,
         binaryImage.shape[0] - constants.topoMapping.WIND_RADIUS + 1,
         constants.topoMapping.GRID_RES,
     )
-    jIdx = range(
+    jIdxHighRes = range(
         constants.topoMapping.WIND_RADIUS,
         binaryImage.shape[1] - constants.topoMapping.WIND_RADIUS + 1,
         constants.topoMapping.GRID_RES,
     )
-    kIdx = range(
+    kIdxHighRes = range(
         constants.topoMapping.WIND_RADIUS,
         binaryImage.shape[2] - constants.topoMapping.WIND_RADIUS + 1,
         constants.topoMapping.GRID_RES,
     )
 
-    # create boolean version of binary array
-    boolImage = np.array(binaryImage, dtype=bool)
+    # initialize indices for storing local topology metrics in low resolution output maps
+    iIdxLowRes = 0
+    jIdxLowRes = 0
+    kIdxLowRes = 0
 
-    for i in iIdx:
-        for j in jIdx:
-            for k in kIdx:
+    for i in iIdxHighRes:
+        for j in jIdxHighRes:
+            for k in kIdxHighRes:
                 # create local binary from 3D window of input binary image
-                localBoolImage = boolImage[
+                localBinaryImage = binaryImage[
                     (i - constants.topoMapping.WIND_RADIUS) : (
                         i + constants.topoMapping.WIND_RADIUS
                     ),
@@ -194,4 +196,10 @@ def genLocalTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
                 ]
 
                 # calculate Minkowski functionals for local binary image
-                mkFnsArray = calcMkFns()
+                mkFnsArray = calcMkFns(localBinaryImage, pixDims)
+
+                # store Minkowski functionals
+                volMap[iIdxLowRes, jIdxLowRes, kIdxLowRes] = mkFnsArray[0]
+                areaMap[iIdxLowRes, jIdxLowRes, kIdxLowRes] = mkFnsArray[1]
+                curvMap[iIdxLowRes, jIdxLowRes, kIdxLowRes] = mkFnsArray[2]
+                eulerMap[iIdxLowRes, jIdxLowRes, kIdxLowRes] = mkFnsArray[3]
