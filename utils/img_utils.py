@@ -118,7 +118,7 @@ def genLowResGrid(highResImgShape: np.ndarray, windowRadius: int, gridRes: int):
 
 
 def genLocalTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
-    """Generate 3D maps of local topology for a binary image.
+    """Generate 3D maps of local topology for a binary image by passing moving window over input image.
 
     Args:
         binaryImage (np.array): image of zeros and ones denoting PRM regions
@@ -155,8 +155,6 @@ def genLocalTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
         constants.topoMapping.GRID_RES,
     )
 
-    # pass moving window over binaryImage every jth voxel and calculate local topology for each window
-
     # get indices of the center of each window along each dimension in high resolution input binary image
     iIdxHighRes = range(
         constants.topoMapping.WIND_RADIUS,
@@ -179,6 +177,7 @@ def genLocalTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
     jIdxLowRes = 0
     kIdxLowRes = 0
 
+    # pass moving window over binaryImage every jth voxel and calculate local topology for each window
     for i in iIdxHighRes:
         for j in jIdxHighRes:
             for k in kIdxHighRes:
