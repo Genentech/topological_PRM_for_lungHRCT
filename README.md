@@ -77,10 +77,9 @@ python main.py --config <path-to-config-file-directory>
 - Global topology metrics for each PRM classification: volume, surface area, mean curvature length, Euler-Poincare characteristic (.csv)
 
 ## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
+Developers: Aryil Bechtel, Riqui Geng
+Credits: Laura Bell
+Correspondence: Aryil Bechtel (bechtel.aryil@gene.com), Laura Bell (bell.laura@gene.com)
 
 ## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+This pipeline is currently regularly updated to improve existing functions and include new analysis features.
