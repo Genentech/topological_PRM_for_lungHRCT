@@ -1,9 +1,12 @@
 """Utils for image processing."""
+import math
 from typing import Dict
 
 import numpy as np
 import scipy.signal
 from quantimpy import minkowski as mk
+
+import constants
 
 
 def normalizeCt(image: np.ndarray, mask: np.ndarray):
@@ -91,3 +94,104 @@ def calcMkFns(binaryImage: np.ndarray, pixDims: np.ndarray):
     mkFnsArray[2] /= pixDimsScale  # curvature
 
     return mkFnsArray
+
+
+def genLowResGrid(highResImgShape: np.ndarray, windowRadius: int, gridRes: int):
+    """Create low resolution grid for output image after passing moving window
+    over high resolution image every jth voxel (j=gridRes).
+
+    Args:
+        highResImgShape (np.array): nxnxn shape of high res image that moving window will be passed over
+        windowRadius (int): half the length of one side of nxnxn moving window
+        gridRes (int): interval (in voxels) between nxnxn moving windows
+
+    Returns:
+        lowResGrid (np.ndarray): low resolution array of zeros for storing output after passing moving window
+                                    over high resolution image every jth voxel
+    """
+    x = 1 + math.ceil(highResImgShape[0] - windowRadius * 2) / gridRes
+    y = 1 + math.ceil(highResImgShape[1] - windowRadius * 2) / gridRes
+    z = 1 + math.ceil(highResImgShape[2] - windowRadius * 2) / gridRes
+    lowResGrid = np.zeros(x, y, z)
+
+    return lowResGrid
+
+
+def genLocalTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
+    """Generate 3D maps of local topology for a binary image.
+
+    Args:
+        binaryImage (np.array): image of zeros and ones denoting PRM regions
+        pixDims (np.array): pixel dimensions of binaryImage
+
+    Returns:
+        volMap (np.array): 3D map of local volume
+        areaMap (np.array): 3D map of local surface area
+        curvMap (np.array): 3D map of local curvature
+        eulerMap (np.array): 3D map of local Euler-Poincare characteristic
+
+    Note: output maps are lower resolution than input binaryImage.
+    """
+
+    # initialize low resolution arrays in which to store local topology calculations
+    volMap = genLowResGrid(
+        binaryImage.shape,
+        constants.topoMapping.WIND_RADIUS,
+        constants.topoMapping.GRID_RES,
+    )
+    areaMap = genLowResGrid(
+        binaryImage.shape,
+        constants.topoMapping.WIND_RADIUS,
+        constants.topoMapping.GRID_RES,
+    )
+    curvMap = genLowResGrid(
+        binaryImage.shape,
+        constants.topoMapping.WIND_RADIUS,
+        constants.topoMapping.GRID_RES,
+    )
+    eulerMap = genLowResGrid(
+        binaryImage.shape,
+        constants.topoMapping.WIND_RADIUS,
+        constants.topoMapping.GRID_RES,
+    )
+
+    # pass moving window over binaryImage every jth voxel and calculate local topology for each window
+
+    # get indices of the center of each window along each dimension
+    iIdx = range(
+        constants.topoMapping.WIND_RADIUS,
+        binaryImage.shape[0] - constants.topoMapping.WIND_RADIUS + 1,
+        constants.topoMapping.GRID_RES,
+    )
+    jIdx = range(
+        constants.topoMapping.WIND_RADIUS,
+        binaryImage.shape[1] - constants.topoMapping.WIND_RADIUS + 1,
+        constants.topoMapping.GRID_RES,
+    )
+    kIdx = range(
+        constants.topoMapping.WIND_RADIUS,
+        binaryImage.shape[2] - constants.topoMapping.WIND_RADIUS + 1,
+        constants.topoMapping.GRID_RES,
+    )
+
+    # create boolean version of binary array
+    boolImage = np.array(binaryImage, dtype=bool)
+
+    for i in iIdx:
+        for j in jIdx:
+            for k in kIdx:
+                # create local binary from 3D window of input binary image
+                localBoolImage = boolImage[
+                    (i - constants.topoMapping.WIND_RADIUS) : (
+                        i + constants.topoMapping.WIND_RADIUS
+                    ),
+                    (j - constants.topoMapping.WIND_RADIUS) : (
+                        j + constants.topoMapping.WIND_RADIUS
+                    ),
+                    (k - constants.topoMapping.WIND_RADIUS) : (
+                        k + constants.topoMapping.WIND_RADIUS
+                    ),
+                ]
+
+                # calculate Minkowski functionals for local binary image
+                mkFnsArray = calcMkFns()

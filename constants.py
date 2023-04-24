@@ -41,6 +41,18 @@ class prmProcessing(object):
     PLOT_SLICENUM = 200
 
 
+class topoMapping(object):
+    """Constants for generating PRM topological maps.
+
+    Attributes:
+        WIND_RADIUS (int): half the length of one side of nxnxn moving window for calculating local topology, rounded up
+        GRID_RES (int): interval (in voxels) between nxnxn moving windows for calculating local topology
+    """
+
+    WIND_RADIUS = 11
+    GRID_RES = 5
+
+
 class outFileNames(object):
     """Establish standard file names for output.
 

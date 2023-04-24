@@ -28,7 +28,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-def prmTopoMapping(config):
+def genPrmTopoMaps(config):
     """Run pipeline from registered HRCT files."""
 
     subject = Subject(config)
@@ -45,13 +45,16 @@ def prmTopoMapping(config):
     subject.calcPrmStats()
     subject.savePrmNiis()
     subject.genPrmColor()
-    logging.info("PRM complete")
 
-    # generate global and local topology metrics and maps
-    logging.info("Generating topological maps")
+    # calculate global topology metrics
+    logging.info("Calculating global topology metrics")
     subject.calcTopologyGlobal()
     subject.saveTopologyStats()
-    logging.info("Topological mapping complete")
+
+    # generate PRM topology maps
+    logging.info("Generating PRM topology maps")
+
+    logging.info("Program complete")
 
 
 def main():
@@ -68,7 +71,7 @@ def main():
 
         # run pipeline from registered HRCT files
         logging.info("*****Processing subject %s*****" % config["subjInfo"]["subjID"])
-        prmTopoMapping(config)
+        genPrmTopoMaps(config)
     else:
         # get list of config files in specified directory
         configList = glob.glob(join(args.config, "*.ini"))
@@ -81,7 +84,7 @@ def main():
             logging.info(
                 "*****Processing subject %s*****" % config["subjInfo"]["subjID"]
             )
-            prmTopoMapping(config)
+            genPrmTopoMaps(config)
 
 
 if __name__ == "__main__":
