@@ -8,6 +8,7 @@ A pipeline for analyzing inspiratory and expiratory HRCT lung images through qua
 2. [Usage](#2-usage)
 3. [Outputs](#3-outputs)
 4. [Authors and acknowledgement](#4-authors-and-acknowledgment)
+5. [Project status](#5-project-status)
 
 ## 1. Installation
 The following instructions are intended for Mac and Linux systems. Prior to installation, download or clone this git repository. This pipeline is written for use with Python 3.9.1.
@@ -83,5 +84,5 @@ Developers: Aryil Bechtel, Riqui Geng<br />
 Credits: Laura Bell<br /> 
 Correspondence: Aryil Bechtel (bechtel.aryil@gene.com), Laura Bell (bell.laura@gene.com)
 
-## Project status
+## 5. Project status
 This pipeline is currently regularly updated to improve existing functions and include new analysis features.
