@@ -7,7 +7,7 @@ A pipeline for analyzing inspiratory and expiratory HRCT lung images through qua
 1. [Installation](#installation)
 2. [Usage](#usage)
 
-## 1. Installation
+## Installation
 The following instructions are intended for Mac and Linux systems. Prior to installation, download or clone this git repository. This pipeline is written for use with Python 3.9.1.
 
 ### 1.1 Conda installation
@@ -36,13 +36,45 @@ conda activate <envName>
 ```
 
 #### 1.2.2 Install Python packages
-Before installing packages, activate the virtual environment. The list of required packages can be found in `setup/requirements.txt`. To install the pacakges, navigate to the main program directory and execute the following command.
+Before installing packages, activate the virtual environment. The list of required packages can be found in `setup/requirements.txt`. To install the pacakges, navigate to the main program directory in terminal and execute the following command.
 ```bash
 pip install -r setup/requirements.txt
 ```
 
-## 2. Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## Usage
+The pipeline currently takes the following required inputs:
+- Registered inspiratory and expiratory HRCTs in hounsfield units (HU) (supported file formats: .nii)
+- Segmentation mask with positive integers denoting regions of lung parenchyma (supported file formats: .nii)
+
+### 2.1 Create subject configuration file(s)
+Configuration (config) files (.ini) specify subject ID, inspiratory HRCT file path, expiratory file path, and the path to save out files to. 
+<br /> 
+<br />`config/config_demo.ini` shows the required config file structure and fields.
+ <br />
+<br />`scripts/write_config.py` can be used to create a config file for a single subject and can be adapted to create config files for a batch of subjects.
+
+### 2.2 Process a single subject
+To process a single subject run, active your virtual environment, navigate to the main program directory, and run the following command.
+```bash
+python main.py --config <path-to-subject-config-file>
+```
+
+### 2.3 Process a batch of subjects
+First create a config file for each subejct and place them all in one directory. To process the batch of subjects, activate your virtual environment, navigate to the main program directory in terminal, and run the following command in terminal.
+```bash
+python main.py --config <path-to-config-file-directory>
+```
+
+## Outputs
+- Separate 3D PRM maps of normal lung structure, emphysema, fSAD, and emptying emphysema (.nii)
+- Combined 3D PRM map of normal lung structure, emphysema, fSAD, and emptying emphysema (.nii). PRM classifications are assigned the following values
+    - normal: 1
+    - fSAD: 2
+    - emphysema: 3
+    - emptying emphysema: 4
+- Colorcoded PRM image of a representative slice along the anterior-posterior dimension (.png)
+- Percentage of lung parenchyma voxels in each PRM classification (.csv)
+- Global topology metrics for each PRM classification: volume, surface area, mean curvature length, Euler-Poincare characteristic (.csv)
 
 ## Authors and acknowledgment
 Show your appreciation to those who have contributed to the project.
