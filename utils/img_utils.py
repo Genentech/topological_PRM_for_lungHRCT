@@ -252,7 +252,7 @@ def resizeTopoMaps(
         (
             (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
             (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
-            (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUSs),
+            (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
         ),
         "constant",
     )
