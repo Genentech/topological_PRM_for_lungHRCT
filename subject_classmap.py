@@ -321,7 +321,9 @@ class Subject(object):
             fSadEulerMap,
         )
 
+        print("vol: ")
         print(np.mean(fSadVolMapHiRes[fSadVolMap > 0]))
+        print("area: ")
         print(np.mean(fSadAreaMapHiRes[fSadAreaMap > 0]))
 
     def saveTopologyStats(self):

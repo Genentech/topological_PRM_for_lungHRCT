@@ -207,7 +207,7 @@ def genLowResTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
 
 
 def resizeTopoMaps(
-    highResImgShape: np.ndarray,
+    highResImgShape: tuple,
     volMap: np.ndarray,
     areaMap: np.ndarray,
     curvMap: np.ndarray,
@@ -216,7 +216,7 @@ def resizeTopoMaps(
     """Use linear interpolation to resize low resolution topology maps.
 
     Args:
-        highResImgShape (np.array): high resolution shape to resize maps to (original PRM image shape)
+        highResImgShape (tuple): high resolution shape to resize maps to (original PRM image shape)
         volMap (np.array): low resolution 3D map of local volume
         areaMap (np.array): low resolution 3D map of local surface area
         curvMap (np.array): low resolution 3D map of local curvature
@@ -234,16 +234,16 @@ def resizeTopoMaps(
     # interp low res maps to specified shape, minus a border the size of
     # the moving window radius used to make low res maps
     volMapHiRes = resize(
-        volMap, highResImgShape - constants.topoMapping.WIND_RADIUS * 2
+        volMap, np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2
     )
     areaMapHiRes = resize(
-        areaMap, highResImgShape - constants.topoMapping.WIND_RADIUS * 2
+        areaMap, np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2
     )
     curvMapHiRes = resize(
-        curvMap, highResImgShape - constants.topoMapping.WIND_RADIUS * 2
+        curvMap, np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2
     )
     eulerMapHiRes = resize(
-        eulerMap, highResImgShape - constants.topoMapping.WIND_RADIUS * 2
+        eulerMap, np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2
     )
 
     # add a border of zeros the size of the moving window radius
