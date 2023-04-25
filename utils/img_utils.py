@@ -1,5 +1,6 @@
 """Utils for image processing."""
 import math
+import pdb
 from typing import Dict
 
 import numpy as np
@@ -125,7 +126,10 @@ def calcMkFnsNorm(binaryImage: np.ndarray, mask: np.ndarray, pixDims: np.ndarray
     # normalize volume, surface area, and curvature by masked volume and euler-poincare characteristic by masked voxel count
     maskedVoxels = (mask > 0).sum()
     maskedVol = maskedVoxels * (pixDims[0] * pixDims[1] * pixDims[2])
-    mkFnsArray = np.divide(mkFnsArray, [maskedVol, maskedVol, maskedVol, maskedVoxels])
+    if maskedVoxels > 0:
+        mkFnsArray = np.divide(
+            mkFnsArray, [maskedVol, maskedVol, maskedVol, maskedVoxels]
+        )
 
     return mkFnsArray
 

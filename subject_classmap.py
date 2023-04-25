@@ -258,10 +258,18 @@ class Subject(object):
         """
 
         # get individual arrays containing global mk fns for each prm region
-        normGlobal = img_utils.calcMkFnsNorm(self.normArray, self.pixDims)
-        fSadGlobal = img_utils.calcMkFnsNorm(self.fSadArray, self.pixDims)
-        emphGlobal = img_utils.calcMkFnsNorm(self.emphArray, self.pixDims)
-        emptEmphGlobal = img_utils.calcMkFnsNorm(self.emptEmphArray, self.pixDims)
+        normGlobal = img_utils.calcMkFnsNorm(
+            self.normArray, self.maskArray, self.pixDims
+        )
+        fSadGlobal = img_utils.calcMkFnsNorm(
+            self.fSadArray, self.maskArray, self.pixDims
+        )
+        emphGlobal = img_utils.calcMkFnsNorm(
+            self.emphArray, self.maskArray, self.pixDims
+        )
+        emptEmphGlobal = img_utils.calcMkFnsNorm(
+            self.emptEmphArray, self.maskArray, self.pixDims
+        )
 
         # create individual dictionaries from arrays
         normGlobalDict = io_utils.createMkFnDict(normGlobal, "global_norm")
@@ -294,7 +302,7 @@ class Subject(object):
             fSadAreaMap,
             fSadCurvMap,
             fSadEulerMap,
-        ) = img_utils.genLowResTopoMaps(self.fSadArray, self.pixDims)
+        ) = img_utils.genLowResTopoMaps(self.fSadArray, self.maskArray, self.pixDims)
 
         # generate high resolution 3D maps using interpolation
         # (
