@@ -127,6 +127,7 @@ def calcMkFnsNorm(binaryImage: np.ndarray, mask: np.ndarray, pixDims: np.ndarray
     maskedVoxels = (mask > 0).sum()
     maskedVol = maskedVoxels * (pixDims[0] * pixDims[1] * pixDims[2])
     if maskedVoxels > 0:
+        print(maskedVol * 1e-6)
         mkFnsArray = np.divide(
             mkFnsArray, [maskedVol, maskedVol, maskedVol, maskedVoxels]
         )
@@ -163,10 +164,9 @@ def genLowResTopoMaps(binaryImage: np.ndarray, mask: np.ndarray, pixDims: np.nda
         pixDims (np.array): pixel dimensions of binaryImage
 
     Returns:
-        volMap (np.array): 3D map of local volume
-        areaMap (np.array): 3D map of local surface area
-        curvMap (np.array): 3D map of local curvature
-        eulerMap (np.array): 3D map of local Euler-Poincare characteristic
+        lowResTopoMaps (np.array): 4xnxmxp array containing normalized low resolution topology maps for
+                                    volume, surface area, curvature, and Euler-Poincare characteristic
+                                    (indices follow that order)
 
     NOTE: output maps are lower resolution than input binaryImage.
     """
@@ -261,91 +261,50 @@ def genLowResTopoMaps(binaryImage: np.ndarray, mask: np.ndarray, pixDims: np.nda
                 curvMap[iIdxLowRes, jIdxLowRes, kIdxLowRes] = mkFnsArray[2]
                 eulerMap[iIdxLowRes, jIdxLowRes, kIdxLowRes] = mkFnsArray[3]
 
-    return volMap, areaMap, curvMap, eulerMap
+    # combine individual topology maps into one 4xnxmxp array
+    lowResTopoMaps = np.array([volMap, areaMap, curvMap, eulerMap])
+
+    return lowResTopoMaps
 
 
-def resizeTopoMaps(
-    highResImgShape: tuple,
-    volMap: np.ndarray,
-    areaMap: np.ndarray,
-    curvMap: np.ndarray,
-    eulerMap: np.ndarray,
-):
+def resizeTopoMaps(highResImgShape: tuple, lowResTopoMaps: np.ndarray):
     """Use linear interpolation to resize low resolution topology maps.
 
     Args:
         highResImgShape (tuple): high resolution shape to resize maps to (original PRM image shape)
-        volMap (np.array): low resolution 3D map of local volume
-        areaMap (np.array): low resolution 3D map of local surface area
-        curvMap (np.array): low resolution 3D map of local curvature
-        eulerMap (np.array): low resolution 3D map of Euler-Poincare characteristic
+        lowResTopoMaps (np.array): 4xnxmxp array containing normalized low resolution topology maps for
+                                    volume, surface area, curvature, and Euler-Poincare characteristic
+                                    (indices follow that order)
 
     Returns:
-        volMapHiRes (np.array): resized high resolution 3D map of local volume
-        areaMapHiRes (np.array): resized high resolution 3D map of local surface area
-        curvMapHiRes (np.array): resized high resolution 3D map of local curvature
-        eulerMapHiRes (np.array): resized high resolution 3D map of Euler-Poincare characteristic
+        highResTopoMaps (np.array): 4xnxmxp array containing normalized high resolution topology maps for
+                                    volume, surface area, curvature, and Euler-Poincare characteristic
+                                    (indices follow that order)
     """
 
-    # interp low res maps to specified shape, minus a border the size of
-    # the moving window radius used to make low res maps
-    volMapHiRes = resize(
-        volMap,
-        np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2,
-        order=1,
-    )
-    areaMapHiRes = resize(
-        areaMap,
-        np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2,
-        order=1,
-    )
-    curvMapHiRes = resize(
-        curvMap,
-        np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2,
-        order=1,
-    )
-    eulerMapHiRes = resize(
-        eulerMap,
-        np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2,
-        order=1,
-    )
+    highResTopoMaps = np.zeros(
+        lowResTopoMaps.shape
+    )  # initialize array to store high resolution maps in
+    numMaps = lowResTopoMaps.shape[
+        0
+    ]  # get number of topology maps stores in lowResTopoMaps
+    for i in range(numMaps):
+        # interp low res maps to specified shape, minus a border the size of
+        # the moving window radius used to make low res maps
+        highResTopoMaps[i, :, :, :] = resize(
+            lowResTopoMaps[i, :, :, :],
+            np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2,
+            order=1,
+        )
+        # add a border of zeros the size of the moving window radius
+        highResTopoMaps[i, :, :, :] = np.pad(
+            highResTopoMaps[i, :, :, :],
+            (
+                (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
+                (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
+                (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
+            ),
+            "constant",
+        )
 
-    # add a border of zeros the size of the moving window radius
-    volMapHiRes = np.pad(
-        volMapHiRes,
-        (
-            (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
-            (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
-            (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
-        ),
-        "constant",
-    )
-    areaMapHiRes = np.pad(
-        areaMapHiRes,
-        (
-            (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
-            (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
-            (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
-        ),
-        "constant",
-    )
-    curvMapHiRes = np.pad(
-        curvMapHiRes,
-        (
-            (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
-            (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
-            (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
-        ),
-        "constant",
-    )
-    eulerMapHiRes = np.pad(
-        eulerMapHiRes,
-        (
-            (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
-            (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
-            (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
-        ),
-        "constant",
-    )
-
-    return volMapHiRes, areaMapHiRes, curvMapHiRes, eulerMapHiRes
+    return highResTopoMaps
