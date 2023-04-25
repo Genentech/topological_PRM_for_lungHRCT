@@ -324,33 +324,19 @@ class Subject(object):
         """
 
         # generate low resolution 3D local topolgy maps
-        (
-            normVolMap,
-            normAreaMap,
-            normCurvMap,
-            normEulerMap,
-        ) = img_utils.genLowResTopoMaps(self.normArray, self.pixDims)
+        normTopoMaps = img_utils.genLowResTopoMaps(
+            self.normArray, self.maskArray, self.pixDims
+        )
         logging.info("Normal low resolution local topology maps complete.")
-        (
-            fSadVolMap,
-            fSadAreaMap,
-            fSadCurvMap,
-            fSadEulerMap,
-        ) = img_utils.genLowResTopoMaps(self.fSadArray, self.maskArray, self.pixDims)
+        fSadTopoMaps = img_utils.genLowResTopoMaps(
+            self.fSadArray, self.maskArray, self.pixDims
+        )
         logging.info("fSAD low resolution local topology maps complete.")
-        (
-            emphVolMap,
-            emphAreaMap,
-            emphCurvMap,
-            emphEulerMap,
-        ) = img_utils.genLowResTopoMaps(self.emphArray, self.maskArray, self.pixDims)
+        emphTopoMaps = img_utils.genLowResTopoMaps(
+            self.emphArray, self.maskArray, self.pixDims
+        )
         logging.info("Emphysema low resolution local topology maps complete.")
-        (
-            emptEmphVolMap,
-            emptEmphAreaMap,
-            emptEmphCurvMap,
-            emptEmphEulerMap,
-        ) = img_utils.genLowResTopoMaps(
+        emptEmphTopoMaps = img_utils.genLowResTopoMaps(
             self.emptEmphArray, self.maskArray, self.pixDims
         )
         logging.info("Emptying emphysema low resolution local topology maps complete.")
