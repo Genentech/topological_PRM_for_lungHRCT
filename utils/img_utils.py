@@ -97,6 +97,39 @@ def calcMkFns(binaryImage: np.ndarray, pixDims: np.ndarray):
     return mkFnsArray
 
 
+def calcMkFnsNorm(binaryImage: np.ndarray, mask: np.ndarray, pixDims: np.ndarray):
+    """Calculate normalized Minkowski functionals for a binary image.
+
+    Args:
+        binaryImage (np.array): image of zeros and ones denoting PRM regions
+        mask (np.array): image with same shape as binaryImage where positive integers denote regions of lung parenchyma
+        pixDims (np.array): pixel dimensions of binaryImage
+
+    Returns:
+        mkFnsArray (np.array): output array from quantimpy minkowski.functionals
+    """
+
+    # convert input binary array to boolean array
+    boolImage = np.array(binaryImage, dtype=bool)
+
+    # temporarily scale pix dims up (quantimpy requires them to be >=1)
+    pixDimsScale = 10
+    pixDimsRescale = pixDims * pixDimsScale
+
+    # calculate global Mk fns using quantimpy and rescale to match original pixel dim units
+    mkFnsArray = np.array(mk.functionals(boolImage, pixDimsRescale))
+    mkFnsArray[0] /= pixDimsScale**3  # volume
+    mkFnsArray[1] /= pixDimsScale**2  # surface area
+    mkFnsArray[2] /= pixDimsScale  # curvature
+
+    # normalize volume, surface area, and curvature by masked volume and euler-poincare characteristic by masked voxel count
+    maskedVoxels = (mask > 0).sum()
+    maskedVol = maskedVoxels * (pixDims[0] * pixDims[1] * pixDims[2])
+    mkFnsArray = np.divide(mkFnsArray, [maskedVol, maskedVol, maskedVol, maskedVoxels])
+
+    return mkFnsArray
+
+
 def genLowResGrid(highResImgShape: np.ndarray, windowRadius: int, gridRes: int):
     """Create low resolution grid for output image after passing moving window over high resolution image.
 
@@ -117,11 +150,12 @@ def genLowResGrid(highResImgShape: np.ndarray, windowRadius: int, gridRes: int):
     return lowResGrid
 
 
-def genLowResTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
+def genLowResTopoMaps(binaryImage: np.ndarray, mask: np.ndarray, pixDims: np.ndarray):
     """Generate low resolution 3D maps of local topology for a binary image by passing moving window over input image.
 
     Args:
         binaryImage (np.array): image of zeros and ones denoting PRM regions
+        mask (np.array): mask of thoracic cavity in input binaryImage
         pixDims (np.array): pixel dimensions of binaryImage
 
     Returns:
@@ -176,8 +210,19 @@ def genLowResTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
     for i in iIdxHighRes:
         for j in jIdxHighRes:
             for k in kIdxHighRes:
-                # create local binary from 3D window of input binary image
+                # get local binary image and mask from 3D window of input binary image
                 localBinaryImage = binaryImage[
+                    (i - constants.topoMapping.WIND_RADIUS) : (
+                        i + constants.topoMapping.WIND_RADIUS
+                    ),
+                    (j - constants.topoMapping.WIND_RADIUS) : (
+                        j + constants.topoMapping.WIND_RADIUS
+                    ),
+                    (k - constants.topoMapping.WIND_RADIUS) : (
+                        k + constants.topoMapping.WIND_RADIUS
+                    ),
+                ]
+                localMask = mask[
                     (i - constants.topoMapping.WIND_RADIUS) : (
                         i + constants.topoMapping.WIND_RADIUS
                     ),
@@ -190,7 +235,7 @@ def genLowResTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
                 ]
 
                 # calculate Minkowski functionals for local binary image
-                mkFnsArray = calcMkFns(localBinaryImage, pixDims)
+                mkFnsArray = calcMkFnsNorm(localBinaryImage, localMask, pixDims)
 
                 # calculate indices for storing local topology metrics in low resolution output maps
                 iIdxLowRes = math.ceil(
@@ -236,23 +281,29 @@ def resizeTopoMaps(
         areaMapHiRes (np.array): resized high resolution 3D map of local surface area
         curvMapHiRes (np.array): resized high resolution 3D map of local curvature
         eulerMapHiRes (np.array): resized high resolution 3D map of Euler-Poincare characteristic
-
-    NOTE: interpolated high resolution maps are inteded for plotting only.
     """
 
     # interp low res maps to specified shape, minus a border the size of
     # the moving window radius used to make low res maps
     volMapHiRes = resize(
-        volMap, np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2
+        volMap,
+        np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2,
+        order=1,
     )
     areaMapHiRes = resize(
-        areaMap, np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2
+        areaMap,
+        np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2,
+        order=1,
     )
     curvMapHiRes = resize(
-        curvMap, np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2
+        curvMap,
+        np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2,
+        order=1,
     )
     eulerMapHiRes = resize(
-        eulerMap, np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2
+        eulerMap,
+        np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2,
+        order=1,
     )
 
     # add a border of zeros the size of the moving window radius

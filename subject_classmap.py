@@ -258,10 +258,10 @@ class Subject(object):
         """
 
         # get individual arrays containing global mk fns for each prm region
-        normGlobal = img_utils.calcMkFns(self.normArray, self.pixDims)
-        fSadGlobal = img_utils.calcMkFns(self.fSadArray, self.pixDims)
-        emphGlobal = img_utils.calcMkFns(self.emphArray, self.pixDims)
-        emptEmphGlobal = img_utils.calcMkFns(self.emptEmphArray, self.pixDims)
+        normGlobal = img_utils.calcMkFnsNorm(self.normArray, self.pixDims)
+        fSadGlobal = img_utils.calcMkFnsNorm(self.fSadArray, self.pixDims)
+        emphGlobal = img_utils.calcMkFnsNorm(self.emphArray, self.pixDims)
+        emptEmphGlobal = img_utils.calcMkFnsNorm(self.emptEmphArray, self.pixDims)
 
         # create individual dictionaries from arrays
         normGlobalDict = io_utils.createMkFnDict(normGlobal, "global_norm")
@@ -298,10 +298,10 @@ class Subject(object):
 
         # generate high resolution 3D maps using interpolation
         # (
-        #     normVolMapHiRes,
-        #     normAreaMapHiRes,
-        #     normCurvMapHiRes,
-        #     normEulerMapHiRes,
+        #     self.normVolMapHiRes,
+        #     self.normAreaMapHiRes,
+        #     self.normCurvMapHiRes,
+        #     self.normEulerMapHiRes,
         # ) = img_utils.resizeTopoMaps(
         #     self.normArray.shape,
         #     normVolMap,
@@ -310,10 +310,10 @@ class Subject(object):
         #     normEulerMap,
         # )
         (
-            fSadVolMapHiRes,
-            fSadAreaMapHiRes,
-            fSadCurvMapHiRes,
-            fSadEulerMapHiRes,
+            self.fSadVolMapHiRes,
+            self.fSadAreaMapHiRes,
+            self.fSadCurvMapHiRes,
+            self.fSadEulerMapHiRes,
         ) = img_utils.resizeTopoMaps(
             self.fSadArray.shape,
             fSadVolMap,
@@ -321,12 +321,7 @@ class Subject(object):
             fSadCurvMap,
             fSadEulerMap,
         )
-
         pdb.set_trace()
-        print("vol: ")
-        print(np.mean(fSadVolMapHiRes[fSadVolMapHiRes > 0]))
-        print("area: ")
-        print(np.mean(fSadAreaMapHiRes[fSadAreaMapHiRes > 0]))
 
     def saveTopologyStats(self):
         """Save combined global and local topology metrics in CSV."""
