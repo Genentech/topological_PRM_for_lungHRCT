@@ -172,11 +172,6 @@ def genLowResTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
         constants.topoMapping.GRID_RES,
     )
 
-    # initialize indices for storing local topology metrics in low resolution output maps
-    iIdxLowRes = 0
-    jIdxLowRes = 0
-    kIdxLowRes = 0
-
     # pass moving window over binaryImage every jth voxel and calculate local topology for each window
     for i in iIdxHighRes:
         for j in jIdxHighRes:
@@ -196,6 +191,20 @@ def genLowResTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
 
                 # calculate Minkowski functionals for local binary image
                 mkFnsArray = calcMkFns(localBinaryImage, pixDims)
+
+                # calculate indices for storing local topology metrics in low resolution output maps
+                iIdxLowRes = math.ceil(
+                    (i - constants.topoMapping.WIND_RADIUS)
+                    / constants.topoMapping.GRID_RES
+                )
+                jIdxLowRes = math.ceil(
+                    (j - constants.topoMapping.WIND_RADIUS)
+                    / constants.topoMapping.GRID_RES
+                )
+                kIdxLowRes = math.ceil(
+                    (k - constants.topoMapping.WIND_RADIUS)
+                    / constants.topoMapping.GRID_RES
+                )
 
                 # store Minkowski functionals
                 volMap[iIdxLowRes, jIdxLowRes, kIdxLowRes] = mkFnsArray[0]
