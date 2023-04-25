@@ -1,4 +1,5 @@
 """Class for generating HRCT PRM and topoligcal maps of the lungs."""
+import pdb
 from os.path import join
 
 import nibabel as nib
@@ -321,10 +322,11 @@ class Subject(object):
             fSadEulerMap,
         )
 
+        pdb.set_trace()
         print("vol: ")
-        print(np.mean(fSadVolMapHiRes[fSadVolMap > 0]))
+        print(np.mean(fSadVolMapHiRes[fSadVolMapHiRes > 0]))
         print("area: ")
-        print(np.mean(fSadAreaMapHiRes[fSadAreaMap > 0]))
+        print(np.mean(fSadAreaMapHiRes[fSadAreaMapHiRes > 0]))
 
     def saveTopologyStats(self):
         """Save combined global and local topology metrics in CSV."""
