@@ -97,8 +97,7 @@ def calcMkFns(binaryImage: np.ndarray, pixDims: np.ndarray):
 
 
 def genLowResGrid(highResImgShape: np.ndarray, windowRadius: int, gridRes: int):
-    """Create low resolution grid for output image after passing moving window
-    over high resolution image every jth voxel (j=gridRes).
+    """Create low resolution grid for output image after passing moving window over high resolution image.
 
     Args:
         highResImgShape (np.array): nxnxn shape of high res image that moving window will be passed over
@@ -117,8 +116,8 @@ def genLowResGrid(highResImgShape: np.ndarray, windowRadius: int, gridRes: int):
     return lowResGrid
 
 
-def genLocalTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
-    """Generate 3D maps of local topology for a binary image by passing moving window over input image.
+def genLowResTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
+    """Generate low resolution 3D maps of local topology for a binary image by passing moving window over input image.
 
     Args:
         binaryImage (np.array): image of zeros and ones denoting PRM regions
@@ -204,3 +203,28 @@ def genLocalTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
                 eulerMap[iIdxLowRes, jIdxLowRes, kIdxLowRes] = mkFnsArray[3]
 
     return volMap, areaMap, curvMap, eulerMap
+
+
+def resizeTopoMaps(
+    highResImgShape: np.ndarray,
+    volMap: np.ndarray,
+    areaMap: np.ndarray,
+    curvMap: np.ndarray,
+    eulerMap: np.ndarray,
+):
+    """Use linear interpolation to resize low resolution topology maps.
+
+    Args:
+        highResImgShape (np.array): high resolution shape to resize maps to (original PRM image shape)
+        volMap (np.array): low resolution 3D map of local volume
+        areaMap (np.array): low resolution 3D map of local surface area
+        curvMap (np.array): low resolution 3D map of local curvature
+        eulerMap (np.array): low resolution 3D map of Euler-Poincare characteristic
+
+    Returns:
+        volMapHiRes (np.array): resized high resolution 3D map of local volume
+        areaMapHiRes (np.array): resized high resolution 3D map of local surface area
+        curvMapHiRes (np.array): resized high resolution 3D map of local curvature
+        eulerMapHiRes (np.array): resized high resolution 3D map of Euler-Poincare characteristic
+    """
+    return 0

@@ -274,7 +274,7 @@ class Subject(object):
         self.topologyStatsGlobal.update(emphGlobalDict)
         self.topologyStatsGlobal.update(emptEmphGlobalDict)
 
-    def genAllLocalTopoMaps(self):
+    def genLocalTopoMaps(self):
         """Generate 3D maps of local topology features for all PRM maps.
 
         Calculates maps of local volume, surface area, curvature, and the Euler characteristic
@@ -282,9 +282,12 @@ class Subject(object):
         """
 
         # generate low resolution 3D local topolgy maps
-        normVolMap, normAreaMap, normCurvMap, normEulerMap = img_utils.genLocalTopoMaps(
-            self.normArray, self.pixDims
-        )
+        (
+            normVolMap,
+            normAreaMap,
+            normCurvMap,
+            normEulerMap,
+        ) = img_utils.genLowResTopoMaps(self.normArray, self.pixDims)
 
     def saveTopologyStats(self):
         """Save combined global and local topology metrics in CSV."""
