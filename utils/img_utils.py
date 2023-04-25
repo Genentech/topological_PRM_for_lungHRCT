@@ -203,9 +203,9 @@ def genLowResTopoMaps(binaryImage: np.ndarray, pixDims: np.ndarray):
                 curvMap[iIdxLowRes, jIdxLowRes, kIdxLowRes] = mkFnsArray[2]
                 eulerMap[iIdxLowRes, jIdxLowRes, kIdxLowRes] = mkFnsArray[3]
 
-                iIdxLowRes += 1
-                jIdxLowRes += 1
                 kIdxLowRes += 1
+            jIdxLowRes += 1
+        iIdxLowRes += 1
 
     return volMap, areaMap, curvMap, eulerMap
 
