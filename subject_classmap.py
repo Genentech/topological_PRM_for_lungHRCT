@@ -282,12 +282,47 @@ class Subject(object):
         """
 
         # generate low resolution 3D local topolgy maps
+        # (
+        #     normVolMap,
+        #     normAreaMap,
+        #     normCurvMap,
+        #     normEulerMap,
+        # ) = img_utils.genLowResTopoMaps(self.normArray, self.pixDims)
         (
-            normVolMap,
-            normAreaMap,
-            normCurvMap,
-            normEulerMap,
-        ) = img_utils.genLowResTopoMaps(self.normArray, self.pixDims)
+            fSadVolMap,
+            fSadAreaMap,
+            fSadCurvMap,
+            fSadEulerMap,
+        ) = img_utils.genLowResTopoMaps(self.fSadArray, self.pixDims)
+
+        # generate high resolution 3D maps using interpolation
+        # (
+        #     normVolMapHiRes,
+        #     normAreaMapHiRes,
+        #     normCurvMapHiRes,
+        #     normEulerMapHiRes,
+        # ) = img_utils.resizeTopoMaps(
+        #     self.normArray.shape,
+        #     normVolMap,
+        #     normAreaMap,
+        #     normCurvMap,
+        #     normEulerMap,
+        # )
+        (
+            fSadVolMapHiRes,
+            fSadAreaMapHiRes,
+            fSadCurvMapHiRes,
+            fSadEulerMapHiRes,
+        ) = img_utils.resizeTopoMaps(
+            self.fSadArray.shape,
+            fSadVolMap,
+            fSadAreaMap,
+            fSadCurvMap,
+            fSadEulerMap,
+        )
+
+        print(np.mean(fSadVolMapHiRes[fSadVolMap > 0]))
+        print(np.mean(fSadAreaMapHiRes[fSadAreaMap > 0]))
 
     def saveTopologyStats(self):
         """Save combined global and local topology metrics in CSV."""
