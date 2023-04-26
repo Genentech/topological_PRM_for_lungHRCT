@@ -1,7 +1,8 @@
 """Class for generating HRCT PRM and topoligcal maps of the lungs."""
 import logging
+import os
 import pdb
-from os.path import join
+from os.path import exists, join
 
 import nibabel as nib
 import numpy as np
@@ -215,25 +216,34 @@ class Subject(object):
     def savePrmNiis(self):
         """Save PRM maps as niftis."""
 
+        # if it doesn't already exists, create directory for PRM niftis
+        if not exists(join(self.outDir, constants.outFileNames.PRM_DIR)):
+            os.mkdir(join(self.outDir, constants.outFileNames.PRM_DIR))
+
         # create path + file names
         normArrayOutPath = join(
             self.outDir,
+            constants.outFileNames.PRM_DIR,
             constants.outFileNames.PRM_NORM + self.subjID,
         )
         fSadArrayOutPath = join(
             self.outDir,
+            constants.outFileNames.PRM_DIR,
             constants.outFileNames.PRM_FSAD + self.subjID,
         )
         emphArrayOutPath = join(
             self.outDir,
+            constants.outFileNames.PRM_DIR,
             constants.outFileNames.PRM_EMPH + self.subjID,
         )
         emptEmphArrayOutPath = join(
             self.outDir,
+            constants.outFileNames.PRM_DIR,
             constants.outFileNames.PRM_EMPTEMPH + self.subjID,
         )
         prmAllArrayOutPath = join(
             self.outDir,
+            constants.outFileNames.PRM_DIR,
             constants.outFileNames.PRM_ALL + self.subjID,
         )
 
@@ -243,6 +253,39 @@ class Subject(object):
         io_utils.saveAsNii(self.emphArray, emphArrayOutPath, self.pixDims)
         io_utils.saveAsNii(self.emptEmphArray, emptEmphArrayOutPath, self.pixDims)
         io_utils.saveAsNii(self.prmAllArray, prmAllArrayOutPath, self.pixDims)
+
+    def saveTopoNiis(self):
+        """Save topology maps as niftis."""
+
+        # if it doesn't already exists, create directory for topology niftis
+        if not exists(join(self.outDir, constants.outFileNames.TOPO_DIR)):
+            os.mkdir(join(self.outDir, constants.outFileNames.TOPO_DIR))
+
+        # loop over norm topology arrays and save them as niftis
+        # for i in range(self.normTopoMapsHiRes.shape[0]):
+        #     outPath = join(
+        #         self.outDir,
+        #         constants.outFileNames.TOPO_DIR,
+        #         constants.outFileNames.PRM_NORM
+        #         + constants.outFileNames.TOPO[i],
+        #         + self.subjID,
+        #     )
+        #     io_utils.saveAsNii(
+        #         self.normTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
+        #     )
+
+        # loop over fSAD topology arrays and save them as niftis
+        for i in range(self.fSadTopoMapsHiRes.shape[0]):
+            outPath = join(
+                self.outDir,
+                constants.outFileNames.TOPO_DIR,
+                constants.outFileNames.PRM_FSAD
+                + constants.outFileNames.TOPO[i]
+                + self.subjID,
+            )
+            io_utils.saveAsNii(
+                self.fSadTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
+            )
 
     def genPrmColor(self):
         """Generate RGB images of PRM maps."""
@@ -321,16 +364,16 @@ class Subject(object):
 
         # generate high resolution 3D maps using interpolation
         # self.normTopoMapsHiRes = img_utils.resizeTopoMaps(
-        #     self.normArray.shape, normTopoMaps
+        #     self.normArray.shape, self.maskArray, normTopoMaps
         # )
         self.fSadTopoMapsHiRes = img_utils.resizeTopoMaps(
-            self.fSadArray.shape, fSadTopoMaps
+            self.fSadArray.shape, self.maskArray, fSadTopoMaps
         )
         # self.emphTopoMapsHiRes = img_utils.resizeTopoMaps(
-        #     self.emphArray.shape, emphTopoMaps
+        #     self.emphArray.shape, self.maskArray, emphTopoMaps
         # )
         # self.emptEmphTopoMapsHiRes = img_utils.resizeTopoMaps(
-        #     self.emptEmphArray.shape, emptEmphTopoMaps
+        #     self.emptEmphArray.shape, self.maskArray, emptEmphTopoMaps
         # )
         pdb.set_trace()
 

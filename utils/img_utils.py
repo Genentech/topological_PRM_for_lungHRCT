@@ -267,17 +267,20 @@ def genLowResTopoMaps(binaryImage: np.ndarray, mask: np.ndarray, pixDims: np.nda
     return lowResTopoMaps
 
 
-def resizeTopoMaps(highResImgShape: tuple, lowResTopoMaps: np.ndarray):
+def resizeTopoMaps(
+    highResImgShape: tuple, mask: np.ndarray, lowResTopoMaps: np.ndarray
+):
     """Use linear interpolation to resize low resolution topology maps.
 
     Args:
         highResImgShape (tuple): high resolution shape to resize maps to (original PRM image shape)
+        mask (np.array): segmentation mask with the shape of highResImgShape denoting lung parenchyma
         lowResTopoMaps (np.array): 4xnxmxp array containing normalized low resolution topology maps for
                                     volume, surface area, curvature, and Euler-Poincare characteristic
                                     (indices follow that order)
 
     Returns:
-        highResTopoMaps (np.array): 4xnxmxp array containing normalized high resolution topology maps for
+        highResTopoMaps (np.array): 4xnxmxp array containing masked normalized high resolution topology maps for
                                     volume, surface area, curvature, and Euler-Poincare characteristic
                                     (indices follow that order)
     """
@@ -297,7 +300,7 @@ def resizeTopoMaps(highResImgShape: tuple, lowResTopoMaps: np.ndarray):
         )
 
         # add a border of zeros the size of the moving window radius
-        highResTopoMaps[i, :, :, :] = np.pad(
+        highResTopoMapsTmp = np.pad(
             highResTopoMapsTmp,
             (
                 (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
@@ -306,5 +309,8 @@ def resizeTopoMaps(highResImgShape: tuple, lowResTopoMaps: np.ndarray):
             ),
             "constant",
         )
+
+        # apply mask
+        highResTopoMaps[i, :, :, :] = np.ma.masked_where(mask <= 0, highResTopoMapsTmp)
 
     return highResTopoMaps

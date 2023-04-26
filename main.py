@@ -54,6 +54,7 @@ def genPrmTopoMaps(config):
     # generate PRM topology maps
     logging.info("Generating PRM topology maps")
     subject.genLocalTopoMaps()
+    subject.saveTopoNiis()
 
     logging.info("Program complete")
 

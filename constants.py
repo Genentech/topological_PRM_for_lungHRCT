@@ -57,21 +57,27 @@ class outFileNames(object):
     """Establish standard file names for output.
 
     Attributes:
+        PRM_DIR (str): directory name for PRM niftis
+        TOPO_DIR (str): directory name for topology niftis
         PRM_NORM (str): file name for map of norm regions from PRM
         PRM_FSAD (str): file name for map of fSAD regions from PRM
         PRM_EMPH (str): file name for map of emph regions from PRM
         PRM_EMPTEMPH (str): file name for map of emptying emph regions from PRM
         PRM_ALL (str): file name for map of all regions from PRM
+        TOPO (str): list of file names for topology maps
         PRM_STATS (str): file name for csv containing prm stats
         TOPO_STATS (str): file name for csv containing global and local topology metrics
 
     Intended that subject ID will be appended to file name.
     """
 
+    PRM_DIR = "prm"
+    TOPO_DIR = "prm_topology"
     PRM_NORM = "prm_norm_"
     PRM_FSAD = "prm_fsad_"
     PRM_EMPH = "prm_emph_"
     PRM_EMPTEMPH = "prm_emptemph_"
     PRM_ALL = "prm_all_"
+    TOPO = ["vol_", "area_", "curv_", "euler_"]
     PRM_STATS = "prm_stats_"
     TOPO_STATS = "topology_stats_"
