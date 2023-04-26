@@ -127,7 +127,6 @@ def calcMkFnsNorm(binaryImage: np.ndarray, mask: np.ndarray, pixDims: np.ndarray
     maskedVoxels = (mask > 0).sum()
     maskedVol = maskedVoxels * (pixDims[0] * pixDims[1] * pixDims[2])
     if maskedVoxels > 0:
-        print(maskedVol * 1e-6)
         mkFnsArray = np.divide(
             mkFnsArray, [maskedVol, maskedVol, maskedVol, maskedVoxels]
         )
@@ -282,23 +281,23 @@ def resizeTopoMaps(highResImgShape: tuple, lowResTopoMaps: np.ndarray):
                                     (indices follow that order)
     """
 
-    highResTopoMaps = np.zeros(
-        lowResTopoMaps.shape
-    )  # initialize array to store high resolution maps in
-    numMaps = lowResTopoMaps.shape[
-        0
-    ]  # get number of topology maps stores in lowResTopoMaps
+    # get number of topology maps stores in lowResTopoMaps
+    numMaps = lowResTopoMaps.shape[0]
+
+    # initialize array to store high resolution maps in
+    highResTopoMapsShape = np.append(numMaps, np.array(highResImgShape))
+    highResTopoMaps = np.zeros(highResTopoMapsShape)
     for i in range(numMaps):
-        # interp low res maps to specified shape, minus a border the size of
-        # the moving window radius used to make low res maps
-        highResTopoMaps[i, :, :, :] = resize(
+        # interp low res maps to specified shape, minus a border the size of the moving window radius used to make low res maps
+        highResTopoMapsTmp = resize(
             lowResTopoMaps[i, :, :, :],
             np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2,
             order=1,
         )
+
         # add a border of zeros the size of the moving window radius
         highResTopoMaps[i, :, :, :] = np.pad(
-            highResTopoMaps[i, :, :, :],
+            highResTopoMapsTmp,
             (
                 (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
                 (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),

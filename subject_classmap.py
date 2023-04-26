@@ -292,38 +292,38 @@ class Subject(object):
         """
 
         # generate low resolution 3D local topolgy maps
-        normTopoMaps = img_utils.genLowResTopoMaps(
-            self.normArray, self.maskArray, self.pixDims
-        )
-        logging.info("Normal low resolution local topology mapping complete.")
+        # normTopoMaps = img_utils.genLowResTopoMaps(
+        #     self.normArray, self.maskArray, self.pixDims
+        # )
+        # logging.info("Normal low resolution local topology mapping complete.")
         fSadTopoMaps = img_utils.genLowResTopoMaps(
             self.fSadArray, self.maskArray, self.pixDims
         )
-        logging.info("fSAD low resolution local topology mapping complete.")
-        emphTopoMaps = img_utils.genLowResTopoMaps(
-            self.emphArray, self.maskArray, self.pixDims
-        )
-        logging.info("Emphysema low resolution local topology mapping complete.")
-        emptEmphTopoMaps = img_utils.genLowResTopoMaps(
-            self.emptEmphArray, self.maskArray, self.pixDims
-        )
-        logging.info(
-            "Emptying emphysema low resolution local topology mapping complete."
-        )
+        # logging.info("fSAD low resolution local topology mapping complete.")
+        # emphTopoMaps = img_utils.genLowResTopoMaps(
+        #     self.emphArray, self.maskArray, self.pixDims
+        # )
+        # logging.info("Emphysema low resolution local topology mapping complete.")
+        # emptEmphTopoMaps = img_utils.genLowResTopoMaps(
+        #     self.emptEmphArray, self.maskArray, self.pixDims
+        # )
+        # logging.info(
+        #     "Emptying emphysema low resolution local topology mapping complete."
+        # )
 
         # generate high resolution 3D maps using interpolation
-        self.normTopoMapsHiRes = img_utils.resizeTopoMaps(
-            self.normArray.shape, normTopoMaps
-        )
+        # self.normTopoMapsHiRes = img_utils.resizeTopoMaps(
+        #     self.normArray.shape, normTopoMaps
+        # )
         self.fSadTopoMapsHiRes = img_utils.resizeTopoMaps(
             self.fSadArray.shape, fSadTopoMaps
         )
-        self.emphTopoMapsHiRes = img_utils.resizeTopoMaps(
-            self.emphArray.shape, emphTopoMaps
-        )
-        self.emptEmphTopoMapsHiRes = img_utils.resizeTopoMaps(
-            self.emptEmphArray.shape, emptEmphTopoMaps
-        )
+        # self.emphTopoMapsHiRes = img_utils.resizeTopoMaps(
+        #     self.emphArray.shape, emphTopoMaps
+        # )
+        # self.emptEmphTopoMapsHiRes = img_utils.resizeTopoMaps(
+        #     self.emptEmphArray.shape, emptEmphTopoMaps
+        # )
         pdb.set_trace()
 
     def saveTopologyStats(self):
