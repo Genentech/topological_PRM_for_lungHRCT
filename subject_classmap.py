@@ -33,22 +33,6 @@ class Subject(object):
         prmStats (dict): key PRM metrics/statistics
         topologyGlobal (dict): global topology (Minkowski functionals) metrics for all prm maps
         topologyStatsLocal (dict): mean of local topology (Minkowski functionals) metrics for all prm maps
-        self.normVolMapHiRes (np.array): 3D topology map of normalized volume for PRM normal voxels
-        self.normAreaMapHiRes (np.array): 3D topology map of normalized surf area for PRM normal voxels
-        self.normCurvMapHiRes (np.array)
-        self.normEulerMapHiRes (np.array)
-        self.fSadVolMapHiRes (np.array): 3D topology map of normalized volume for PRM fSAD voxels
-        self.fSadAreaMapHiRes (np.array): 3D topology map of normalized surf area for PRM fSAD voxels
-        self.fSadCurvMapHiRes (np.array)
-        self.fSadEulerMapHiRes (np.array)
-        self.emphVolMapHiRes (np.array): 3D topology map of normalized volume for PRM emphysema voxels
-        self.emphAreaMapHiRes (np.array): 3D topology map of normalized surf area for PRM emphysema voxels
-        self.emphCurvMapHiRes (np.array)
-        self.emphEulerMapHiRes (np.array)
-        self.emptEmphVolMapHiRes (np.array): 3D topology map of normalized volume for PRM emptying emphysema voxels
-        self.emptEmphAreaMapHiRes (np.array): 3D topology map of normalized surf area for PRM emphysema voxels
-        self.emptEmphCurvMapHiRes (np.array)
-        self.emptEmphEulerMapHiRes (np.array)
     """
 
     def __init__(self, config):
@@ -71,22 +55,6 @@ class Subject(object):
         self.prmStats = {}
         self.topologyStatsGlobal = {}
         self.topologyStatsLocal = {}
-        self.normVolMapHiRes = np.array([])
-        self.normAreaMapHiRes = np.array([])
-        self.normCurvMapHiRes = np.array([])
-        self.normEulerMapHiRes = np.array([])
-        self.fSadVolMapHiRes = np.array([])
-        self.fSadAreaMapHiRes = np.array([])
-        self.fSadCurvMapHiRes = np.array([])
-        self.fSadEulerMapHiRes = np.array([])
-        self.emphVolMapHiRes = np.array([])
-        self.emphAreaMapHiRes = np.array([])
-        self.emphCurvMapHiRes = np.array([])
-        self.emphEulerMapHiRes = np.array([])
-        self.emptEmphVolMapHiRes = np.array([])
-        self.emptEmphAreaMapHiRes = np.array([])
-        self.emptEmphCurvMapHiRes = np.array([])
-        self.emptEmphEulerMapHiRes = np.array([])
 
     def readCtFiles(self):
         """Read in files and convert to np.array.
@@ -327,69 +295,36 @@ class Subject(object):
         normTopoMaps = img_utils.genLowResTopoMaps(
             self.normArray, self.maskArray, self.pixDims
         )
-        logging.info("Normal low resolution local topology maps complete.")
+        logging.info("Normal low resolution local topology mapping complete.")
         fSadTopoMaps = img_utils.genLowResTopoMaps(
             self.fSadArray, self.maskArray, self.pixDims
         )
-        logging.info("fSAD low resolution local topology maps complete.")
+        logging.info("fSAD low resolution local topology mapping complete.")
         emphTopoMaps = img_utils.genLowResTopoMaps(
             self.emphArray, self.maskArray, self.pixDims
         )
-        logging.info("Emphysema low resolution local topology maps complete.")
+        logging.info("Emphysema low resolution local topology mapping complete.")
         emptEmphTopoMaps = img_utils.genLowResTopoMaps(
             self.emptEmphArray, self.maskArray, self.pixDims
         )
-        logging.info("Emptying emphysema low resolution local topology maps complete.")
+        logging.info(
+            "Emptying emphysema low resolution local topology mapping complete."
+        )
 
         # generate high resolution 3D maps using interpolation
-        (
-            self.normVolMapHiRes,
-            self.normAreaMapHiRes,
-            self.normCurvMapHiRes,
-            self.normEulerMapHiRes,
-        ) = img_utils.resizeTopoMaps(
-            self.normArray.shape,
-            normVolMap,
-            normAreaMap,
-            normCurvMap,
-            normEulerMap,
+        self.normTopoMapsHiRes = img_utils.resizeTopoMaps(
+            self.normArray.shape, normTopoMaps
         )
-        (
-            self.fSadVolMapHiRes,
-            self.fSadAreaMapHiRes,
-            self.fSadCurvMapHiRes,
-            self.fSadEulerMapHiRes,
-        ) = img_utils.resizeTopoMaps(
-            self.fSadArray.shape,
-            fSadVolMap,
-            fSadAreaMap,
-            fSadCurvMap,
-            fSadEulerMap,
+        self.fSadTopoMapsHiRes = img_utils.resizeTopoMaps(
+            self.fSadArray.shape, fSadTopoMaps
         )
-        (
-            self.emphVolMapHiRes,
-            self.emphAreaMapHiRes,
-            self.emphCurvMapHiRes,
-            self.emphEulerMapHiRes,
-        ) = img_utils.resizeTopoMaps(
-            self.emphArray.shape,
-            emphVolMap,
-            emphAreaMap,
-            emphCurvMap,
-            emphEulerMap,
+        self.emphTopoMapsHiRes = img_utils.resizeTopoMaps(
+            self.emphArray.shape, emphTopoMaps
         )
-        (
-            self.emptEmphVolMapHiRes,
-            self.emptEmphAreaMapHiRes,
-            self.emptEmphCurvMapHiRes,
-            self.emptEmphEulerMapHiRes,
-        ) = img_utils.resizeTopoMaps(
-            self.emptEmphArray.shape,
-            emptEmphVolMap,
-            emptEmphAreaMap,
-            emptEmphCurvMap,
-            emptEmphEulerMap,
+        self.emptEmphTopoMapsHiRes = img_utils.resizeTopoMaps(
+            self.emptEmphArray.shape, emptEmphTopoMaps
         )
+        pdb.set_trace()
 
     def saveTopologyStats(self):
         """Save combined global and local topology metrics in CSV."""
