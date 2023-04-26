@@ -1,7 +1,10 @@
 # HRCT_lung_image_analysis_pipeline
 
 ## Description
-A pipeline for analyzing inspiratory and expiratory HRCT lung images through quantitative metrics and 3D maps. Currently, this pipeline provides 3D parametric response maps (PRM) and global topology metrics for regions characterized by normal lung structure, emphysema, functional small airways disease (fSAD), and emptying emphysema.
+A pipeline for analyzing inspiratory and expiratory HRCT lung images through quantitative metrics and 3D maps. Currently, this pipeline provides 3D parametric response maps (PRM), global topology metrics, and 3D maps of local topology metrics for regions characterized by normal lung structure, emphysema, functional small airways disease (fSAD), and emptying emphysema.
+
+Analysis methods are adapted from methodology described in:<br />
+Hoff, B.A., Pompe, E., Galbán, S. et al. CT-Based Local Distribution Metric Improves Characterization of COPD. Sci Rep 7, 2999 (2017). https://doi.org/10.1038/s41598-017-02871-1
 
 ## Table of contents
 1. [Installation](#1-installation)
@@ -69,11 +72,14 @@ python main.py --batch --config <path-to-config-file-directory>
 ```
 
 ## 3. Outputs
-- Separate 3D PRM maps of normal lung structure, emphysema, fSAD, and emptying emphysema (.nii)
-- Combined 3D PRM map of normal lung structure, emphysema, fSAD, and emptying emphysema (.nii). PRM classifications are assigned the following values -> normal: 1, fSAD: 2, emphysema: 3, emptying emphysema: 4
-- Colorcoded PRM image of a representative slice along the anterior-posterior dimension (.png)
-- Percentage of lung parenchyma voxels in each PRM classification (.csv)
-- Global topology metrics for each PRM classification: volume, surface area, mean curvature length, Euler-Poincare characteristic (.csv)
+- PRM
+    -  Separate 3D PRM maps of normal lung structure, emphysema, fSAD, and emptying emphysema (.nii)
+    - Combined 3D PRM map of normal lung structure, emphysema, fSAD, and emptying emphysema (.nii). PRM classifications are assigned the following values -> normal: 1, fSAD: 2, emphysema: 3, emptying emphysema: 4
+    - Colorcoded PRM image of a representative slice along the anterior-posterior dimension (.png)
+    - Percentage of lung parenchyma voxels in each PRM classification (.csv)
+- Topology
+    - Global topology metrics and whole-lung mean local topology metrics for each PRM classification: fractional volume, surface area density, mean curvature length density, Euler-Poincare characteristic density (.csv)
+    - Separate 3D maps of local topology density metrics for voxels characterized by normal lung structure, emphysema, fSAD, and emptying emphysema (.nii)
 
 ## 4. Authors and acknowledgment
 Developers: Aryil Bechtel, Riqui Geng<br /> 
