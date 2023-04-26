@@ -53,12 +53,13 @@ def genPrmTopoMaps(config):
     # calculate global topology metrics
     logging.info("Calculating global topology metrics")
     subject.calcTopologyGlobal()
-    subject.saveTopologyStats()
 
     # generate PRM topology maps
     logging.info("Generating PRM topology maps")
     subject.genLocalTopoMaps()
     subject.saveTopoNiis()
+    subject.calcMeanLocalTopoStats()
+    subject.saveTopologyStats()
 
     logging.info("Program complete")
 

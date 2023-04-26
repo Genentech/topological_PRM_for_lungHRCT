@@ -315,3 +315,26 @@ def resizeTopoMaps(
         highResTopoMaps[i, :, :, :] = highResTopoMapsTmp
 
     return highResTopoMaps
+
+
+def meanLocalTopo(topoMaps: np.ndarray, mask: np.ndarray):
+    """Calculate the mean of each topology map in topoMaps.
+
+    Args:
+        topoMaps (np.array): 4xnxmxp array containing vol, area, curv, and euler-poincare maps
+        mask (np.array): nxmxp array denoting regions of lung parenchyma
+
+    Returns:
+        meanLocalArray (np.array): array containing whole lung mean of each topology metric
+    """
+
+    # initialize output array
+    numMaps = topoMaps.shape[0]
+    meanLocalArray = np.zeros((1, numMaps))
+
+    # loop through each map type and calculate whole lung mean
+    for i in range(numMaps):
+        topoMapsTmp = topoMaps[i, :, :, :]
+        meanLocalArray[i] = np.mean(topoMapsTmp[mask > 0])
+
+    return meanLocalArray

@@ -254,65 +254,6 @@ class Subject(object):
         io_utils.saveAsNii(self.emptEmphArray, emptEmphArrayOutPath, self.pixDims)
         io_utils.saveAsNii(self.prmAllArray, prmAllArrayOutPath, self.pixDims)
 
-    def saveTopoNiis(self):
-        """Save topology maps as niftis."""
-
-        # if it doesn't already exists, create directory for topology niftis
-        if not exists(join(self.outDir, constants.outFileNames.TOPO_DIR)):
-            os.mkdir(join(self.outDir, constants.outFileNames.TOPO_DIR))
-
-        # loop over normal topology arrays and save them as niftis
-        for i in range(self.normTopoMapsHiRes.shape[0]):
-            outPath = join(
-                self.outDir,
-                constants.outFileNames.TOPO_DIR,
-                constants.outFileNames.PRM_NORM
-                + constants.outFileNames.TOPO[i]
-                + self.subjID,
-            )
-            io_utils.saveAsNii(
-                self.normTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
-            )
-
-        # loop over fSAD topology arrays and save them as niftis
-        for i in range(self.fSadTopoMapsHiRes.shape[0]):
-            outPath = join(
-                self.outDir,
-                constants.outFileNames.TOPO_DIR,
-                constants.outFileNames.PRM_FSAD
-                + constants.outFileNames.TOPO[i]
-                + self.subjID,
-            )
-            io_utils.saveAsNii(
-                self.fSadTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
-            )
-
-        # loop over emphysema topology arrays and save them as niftis
-        for i in range(self.emphTopoMapsHiRes.shape[0]):
-            outPath = join(
-                self.outDir,
-                constants.outFileNames.TOPO_DIR,
-                constants.outFileNames.PRM_EMPH
-                + constants.outFileNames.TOPO[i]
-                + self.subjID,
-            )
-            io_utils.saveAsNii(
-                self.emphTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
-            )
-
-        # loop over emptying emphysema topology arrays and save them as niftis
-        for i in range(self.emptEmphTopoMapsHiRes.shape[0]):
-            outPath = join(
-                self.outDir,
-                constants.outFileNames.TOPO_DIR,
-                constants.outFileNames.PRM_EMPTEMPH
-                + constants.outFileNames.TOPO[i]
-                + self.subjID,
-            )
-            io_utils.saveAsNii(
-                self.emptEmphTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
-            )
-
     def genPrmColor(self):
         """Generate RGB images of PRM maps."""
 
@@ -401,6 +342,88 @@ class Subject(object):
         self.emptEmphTopoMapsHiRes = img_utils.resizeTopoMaps(
             self.emptEmphArray.shape, self.maskArray, emptEmphTopoMaps
         )
+
+    def calcMeanLocalTopoStats(self):
+        """Calculate whole lung mean of each topology metric in local topology maps."""
+
+        # calculate whole lung mean of each topology map
+        normMeanLocal = img_utils.meanLocalTopo(self.normTopoMapsHiRes, self.maskArray)
+        fSadMeanLocal = img_utils.meanLocalTopo(self.fSadTopoMapsHiRes, self.maskArray)
+        emphMeanLocal = img_utils.meanLocalTopo(self.emphTopoMapsHiRes, self.maskArray)
+        emptEmphMeanLocal = img_utils.meanLocalTopo(
+            self.emptEmphTopoMapsHiRes, self.maskArray
+        )
+
+        # create individual dictionaries
+        normLocalDict = io_utils.createMkFnDict(normMeanLocal, "local_norm")
+        fSadLocalDict = io_utils.createMkFnDict(fSadMeanLocal, "local_fSAD")
+        emphLocalDict = io_utils.createMkFnDict(emphMeanLocal, "local_emph")
+        emptEmphLocalDict = io_utils.createMkFnDict(emptEmphMeanLocal, "local_emptemph")
+
+        # merge indivudal dictionaries
+        self.topologyStatsLocal.update(normLocalDict)
+        self.topologyStatsLocal.update(fSadLocalDict)
+        self.topologyStatsLocal.update(emphLocalDict)
+        self.topologyStatsLocal.update(emptEmphLocalDict)
+
+    def saveTopoNiis(self):
+        """Save topology maps as niftis."""
+
+        # if it doesn't already exists, create directory for topology niftis
+        if not exists(join(self.outDir, constants.outFileNames.TOPO_DIR)):
+            os.mkdir(join(self.outDir, constants.outFileNames.TOPO_DIR))
+
+        # loop over normal topology arrays and save them as niftis
+        for i in range(self.normTopoMapsHiRes.shape[0]):
+            outPath = join(
+                self.outDir,
+                constants.outFileNames.TOPO_DIR,
+                constants.outFileNames.PRM_NORM
+                + constants.outFileNames.TOPO[i]
+                + self.subjID,
+            )
+            io_utils.saveAsNii(
+                self.normTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
+            )
+
+        # loop over fSAD topology arrays and save them as niftis
+        for i in range(self.fSadTopoMapsHiRes.shape[0]):
+            outPath = join(
+                self.outDir,
+                constants.outFileNames.TOPO_DIR,
+                constants.outFileNames.PRM_FSAD
+                + constants.outFileNames.TOPO[i]
+                + self.subjID,
+            )
+            io_utils.saveAsNii(
+                self.fSadTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
+            )
+
+        # loop over emphysema topology arrays and save them as niftis
+        for i in range(self.emphTopoMapsHiRes.shape[0]):
+            outPath = join(
+                self.outDir,
+                constants.outFileNames.TOPO_DIR,
+                constants.outFileNames.PRM_EMPH
+                + constants.outFileNames.TOPO[i]
+                + self.subjID,
+            )
+            io_utils.saveAsNii(
+                self.emphTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
+            )
+
+        # loop over emptying emphysema topology arrays and save them as niftis
+        for i in range(self.emptEmphTopoMapsHiRes.shape[0]):
+            outPath = join(
+                self.outDir,
+                constants.outFileNames.TOPO_DIR,
+                constants.outFileNames.PRM_EMPTEMPH
+                + constants.outFileNames.TOPO[i]
+                + self.subjID,
+            )
+            io_utils.saveAsNii(
+                self.emptEmphTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
+            )
 
     def saveTopologyStats(self):
         """Save combined global and local topology metrics in CSV."""
