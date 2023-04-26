@@ -261,18 +261,18 @@ class Subject(object):
         if not exists(join(self.outDir, constants.outFileNames.TOPO_DIR)):
             os.mkdir(join(self.outDir, constants.outFileNames.TOPO_DIR))
 
-        # loop over norm topology arrays and save them as niftis
-        # for i in range(self.normTopoMapsHiRes.shape[0]):
-        #     outPath = join(
-        #         self.outDir,
-        #         constants.outFileNames.TOPO_DIR,
-        #         constants.outFileNames.PRM_NORM
-        #         + constants.outFileNames.TOPO[i],
-        #         + self.subjID,
-        #     )
-        #     io_utils.saveAsNii(
-        #         self.normTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
-        #     )
+        # loop over normal topology arrays and save them as niftis
+        for i in range(self.normTopoMapsHiRes.shape[0]):
+            outPath = join(
+                self.outDir,
+                constants.outFileNames.TOPO_DIR,
+                constants.outFileNames.PRM_NORM
+                + constants.outFileNames.TOPO[i]
+                + self.subjID,
+            )
+            io_utils.saveAsNii(
+                self.normTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
+            )
 
         # loop over fSAD topology arrays and save them as niftis
         for i in range(self.fSadTopoMapsHiRes.shape[0]):
@@ -285,6 +285,32 @@ class Subject(object):
             )
             io_utils.saveAsNii(
                 self.fSadTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
+            )
+
+        # loop over emphysema topology arrays and save them as niftis
+        for i in range(self.emphTopoMapsHiRes.shape[0]):
+            outPath = join(
+                self.outDir,
+                constants.outFileNames.TOPO_DIR,
+                constants.outFileNames.PRM_EMPH
+                + constants.outFileNames.TOPO[i]
+                + self.subjID,
+            )
+            io_utils.saveAsNii(
+                self.emphTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
+            )
+
+        # loop over emptying emphysema topology arrays and save them as niftis
+        for i in range(self.emptEmphTopoMapsHiRes.shape[0]):
+            outPath = join(
+                self.outDir,
+                constants.outFileNames.TOPO_DIR,
+                constants.outFileNames.PRM_EMPTEMPH
+                + constants.outFileNames.TOPO[i]
+                + self.subjID,
+            )
+            io_utils.saveAsNii(
+                self.emptEmphTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
             )
 
     def genPrmColor(self):
@@ -343,38 +369,38 @@ class Subject(object):
         """
 
         # generate low resolution 3D local topolgy maps
-        # normTopoMaps = img_utils.genLowResTopoMaps(
-        #     self.normArray, self.maskArray, self.pixDims
-        # )
-        # logging.info("Normal low resolution local topology mapping complete.")
+        normTopoMaps = img_utils.genLowResTopoMaps(
+            self.normArray, self.maskArray, self.pixDims
+        )
+        logging.info("Normal low resolution local topology mapping complete.")
         fSadTopoMaps = img_utils.genLowResTopoMaps(
             self.fSadArray, self.maskArray, self.pixDims
         )
-        # logging.info("fSAD low resolution local topology mapping complete.")
-        # emphTopoMaps = img_utils.genLowResTopoMaps(
-        #     self.emphArray, self.maskArray, self.pixDims
-        # )
-        # logging.info("Emphysema low resolution local topology mapping complete.")
-        # emptEmphTopoMaps = img_utils.genLowResTopoMaps(
-        #     self.emptEmphArray, self.maskArray, self.pixDims
-        # )
-        # logging.info(
-        #     "Emptying emphysema low resolution local topology mapping complete."
-        # )
+        logging.info("fSAD low resolution local topology mapping complete.")
+        emphTopoMaps = img_utils.genLowResTopoMaps(
+            self.emphArray, self.maskArray, self.pixDims
+        )
+        logging.info("Emphysema low resolution local topology mapping complete.")
+        emptEmphTopoMaps = img_utils.genLowResTopoMaps(
+            self.emptEmphArray, self.maskArray, self.pixDims
+        )
+        logging.info(
+            "Emptying emphysema low resolution local topology mapping complete."
+        )
 
         # generate high resolution 3D maps using interpolation
-        # self.normTopoMapsHiRes = img_utils.resizeTopoMaps(
-        #     self.normArray.shape, self.maskArray, normTopoMaps
-        # )
+        self.normTopoMapsHiRes = img_utils.resizeTopoMaps(
+            self.normArray.shape, self.maskArray, normTopoMaps
+        )
         self.fSadTopoMapsHiRes = img_utils.resizeTopoMaps(
             self.fSadArray.shape, self.maskArray, fSadTopoMaps
         )
-        # self.emphTopoMapsHiRes = img_utils.resizeTopoMaps(
-        #     self.emphArray.shape, self.maskArray, emphTopoMaps
-        # )
-        # self.emptEmphTopoMapsHiRes = img_utils.resizeTopoMaps(
-        #     self.emptEmphArray.shape, self.maskArray, emptEmphTopoMaps
-        # )
+        self.emphTopoMapsHiRes = img_utils.resizeTopoMaps(
+            self.emphArray.shape, self.maskArray, emphTopoMaps
+        )
+        self.emptEmphTopoMapsHiRes = img_utils.resizeTopoMaps(
+            self.emptEmphArray.shape, self.maskArray, emptEmphTopoMaps
+        )
 
     def saveTopologyStats(self):
         """Save combined global and local topology metrics in CSV."""

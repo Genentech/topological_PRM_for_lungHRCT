@@ -2,6 +2,7 @@
 import argparse
 import glob
 import logging
+import time
 from configparser import ConfigParser
 from os.path import join
 
@@ -31,6 +32,9 @@ args = parser.parse_args()
 def genPrmTopoMaps(config):
     """Run pipeline from registered HRCT files."""
 
+    # record start time for processing subject
+    t1 = time.perf_counter()
+
     subject = Subject(config)
 
     # generate PRM maps
@@ -57,6 +61,12 @@ def genPrmTopoMaps(config):
     subject.saveTopoNiis()
 
     logging.info("Program complete")
+
+    # record end time for processing subject
+    t2 = time.perf_counter()
+    elapsedTime = (t2 - t1) / 60
+
+    logging.info(f"Program runtime: {elapsedTime} mins")
 
 
 def main():
