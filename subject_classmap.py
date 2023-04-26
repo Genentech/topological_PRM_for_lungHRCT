@@ -33,6 +33,10 @@ class Subject(object):
         prmStats (dict): key PRM metrics/statistics
         topologyGlobal (dict): global topology (Minkowski functionals) metrics for all prm maps
         topologyStatsLocal (dict): mean of local topology (Minkowski functionals) metrics for all prm maps
+        self.normTopoMapsHiRes (np.array): normalized 3D topological maps of normal PRM voxels
+        self.fSadTopoMapsHiRes (np.array): normalized 3D topological maps of fSAD PRM voxels
+        self.emphTopoMapsHiRes (np.array): normalized 3D topological maps of emphysema PRM voxels
+        self.emptEmphTopoMapsHiRes (np.array): normalized 3D topological maps of emptying emphysema PRM voxels
     """
 
     def __init__(self, config):
@@ -55,6 +59,10 @@ class Subject(object):
         self.prmStats = {}
         self.topologyStatsGlobal = {}
         self.topologyStatsLocal = {}
+        self.normTopoMapsHiRes = np.array([])
+        self.fSadTopoMapsHiRes = np.array([])
+        self.emphTopoMapsHiRes = np.array([])
+        self.emptEmphTopoMapsHiRes = np.array([])
 
     def readCtFiles(self):
         """Read in files and convert to np.array.

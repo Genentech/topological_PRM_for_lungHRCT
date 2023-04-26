@@ -107,7 +107,8 @@ def calcMkFnsNorm(binaryImage: np.ndarray, mask: np.ndarray, pixDims: np.ndarray
         pixDims (np.array): pixel dimensions of binaryImage
 
     Returns:
-        mkFnsArray (np.array): output array from quantimpy minkowski.functionals normalized by masked volume or masked voxel count
+        mkFnsArray (np.array): output array from quantimpy minkowski.functionals with volume, surface area, and curvature
+                                normalized by masked volume and Euler-Poincare characteristic by masked voxel count
     """
 
     # convert input binary array to boolean array
