@@ -330,7 +330,7 @@ def meanLocalTopo(topoMaps: np.ndarray, mask: np.ndarray):
 
     # initialize output array
     numMaps = topoMaps.shape[0]
-    meanLocalArray = np.zeros((1, numMaps))
+    meanLocalArray = np.zeros(numMaps)
 
     # loop through each map type and calculate whole lung mean
     for i in range(numMaps):
