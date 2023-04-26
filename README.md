@@ -82,6 +82,9 @@ python main.py --batch --config <path-to-config-file-directory>
     - Separate 3D maps of local topology density metrics for voxels characterized by normal lung structure, emphysema, fSAD, and emptying emphysema (.nii)
 
 ## 4. Authors and acknowledgment
+Sources:
+>Hoff, B.A., Pompe, E., Galbán, S. et al. CT-Based Local Distribution Metric Improves Characterization of COPD. Sci Rep 7, 2999 (2017). https://doi.org/10.1038/s41598-017-02871-1
+
 Developers: Aryil Bechtel, Riqui Geng<br /> 
 Credits: Laura Bell<br /> 
 Correspondence: Aryil Bechtel (bechtel.aryil@gene.com), Laura Bell (bell.laura@gene.com)
