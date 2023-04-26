@@ -311,6 +311,7 @@ def resizeTopoMaps(
         )
 
         # apply mask
-        highResTopoMaps[i, :, :, :] = np.ma.masked_where(mask <= 0, highResTopoMapsTmp)
+        highResTopoMapsTmp[mask == 0] = 0
+        highResTopoMaps[i, :, :, :] = highResTopoMapsTmp
 
     return highResTopoMaps

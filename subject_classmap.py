@@ -375,7 +375,6 @@ class Subject(object):
         # self.emptEmphTopoMapsHiRes = img_utils.resizeTopoMaps(
         #     self.emptEmphArray.shape, self.maskArray, emptEmphTopoMaps
         # )
-        pdb.set_trace()
 
     def saveTopologyStats(self):
         """Save combined global and local topology metrics in CSV."""
