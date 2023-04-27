@@ -48,7 +48,7 @@ def genPrmTopoMaps(config):
     subject.classifyVoxelsPrm()
     subject.calcPrmStats()
     subject.savePrmNiis()
-    subject.genPrmColor()
+    subject.plotPrmColor()
 
     # calculate global topology metrics
     logging.info("Calculating global topology metrics")
@@ -59,6 +59,7 @@ def genPrmTopoMaps(config):
     subject.genLocalTopoMaps()
     subject.saveTopoNiis()
     subject.calcMeanLocalTopoStats()
+    subject.plotTopoColor()
     subject.saveTopologyStats()
 
     logging.info("Program complete")

@@ -256,7 +256,7 @@ class Subject(object):
         io_utils.saveAsNii(self.emptEmphArray, emptEmphArrayOutPath, self.pixDims)
         io_utils.saveAsNii(self.prmAllArray, prmAllArrayOutPath, self.pixDims)
 
-    def genPrmColor(self):
+    def plotPrmColor(self):
         """Generate RGB images of PRM maps."""
 
         # plot representative slice of RGB color array
@@ -429,6 +429,77 @@ class Subject(object):
             io_utils.saveAsNii(
                 self.emptEmphTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
             )
+
+    def plotTopoColor(self):
+        """Plot slice of select local topology maps."""
+
+        # norm surface area density
+        normAreaOutPath = join(
+            self.outDir,
+            constants.outFileNames.PRM_NORM
+            + constants.outFileNames.TOPO[1]
+            + "color_"
+            + self.subjID
+            + ".png",
+        )
+        plot_utils.plotTopoOnCt(
+            self.expArrayPlotting,
+            self.maskArray,
+            self.normTopoMapsHiRes[1, :, :, :],
+            self.plotSliceNum,
+            normAreaOutPath,
+        )
+
+        # fSAD surface area density
+        fSadAreaOutPath = join(
+            self.outDir,
+            constants.outFileNames.PRM_FSAD
+            + constants.outFileNames.TOPO[1]
+            + "color_"
+            + self.subjID
+            + ".png",
+        )
+        plot_utils.plotTopoOnCt(
+            self.expArrayPlotting,
+            self.maskArray,
+            self.fSadTopoMapsHiRes[1, :, :, :],
+            self.plotSliceNum,
+            fSadAreaOutPath,
+        )
+
+        # emph surface area density
+        emphAreaOutPath = join(
+            self.outDir,
+            constants.outFileNames.PRM_EMPH
+            + constants.outFileNames.TOPO[1]
+            + "color_"
+            + self.subjID
+            + ".png",
+        )
+        plot_utils.plotTopoOnCt(
+            self.expArrayPlotting,
+            self.maskArray,
+            self.emphTopoMapsHiRes[1, :, :, :],
+            self.plotSliceNum,
+            emphAreaOutPath,
+        )
+
+        # emptying emphysema surface area density
+        emptEmphAreaOutPath = join(
+            self.outDir,
+            constants.outFileNames.PRM_EMPTEMPH
+            + constants.outFileNames.TOPO[1]
+            + "color_"
+            + self.subjID
+            + ".png",
+        )
+        plot_utils.plotTopoOnCt(
+            self.expArrayPlotting,
+            self.maskArray,
+            self.emptEmphTopoMapsHiRes[1, :, :, :],
+            self.plotSliceNum,
+            emptEmphAreaOutPath,
+        )
 
     def saveTopologyStats(self):
         """Save combined global and local topology metrics in CSV."""
