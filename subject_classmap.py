@@ -24,6 +24,7 @@ class Subject(object):
         inspRegArray (np.array): inspiratory hrct in HU registered to expiratory HRCT
         maskArray (np.array): segmentation of thoracic cavity
         pixDims (np.array): pixel dimenstions in mm
+        plotSliceNum (int): slice number along anterior-posterior dimnension to use for plotting
         expArrayFilt (np.array): expiratory image with median filter applied
         inspRegArrayFilt (np.array): inspiratory image with median filter applied
         normArray (np.array): image denoting normal regions from PRM
@@ -50,6 +51,7 @@ class Subject(object):
         self.inspRegArray = np.array([])
         self.maskArray = np.array([])
         self.pixDims = np.array([])
+        self.plotSliceNum = int
         self.expArrayFilt = np.array([])
         self.inspRegArrayFilt = np.array([])
         self.normArray = np.array([])
@@ -258,6 +260,9 @@ class Subject(object):
         """Generate RGB images of PRM maps."""
 
         # plot representative slice of RGB color array
+        self.plotSliceNum = plot_utils.findPlotSliceNum(
+            self.maskArray
+        )  # get optimal slice number to plot
         prmAllArrayColorOutPath = join(
             self.outDir,
             constants.outFileNames.PRM_ALL + "color_" + self.subjID + ".png",
@@ -265,7 +270,7 @@ class Subject(object):
         plot_utils.plotPrmRgbOnCt(
             self.expArrayPlotting,
             self.prmAllArray,
-            constants.prmProcessing.PLOT_SLICENUM,
+            self.plotSliceNum,
             prmAllArrayColorOutPath,
         )
 

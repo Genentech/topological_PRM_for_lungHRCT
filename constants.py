@@ -38,7 +38,6 @@ class prmProcessing(object):
     CLASSIFICATION_NUM_EMPH = 3
     CLASSIFICATION_NUM_EMPTEMPH = 4
     PRM_BIN2RGB = {1: [0.4, 0.8, 0], 2: [1, 1, 0], 3: [0.8, 0, 0], 4: [0.6, 0.2, 1]}
-    PLOT_SLICENUM = 200
 
 
 class topoMapping(object):
