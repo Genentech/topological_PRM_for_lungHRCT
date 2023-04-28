@@ -269,6 +269,7 @@ class Subject(object):
         )
         plot_utils.plotPrmRgbOnCt(
             self.expArrayPlotting,
+            self.maskArray,
             self.prmAllArray,
             self.plotSliceNum,
             prmAllArrayColorOutPath,

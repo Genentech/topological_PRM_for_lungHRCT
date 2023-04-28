@@ -29,6 +29,7 @@ class prmProcessing(object):
         CLASSIFICATION_NUM_EMPTEMPH (int): number assigned to PRM emptying emph voxels in combined PRM map
         PRM_BIN2RGB (dict): dictionary mapping PRM bin number classification to RGB value
         PLOT_SLICENUM (int): slice number along the anterior-posterior dimension for plotting PRM color image
+        PLOT_PAD (int): number of voxels to leave around thoracic cavity for plotting single slice of PRM map
     """
 
     EXP_THRESH = -856
@@ -38,6 +39,7 @@ class prmProcessing(object):
     CLASSIFICATION_NUM_EMPH = 3
     CLASSIFICATION_NUM_EMPTEMPH = 4
     PRM_BIN2RGB = {1: [0.4, 0.8, 0], 2: [1, 1, 0], 3: [0.8, 0, 0], 4: [0.6, 0.2, 1]}
+    PLOT_PAD = 10
 
 
 class topoMapping(object):

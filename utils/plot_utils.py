@@ -63,12 +63,17 @@ def cropImg(img: np.ndarray, mask: np.ndarray, pad: int):
 
 
 def plotPrmRgbOnCt(
-    ctArray: np.ndarray, prmAllArray: np.ndarray, sliceNum: int, path: str
+    ctArray: np.ndarray,
+    maskArray: np.ndarray,
+    prmAllArray: np.ndarray,
+    sliceNum: int,
+    path: str,
 ):
     """Plot single slice of RGB color array overlaid on HRCT.
 
     Args:
         ctArray (np.array): HRCT image to overlay PRGM RGB image onto
+        maskArray (np.array): segmentation mask where positive integers denote thoracic cavity
         prmAllArray (np.array): PRM image sorted into bins denoting PRM voxel classification
         sliceNum (int): index of slice along the anterior to posterior dimension to plot
         path (str): path to save final image to
@@ -79,13 +84,19 @@ def plotPrmRgbOnCt(
     bounds = [1, 2, 3, 4, 5]
     norm = colors.BoundaryNorm(bounds, cmap.N)
 
-    # take single slice of PRM binned image and mask out un-binned regions
+    # take single slice of HRCT and PRM binned image
     prmAllArraySlice = prmAllArray[:, sliceNum, :]
+    ctArraySlice = ctArray[:, sliceNum, :]
+    prmAllArraySlice, _ = cropImg(
+        prmAllArraySlice, maskArray, constants.prmProcessing.PLOT_PAD
+    )
+
+    # mask out un-binned regions
     prmAllArraySlice = np.ma.masked_where(prmAllArraySlice < 1, prmAllArraySlice)
 
     # plot image overlaid on corresponding HRCT slice
     plt.subplots()
-    plt.imshow(ctArray[:, sliceNum, :], cmap="gray")
+    plt.imshow(ctArraySlice, cmap="gray")
     plt.imshow(prmAllArraySlice, cmap=cmap, norm=norm)
     plt.axis("off")
 
