@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import colors
+from PIL import Image
 
 import constants
 
@@ -27,6 +28,38 @@ def findPlotSliceNum(maskArray: np.ndarray):
     sliceNum = np.argmax(maskSizeBySlice)
 
     return sliceNum
+
+
+def cropImg(img: np.ndarray, mask: np.ndarray, pad: int):
+    """Crop image based on mask boundaries.
+
+    Args:
+        img (np.array): nxm image
+        mask (np.array): nxm mask specifying ROI in image
+        pad (int): number of voxels to leave outside of the mask
+
+    Returns:
+        imgCrop (np.array): cropped image
+        maskCrop (np.array): cropped mask
+    """
+
+    # get max and min of ROI along each dimension
+    xMin = min(np.argwhere(mask > 0)[:, 1]) - pad
+    xMax = max(np.argwhere(mask > 0)[:, 1]) + pad
+    yMin = min(np.argwhere(mask > 0)[:, 0]) - pad
+    yMax = max(np.argwhere(mask > 0)[:, 0]) + pad
+
+    # create PIL Image objects from img and mask arrays
+    imgI = Image.fromarray(img.astype(np.uint8))
+    maskI = Image.fromarray(mask.astype(np.uint8))
+    imgCropI = imgI.crop((yMin, xMin, yMax + 1, xMax + 1))
+    maskCropI = maskI.crop((yMin, xMin, yMax + 1, xMax + 1))
+
+    # convert back to np.arrays
+    imgCrop = np.asarray(imgCropI)
+    maskCrop = np.asarray(maskCropI, dtype=int64)
+
+    return imgCrop, maskCrop
 
 
 def plotPrmRgbOnCt(
