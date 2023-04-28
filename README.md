@@ -78,8 +78,9 @@ python main.py --batch --config <path-to-config-file-directory>
     - Colorcoded PRM image of a representative slice along the anterior-posterior dimension (.png)
     - Percentage of lung parenchyma voxels in each PRM classification (.csv)
 - Topology
-    - Global topology metrics and whole-lung mean local topology metrics for each PRM classification: fractional volume, surface area density, mean curvature length density, Euler-Poincare characteristic density (.csv)
     - Separate 3D maps of local topology density metrics for voxels characterized by normal lung structure, emphysema, fSAD, and emptying emphysema (.nii)
+    - Images of surface area density for a reprsentative slice along the anterior-posterior for all PRM maps (.png)
+    - Global topology metrics and whole-lung mean local topology metrics for each PRM classification: fractional volume, surface area density, mean curvature length density, Euler-Poincare characteristic density (.csv)
 
 ## 4. Authors and acknowledgment
 Sources:
@@ -88,6 +89,3 @@ Sources:
 Developers: Aryil Bechtel, Riqui Geng<br /> 
 Credits: Laura Bell<br /> 
 Correspondence: Aryil Bechtel (bechtel.aryil@gene.com), Laura Bell (bell.laura@gene.com)
-
-## 5. Project status
-This pipeline is currently regularly updated to improve existing functions and include new analysis features.
