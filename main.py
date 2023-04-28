@@ -55,12 +55,12 @@ def genPrmTopoMaps(config):
     subject.calcTopologyGlobal()
 
     # generate PRM topology maps
-    # logging.info("Generating PRM topology maps")
-    # subject.genLocalTopoMaps()
-    # subject.saveTopoNiis()
-    # subject.calcMeanLocalTopoStats()
-    # subject.plotTopoColor()
-    # subject.saveTopologyStats()
+    logging.info("Generating PRM topology maps")
+    subject.genLocalTopoMaps()
+    subject.saveTopoNiis()
+    subject.calcMeanLocalTopoStats()
+    subject.plotTopoColor()
+    subject.saveTopologyStats()
 
     logging.info("Program complete")
 

@@ -77,21 +77,19 @@ class Subject(object):
         self.inspRegArray, _ = io_utils.readFiles(self.config["io"]["inFileInspReg"])
         self.maskArray, _ = io_utils.readFiles(self.config["io"]["inFileMask"])
 
-        # make separate copy of expiratory HRCT to use for plotting
-        self.expArrayPlotting = np.copy(self.expArray)
-
     def normalizeAllCt(self):
         """Normalize expiratory and inspiratory HRCTs."""
 
         self.expArray = img_utils.normalizeCt(self.expArray, self.maskArray)
         self.inspRegArray = img_utils.normalizeCt(self.inspRegArray, self.maskArray)
 
+        # make separate copy of expiratory HRCT to use for plotting
+        self.expArrayPlotting = np.copy(self.expArray)
+
     def dimOutsideVoxels(self):
         """Dim voxels outside of thoracic cavity."""
-        self.expArray[self.maskArray == 0] = constants.prePrmProcessing.DIM_OUTSIDE_VAL
-        self.inspRegArray[
-            self.maskArray == 0
-        ] = constants.prePrmProcessing.DIM_OUTSIDE_VAL
+        self.expArray[self.maskArray == 0] = constants.preProc.DIM_OUTSIDE_VAL
+        self.inspRegArray[self.maskArray == 0] = constants.preProc.DIM_OUTSIDE_VAL
 
     def orientImages(self):
         """Put HRCTs into proper orientation.
@@ -111,10 +109,10 @@ class Subject(object):
         """Apply moving 2D median filter to images."""
 
         self.expArrayFilt = img_utils.medFilt(
-            self.expArray, constants.prePrmProcessing.MEDFILT_KERNEL_SIZE
+            self.expArray, constants.preProc.MEDFILT_KERNEL_SIZE
         )
         self.inspRegArrayFilt = img_utils.medFilt(
-            self.inspRegArray, constants.prePrmProcessing.MEDFILT_KERNEL_SIZE
+            self.inspRegArray, constants.preProc.MEDFILT_KERNEL_SIZE
         )
 
     def excludeVoxels(self):
@@ -126,18 +124,18 @@ class Subject(object):
 
         # exclude voxels in filtered expiratory image
         self.maskArray[
-            self.expArrayFilt < constants.prePrmProcessing.EXCLUDE_VOX_LOWERTHRESH
+            self.expArrayFilt < constants.preProc.EXCLUDE_VOX_LOWERTHRESH
         ] = 0
         self.maskArray[
-            self.expArrayFilt > constants.prePrmProcessing.EXCLUDE_VOX_UPPERTHRESH
+            self.expArrayFilt > constants.preProc.EXCLUDE_VOX_UPPERTHRESH
         ] = 0
 
         # exclude voxels in filtered inspiratory image
         self.maskArray[
-            self.inspRegArrayFilt < constants.prePrmProcessing.EXCLUDE_VOX_LOWERTHRESH
+            self.inspRegArrayFilt < constants.preProc.EXCLUDE_VOX_LOWERTHRESH
         ] = 0
         self.maskArray[
-            self.inspRegArrayFilt > constants.prePrmProcessing.EXCLUDE_VOX_UPPERTHRESH
+            self.inspRegArrayFilt > constants.preProc.EXCLUDE_VOX_UPPERTHRESH
         ] = 0
 
     def classifyVoxelsPrm(self):
@@ -149,23 +147,23 @@ class Subject(object):
 
         # get indices of normal, fSAD, emph, and emptying emph regions within mask
         normIdx = np.argwhere(
-            (self.expArrayFilt > constants.prmProcessing.EXP_THRESH)
-            & (self.inspRegArrayFilt > constants.prmProcessing.INSP_THRESH)
+            (self.expArrayFilt > constants.proc.EXP_THRESH)
+            & (self.inspRegArrayFilt > constants.proc.INSP_THRESH)
             & (self.maskArray >= 1)
         )
         fSadIdx = np.argwhere(
-            (self.expArrayFilt < constants.prmProcessing.EXP_THRESH)
-            & (self.inspRegArrayFilt > constants.prmProcessing.INSP_THRESH)
+            (self.expArrayFilt < constants.proc.EXP_THRESH)
+            & (self.inspRegArrayFilt > constants.proc.INSP_THRESH)
             & (self.maskArray >= 1)
         )
         emphIdx = np.argwhere(
-            (self.expArrayFilt < constants.prmProcessing.EXP_THRESH)
-            & (self.inspRegArrayFilt < constants.prmProcessing.INSP_THRESH)
+            (self.expArrayFilt < constants.proc.EXP_THRESH)
+            & (self.inspRegArrayFilt < constants.proc.INSP_THRESH)
             & (self.maskArray >= 1)
         )
         emptEmphIdx = np.argwhere(
-            (self.expArrayFilt > constants.prmProcessing.EXP_THRESH)
-            & (self.inspRegArrayFilt <= constants.prmProcessing.INSP_THRESH)
+            (self.expArrayFilt > constants.proc.EXP_THRESH)
+            & (self.inspRegArrayFilt <= constants.proc.INSP_THRESH)
             & (self.maskArray >= 1)
         )
 
@@ -185,16 +183,16 @@ class Subject(object):
         # for combined classification, set each region to different number (using IMBIO standard)
         self.prmAllArray[
             normIdx[:, 0], normIdx[:, 1], normIdx[:, 2]
-        ] = constants.prmProcessing.CLASSIFICATION_NUM_NORM
+        ] = constants.proc.CLASSIFICATION_NUM_NORM
         self.prmAllArray[
             fSadIdx[:, 0], fSadIdx[:, 1], fSadIdx[:, 2]
-        ] = constants.prmProcessing.CLASSIFICATION_NUM_FSAD
+        ] = constants.proc.CLASSIFICATION_NUM_FSAD
         self.prmAllArray[
             emphIdx[:, 0], emphIdx[:, 1], emphIdx[:, 2]
-        ] = constants.prmProcessing.CLASSIFICATION_NUM_EMPH
+        ] = constants.proc.CLASSIFICATION_NUM_EMPH
         self.prmAllArray[
             emptEmphIdx[:, 0], emptEmphIdx[:, 1], emptEmphIdx[:, 2]
-        ] = constants.prmProcessing.CLASSIFICATION_NUM_EMPTEMPH
+        ] = constants.proc.CLASSIFICATION_NUM_EMPTEMPH
 
     def calcPrmStats(self):
         """Calculate key PRM statistics."""

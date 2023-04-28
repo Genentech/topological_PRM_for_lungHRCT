@@ -1,8 +1,8 @@
 """Define important constants used throughout the pipeline."""
 
 
-class prePrmProcessing(object):
-    """Constants for preprocessing before PRM, after registration.
+class preProc(object):
+    """Constants for preprocessing before PRM and topo mapping.
 
     Attributes:
         DIM_OUTSIDE_VAL (float): HU value to set voxels outside of mask to
@@ -17,8 +17,8 @@ class prePrmProcessing(object):
     EXCLUDE_VOX_UPPERTHRESH = -500
 
 
-class prmProcessing(object):
-    """Constants for creating PRM maps.
+class proc(object):
+    """Constants for creating PRM and topology maps.
 
     Attributes:
         EXP_THRESH (float): HU value marking experitaroy threshold for PRM classification
@@ -28,7 +28,8 @@ class prmProcessing(object):
         CLASSIFICATION_NUM_EMPH (int): number assigned to PRM emph voxels in combined PRM map
         CLASSIFICATION_NUM_EMPTEMPH (int): number assigned to PRM emptying emph voxels in combined PRM map
         PRM_BIN2RGB (dict): dictionary mapping PRM bin number classification to RGB value
-        PLOT_SLICENUM (int): slice number along the anterior-posterior dimension for plotting PRM color image
+        WIND_RADIUS (int): half the length of one side of nxnxn moving window for calculating local topology, rounded up
+        GRID_RES (int): interval (in voxels) between nxnxn moving windows for calculating local topology
         PLOT_PAD (int): number of voxels to leave around thoracic cavity for plotting single slice of PRM map
     """
 
@@ -39,19 +40,9 @@ class prmProcessing(object):
     CLASSIFICATION_NUM_EMPH = 3
     CLASSIFICATION_NUM_EMPTEMPH = 4
     PRM_BIN2RGB = {1: [0.4, 0.8, 0], 2: [1, 1, 0], 3: [0.8, 0, 0], 4: [0.6, 0.2, 1]}
-    PLOT_PAD = 10
-
-
-class topoMapping(object):
-    """Constants for generating PRM topological maps.
-
-    Attributes:
-        WIND_RADIUS (int): half the length of one side of nxnxn moving window for calculating local topology, rounded up
-        GRID_RES (int): interval (in voxels) between nxnxn moving windows for calculating local topology
-    """
-
     WIND_RADIUS = 11
     GRID_RES = 5
+    PLOT_PAD = 40
 
 
 class outFileNames(object):

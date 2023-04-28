@@ -50,14 +50,14 @@ def cropImg(img: np.ndarray, mask: np.ndarray, pad: int):
     yMax = max(np.argwhere(mask > 0)[:, 0]) + pad
 
     # create PIL Image objects from img and mask arrays
-    imgI = Image.fromarray(img.astype(np.uint8))
-    maskI = Image.fromarray(mask.astype(np.uint8))
-    imgCropI = imgI.crop((yMin, xMin, yMax + 1, xMax + 1))
-    maskCropI = maskI.crop((yMin, xMin, yMax + 1, xMax + 1))
+    imgI = Image.fromarray(img.astype(float))
+    maskI = Image.fromarray(mask.astype(float))
+    imgCropI = imgI.crop((xMin, yMin, xMax + 1, yMax + 1))
+    maskCropI = maskI.crop((xMin, yMin, xMax + 1, yMax + 1))
 
     # convert back to np.arrays
     imgCrop = np.asarray(imgCropI)
-    maskCrop = np.asarray(maskCropI, dtype=int64)
+    maskCrop = np.asarray(maskCropI)
 
     return imgCrop, maskCrop
 
@@ -84,12 +84,16 @@ def plotPrmRgbOnCt(
     bounds = [1, 2, 3, 4, 5]
     norm = colors.BoundaryNorm(bounds, cmap.N)
 
-    # take single slice of HRCT and PRM binned image
-    prmAllArraySlice = prmAllArray[:, sliceNum, :]
+    # take single slice of HRCT, mask, and PRM map
     ctArraySlice = ctArray[:, sliceNum, :]
+    maskArraySlice = maskArray[:, sliceNum, :]
+    prmAllArraySlice = prmAllArray[:, sliceNum, :]
+
+    # crop HRCT and PRM images
     prmAllArraySlice, _ = cropImg(
-        prmAllArraySlice, maskArray, constants.prmProcessing.PLOT_PAD
+        prmAllArraySlice, maskArraySlice, constants.proc.PLOT_PAD
     )
+    ctArraySlice, _ = cropImg(ctArraySlice, maskArraySlice, constants.proc.PLOT_PAD)
 
     # mask out un-binned regions
     prmAllArraySlice = np.ma.masked_where(prmAllArraySlice < 1, prmAllArraySlice)
@@ -129,14 +133,23 @@ def plotTopoOnCt(
         path (str): path to save final image to
     """
 
-    # take single slice of topoArray and mask out regions outside of maskArray
+    # take single slice of HRCT, mask, and topology map
     topoArraySlice = topoArray[:, sliceNum, :]
     maskArraySlice = maskArray[:, sliceNum, :]
-    topoArraySlice = np.ma.masked_where(maskArraySlice <= 0, topoArraySlice)
+    ctArraySlice = ctArray[:, sliceNum, :]
+
+    # crop HRCT, mask, and topology map
+    topoArraySlice, maskArraySliceK = cropImg(
+        topoArraySlice, maskArraySlice, constants.proc.PLOT_PAD
+    )
+    ctArraySlice, _ = cropImg(ctArraySlice, maskArraySlice, constants.proc.PLOT_PAD)
+
+    # mask out regions outside of maskArray
+    topoArraySlice = np.ma.masked_where(maskArraySliceK <= 0, topoArraySlice)
 
     # plot image overlaid on corresponding HRCT slice
     plt.subplots()
-    plt.imshow(ctArray[:, sliceNum, :], cmap="gray")
+    plt.imshow(ctArraySlice, cmap="gray")
     plt.imshow(topoArraySlice, cmap="plasma")
     plt.axis("off")
 

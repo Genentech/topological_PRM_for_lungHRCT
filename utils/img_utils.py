@@ -174,40 +174,40 @@ def genLowResTopoMaps(binaryImage: np.ndarray, mask: np.ndarray, pixDims: np.nda
     # initialize low resolution arrays in which to store local topology calculations
     volMap = genLowResGrid(
         binaryImage.shape,
-        constants.topoMapping.WIND_RADIUS,
-        constants.topoMapping.GRID_RES,
+        constants.proc.WIND_RADIUS,
+        constants.proc.GRID_RES,
     )
     areaMap = genLowResGrid(
         binaryImage.shape,
-        constants.topoMapping.WIND_RADIUS,
-        constants.topoMapping.GRID_RES,
+        constants.proc.WIND_RADIUS,
+        constants.proc.GRID_RES,
     )
     curvMap = genLowResGrid(
         binaryImage.shape,
-        constants.topoMapping.WIND_RADIUS,
-        constants.topoMapping.GRID_RES,
+        constants.proc.WIND_RADIUS,
+        constants.proc.GRID_RES,
     )
     eulerMap = genLowResGrid(
         binaryImage.shape,
-        constants.topoMapping.WIND_RADIUS,
-        constants.topoMapping.GRID_RES,
+        constants.proc.WIND_RADIUS,
+        constants.proc.GRID_RES,
     )
 
     # get indices of the center of each window along each dimension in high resolution input binary image
     iIdxHighRes = range(
-        constants.topoMapping.WIND_RADIUS,
-        binaryImage.shape[0] - constants.topoMapping.WIND_RADIUS + 1,
-        constants.topoMapping.GRID_RES,
+        constants.proc.WIND_RADIUS,
+        binaryImage.shape[0] - constants.proc.WIND_RADIUS + 1,
+        constants.proc.GRID_RES,
     )
     jIdxHighRes = range(
-        constants.topoMapping.WIND_RADIUS,
-        binaryImage.shape[1] - constants.topoMapping.WIND_RADIUS + 1,
-        constants.topoMapping.GRID_RES,
+        constants.proc.WIND_RADIUS,
+        binaryImage.shape[1] - constants.proc.WIND_RADIUS + 1,
+        constants.proc.GRID_RES,
     )
     kIdxHighRes = range(
-        constants.topoMapping.WIND_RADIUS,
-        binaryImage.shape[2] - constants.topoMapping.WIND_RADIUS + 1,
-        constants.topoMapping.GRID_RES,
+        constants.proc.WIND_RADIUS,
+        binaryImage.shape[2] - constants.proc.WIND_RADIUS + 1,
+        constants.proc.GRID_RES,
     )
 
     # pass moving window over binaryImage every jth voxel and calculate local topology for each window
@@ -216,26 +216,14 @@ def genLowResTopoMaps(binaryImage: np.ndarray, mask: np.ndarray, pixDims: np.nda
             for k in kIdxHighRes:
                 # get local binary image and mask from 3D window of input binary image
                 localBinaryImage = binaryImage[
-                    (i - constants.topoMapping.WIND_RADIUS) : (
-                        i + constants.topoMapping.WIND_RADIUS
-                    ),
-                    (j - constants.topoMapping.WIND_RADIUS) : (
-                        j + constants.topoMapping.WIND_RADIUS
-                    ),
-                    (k - constants.topoMapping.WIND_RADIUS) : (
-                        k + constants.topoMapping.WIND_RADIUS
-                    ),
+                    (i - constants.proc.WIND_RADIUS) : (i + constants.proc.WIND_RADIUS),
+                    (j - constants.proc.WIND_RADIUS) : (j + constants.proc.WIND_RADIUS),
+                    (k - constants.proc.WIND_RADIUS) : (k + constants.proc.WIND_RADIUS),
                 ]
                 localMask = mask[
-                    (i - constants.topoMapping.WIND_RADIUS) : (
-                        i + constants.topoMapping.WIND_RADIUS
-                    ),
-                    (j - constants.topoMapping.WIND_RADIUS) : (
-                        j + constants.topoMapping.WIND_RADIUS
-                    ),
-                    (k - constants.topoMapping.WIND_RADIUS) : (
-                        k + constants.topoMapping.WIND_RADIUS
-                    ),
+                    (i - constants.proc.WIND_RADIUS) : (i + constants.proc.WIND_RADIUS),
+                    (j - constants.proc.WIND_RADIUS) : (j + constants.proc.WIND_RADIUS),
+                    (k - constants.proc.WIND_RADIUS) : (k + constants.proc.WIND_RADIUS),
                 ]
 
                 # calculate Minkowski functionals for local binary image
@@ -243,16 +231,13 @@ def genLowResTopoMaps(binaryImage: np.ndarray, mask: np.ndarray, pixDims: np.nda
 
                 # calculate indices for storing local topology metrics in low resolution output maps
                 iIdxLowRes = math.ceil(
-                    (i - constants.topoMapping.WIND_RADIUS)
-                    / constants.topoMapping.GRID_RES
+                    (i - constants.proc.WIND_RADIUS) / constants.proc.GRID_RES
                 )
                 jIdxLowRes = math.ceil(
-                    (j - constants.topoMapping.WIND_RADIUS)
-                    / constants.topoMapping.GRID_RES
+                    (j - constants.proc.WIND_RADIUS) / constants.proc.GRID_RES
                 )
                 kIdxLowRes = math.ceil(
-                    (k - constants.topoMapping.WIND_RADIUS)
-                    / constants.topoMapping.GRID_RES
+                    (k - constants.proc.WIND_RADIUS) / constants.proc.GRID_RES
                 )
 
                 # store Minkowski functionals
@@ -295,7 +280,7 @@ def resizeTopoMaps(
         # interp low res maps to specified shape, minus a border the size of the moving window radius used to make low res maps
         highResTopoMapsTmp = resize(
             lowResTopoMaps[i, :, :, :],
-            np.array(highResImgShape) - constants.topoMapping.WIND_RADIUS * 2,
+            np.array(highResImgShape) - constants.proc.WIND_RADIUS * 2,
             order=1,
         )
 
@@ -303,9 +288,9 @@ def resizeTopoMaps(
         highResTopoMapsTmp = np.pad(
             highResTopoMapsTmp,
             (
-                (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
-                (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
-                (constants.topoMapping.WIND_RADIUS, constants.topoMapping.WIND_RADIUS),
+                (constants.proc.WIND_RADIUS, constants.proc.WIND_RADIUS),
+                (constants.proc.WIND_RADIUS, constants.proc.WIND_RADIUS),
+                (constants.proc.WIND_RADIUS, constants.proc.WIND_RADIUS),
             ),
             "constant",
         )
