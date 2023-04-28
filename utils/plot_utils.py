@@ -93,7 +93,7 @@ def plotTopoOnCt(
     # plot image overlaid on corresponding HRCT slice
     plt.subplots()
     plt.imshow(ctArray[:, sliceNum, :], cmap="gray")
-    plt.imshow(topoArraySlice, cmap="inferno")
+    plt.imshow(topoArraySlice, cmap="plasma")
     plt.axis("off")
 
     # add colorbar
