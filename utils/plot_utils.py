@@ -121,6 +121,7 @@ def plotTopoOnCt(
     maskArray: np.ndarray,
     topoArray: np.ndarray,
     sliceNum: int,
+    mapType: str,
     path: str,
 ):
     """Plot single slice of local topology map overlaid on HRCT.
@@ -130,6 +131,7 @@ def plotTopoOnCt(
         maskArray (np.array): segmentation mask where positive integers denote thoracic cavity
         topoArray (np.arry): 3D map of local topology
         sliceNum (int): index of slice along the anterior to posterior dimension to plot
+        mapType (str): string specifying topology metric being plotted (e.g. vol, area, curv, euler)
         path (str): path to save final image to
     """
 
@@ -155,7 +157,7 @@ def plotTopoOnCt(
 
     # add colorbar
     imgRatio = topoArraySlice.shape[0] / topoArraySlice.shape[1]
-    cbar = plt.colorbar(fraction=0.047 * imgRatio, pad=0)
+    cbar = plt.colorbar(label=mapType, fraction=0.047 * imgRatio, pad=0)
 
     # save figure and close it
     plt.tight_layout()
