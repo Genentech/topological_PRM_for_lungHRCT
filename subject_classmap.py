@@ -77,12 +77,6 @@ class Subject(object):
         self.inspRegArray, _ = io_utils.readFiles(self.config["io"]["inFileInspReg"])
         self.maskArray, _ = io_utils.readFiles(self.config["io"]["inFileMask"])
 
-    def normalizeAllCt(self):
-        """Normalize expiratory and inspiratory HRCTs."""
-
-        self.expArray = img_utils.normalizeCt(self.expArray, self.maskArray)
-        self.inspRegArray = img_utils.normalizeCt(self.inspRegArray, self.maskArray)
-
         # make separate copy of expiratory HRCT to use for plotting
         self.expArrayPlotting = np.copy(self.expArray)
 
