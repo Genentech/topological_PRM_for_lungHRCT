@@ -6,7 +6,7 @@ A pipeline for analyzing inspiratory and expiratory HRCT lung images through qua
 Analysis methods are adapted from methodology described in:<br />
 Hoff, B.A., Pompe, E., Galbán, S. et al. CT-Based Local Distribution Metric Improves Characterization of COPD. Sci Rep 7, 2999 (2017). https://doi.org/10.1038/s41598-017-02871-1
 
-NOTE: this pipeline calculates topology metrics from Minkowski functionals computed with the QuantImPy Python package, which may differ from Hoff et al. (2017).
+NOTE: this pipeline calculates topology metrics from Minkowski functionals computed with the QuantImPy Python package, which may differ from Minkowski measures in Hoff et al. (2017).
 
 ## Table of contents
 1. [Installation](#1-installation)
@@ -82,7 +82,13 @@ python main.py --batch --config <path-to-config-file-directory>
 - Topology
     - Separate 3D maps of local topology density metrics for voxels characterized by normal lung structure, emphysema, fSAD, and emptying emphysema (.nii)
     - Images of surface area density for a reprsentative slice along the anterior-posterior for all PRM maps (.png)
-    - Global topology metrics and whole-lung mean local topology metrics for each PRM classification: fractional volume, surface area density, mean curvature length density, Euler-Poincare characteristic density (.csv)
+    - Global and mean local topology metrics and whole-lung mean local topology metrics for each PRM classification (.csv)
+    - Note: output topology density metrics have the following units (pipeline assumes voxel dimensions in HRCT NIfTI header are in mm)
+        - Fractional volume (volume density): unitless
+        - Surface area density: m<sup>-1</sup>
+        - Integral mean curvature density: m<sup>-2</sup>
+        - Euler-Poincare characteristic density: unitless
+
 
 ## 4. Authors and acknowledgment
 Sources:
