@@ -28,6 +28,7 @@ class proc(object):
         CLASSIFICATION_NUM_EMPH (int): number assigned to PRM emph voxels in combined PRM map
         CLASSIFICATION_NUM_EMPTEMPH (int): number assigned to PRM emptying emph voxels in combined PRM map
         PRM_BIN2RGB (dict): dictionary mapping PRM bin number classification to RGB value
+        SCALE_UNIT (float): scalar to convert pixel dimension unit for topological metrics, e.g. set to 1e-3 to convert mm to m
         WIND_RADIUS (int): half the length of one side of nxnxn moving window for calculating local topology, rounded up
         GRID_RES (int): interval (in voxels) between nxnxn moving windows for calculating local topology
         PLOT_PAD (int): number of voxels to leave around thoracic cavity for plotting single slice of PRM map
@@ -40,6 +41,7 @@ class proc(object):
     CLASSIFICATION_NUM_EMPH = 3
     CLASSIFICATION_NUM_EMPTEMPH = 4
     PRM_BIN2RGB = {1: [0.4, 0.8, 0], 2: [1, 1, 0], 3: [0.8, 0, 0], 4: [0.6, 0.2, 1]}
+    SCALE_UNIT = 1e-3
     WIND_RADIUS = 11
     GRID_RES = 5
     PLOT_PAD = 40

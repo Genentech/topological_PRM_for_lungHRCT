@@ -112,7 +112,7 @@ class Subject(object):
     def excludeVoxels(self):
         """Exclude voxels above and below certain thresholds.
 
-        Exclude voxels from mask that fall above upperThresh to
+        Exclude voxels from mask that fall above UPPERTHRESH and below LOWERTHRESH to
         minimize the contribution of blood vessels and airways.
         """
 

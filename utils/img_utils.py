@@ -80,6 +80,8 @@ def calcMkFns(binaryImage: np.ndarray, pixDims: np.ndarray):
 
     Returns:
         mkFnsArray (np.array): output array from quantimpy minkowski.functionals
+
+    NOTE: this function does not normalize by masked volume or masked voxel count
     """
 
     # convert input binary array to boolean array
@@ -94,6 +96,11 @@ def calcMkFns(binaryImage: np.ndarray, pixDims: np.ndarray):
     mkFnsArray[0] /= pixDimsScale**3  # volume
     mkFnsArray[1] /= pixDimsScale**2  # surface area
     mkFnsArray[2] /= pixDimsScale  # curvature
+
+    # rescale Mk fns to express in a diffent unit from original pixel dim units
+    mkFnsArray[0] *= constants.proc.SCALE_UNIT**3
+    mkFnsArray[1] *= constants.proc.SCALE_UNIT**2
+    mkFnsArray[2] *= constants.proc.SCALE_UNIT
 
     return mkFnsArray
 
@@ -125,12 +132,17 @@ def calcMkFnsNorm(binaryImage: np.ndarray, mask: np.ndarray, pixDims: np.ndarray
     mkFnsArray[2] /= pixDimsScale  # curvature
 
     # normalize volume, surface area, and curvature by masked volume and euler-poincare characteristic by masked voxel count
+    # normalized dims: vol_norm -> unitless, area_norm -> [length]^-1, curv_norm -> [length]^-2, euler_norm -> unitless
     maskedVoxels = (mask > 0).sum()
     maskedVol = maskedVoxels * (pixDims[0] * pixDims[1] * pixDims[2])
     if maskedVoxels > 0:
         mkFnsArray = np.divide(
             mkFnsArray, [maskedVol, maskedVol, maskedVol, maskedVoxels]
         )
+
+    # rescale normalized Mk fns to express in a diffent unit from original pixel dim units
+    mkFnsArray[1] /= constants.proc.SCALE_UNIT
+    mkFnsArray[2] /= constants.proc.SCALE_UNIT**2
 
     return mkFnsArray
 
