@@ -92,7 +92,7 @@ python main.py --batch --config <path-to-config-file-directory>
 Sources:
 >1. Hoff, B.A., Pompe, E., Galbán, S. et al. CT-Based Local   Distribution Metric Improves Characterization of COPD. Sci Rep 7, 2999 (2017). https://doi.org/10.1038/s41598-017-02871-1
 
->2. Arnout M.P. Boelens, and Hamdi A. Tchelepi, QuantImPy: Minkowski functionals and functions with Python, SoftwareX, Volume 16, 2021, 100823, ISSN 2352-7110, doi: 10.1016/j.softx.2021.100823,
+>2. Arnout M.P. Boelens, and Hamdi A. Tchelepi, QuantImPy: Minkowski functionals and functions with Python. SoftwareX, Volume 16 100823, ISSN 2352-7110 (2021). https://doi.org/10.1016/j.softx.2021.100823
 
 
 Developers: Aryil Bechtel, Riqui Geng<br /> 
