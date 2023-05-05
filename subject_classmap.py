@@ -427,7 +427,7 @@ class Subject(object):
         """Plot slice of select local topology maps."""
 
         # specify topology map type
-        mapType = "surface area density"
+        mapType = "m$^{-1}$"
 
         # norm surface area density
         normAreaOutPath = join(
