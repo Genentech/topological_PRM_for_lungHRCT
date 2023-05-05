@@ -1,12 +1,10 @@
 # lung_HRCT_PRM_topology_mapping
 
 ## Description
-A pipeline for analyzing inspiratory and expiratory HRCT lung images through quantitative metrics and 3D maps. Currently, this pipeline provides 3D parametric response maps (PRM), global topology metrics, and 3D maps of local topology metrics for regions characterized by normal lung structure, emphysema, functional small airways disease (fSAD), and emptying emphysema.
+A pipeline for analyzing inspiratory and expiratory HRCT lung images through quantitative metrics and 3D maps. Currently, this pipeline provides 3D parametric response maps (PRM), global topology metrics, and 3D maps of local topology metrics for regions characterized by normal lung structure, emphysema, functional small airways disease (fSAD), and emptying emphysema. Analysis methods are adapted from methodology described in Hoff et al. (2017)<sup>1</sup>.
 
-Analysis methods are adapted from methodology described in:<br />
-Hoff, B.A., Pompe, E., Galbán, S. et al. CT-Based Local Distribution Metric Improves Characterization of COPD. Sci Rep 7, 2999 (2017). https://doi.org/10.1038/s41598-017-02871-1
+NOTE: this pipeline calculates topology metrics from Minkowski functionals computed with the QuantImPy Python package<sup>2</sup>, which may differ from Minkowski measures in Hoff et al. (2017)<sup>1</sup>.
 
-NOTE: this pipeline calculates topology metrics from Minkowski functionals computed with the QuantImPy Python package, which may differ from Minkowski measures in Hoff et al. (2017).
 
 ## Table of contents
 1. [Installation](#1-installation)
@@ -92,9 +90,9 @@ python main.py --batch --config <path-to-config-file-directory>
 
 ## 4. Authors and acknowledgment
 Sources:
->Hoff, B.A., Pompe, E., Galbán, S. et al. CT-Based Local   Distribution Metric Improves Characterization of COPD. Sci Rep 7, 2999 (2017). https://doi.org/10.1038/s41598-017-02871-1
+>1. Hoff, B.A., Pompe, E., Galbán, S. et al. CT-Based Local   Distribution Metric Improves Characterization of COPD. Sci Rep 7, 2999 (2017). https://doi.org/10.1038/s41598-017-02871-1
 
->Arnout M.P. Boelens, and Hamdi A. Tchelepi, QuantImPy: Minkowski functionals and functions with Python, SoftwareX, Volume 16, 2021, 100823, ISSN 2352-7110, doi: 10.1016/j.softx.2021.100823,
+>2. Arnout M.P. Boelens, and Hamdi A. Tchelepi, QuantImPy: Minkowski functionals and functions with Python, SoftwareX, Volume 16, 2021, 100823, ISSN 2352-7110, doi: 10.1016/j.softx.2021.100823,
 
 
 Developers: Aryil Bechtel, Riqui Geng<br /> 
