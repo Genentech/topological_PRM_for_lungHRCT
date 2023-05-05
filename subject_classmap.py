@@ -426,8 +426,8 @@ class Subject(object):
     def plotTopoColor(self):
         """Plot slice of select local topology maps."""
 
-        # specify topology map type
-        mapType = "m$^{-1}$"
+        # specify units of topology map
+        mapUnit = "m$^{-1}$"
 
         # norm surface area density
         normAreaOutPath = join(
@@ -443,7 +443,7 @@ class Subject(object):
             self.maskArray,
             self.normTopoMapsHiRes[1, :, :, :],
             self.plotSliceNum,
-            mapType,
+            mapUnit,
             normAreaOutPath,
         )
 
@@ -461,7 +461,7 @@ class Subject(object):
             self.maskArray,
             self.fSadTopoMapsHiRes[1, :, :, :],
             self.plotSliceNum,
-            mapType,
+            mapUnit,
             fSadAreaOutPath,
         )
 
@@ -479,7 +479,7 @@ class Subject(object):
             self.maskArray,
             self.emphTopoMapsHiRes[1, :, :, :],
             self.plotSliceNum,
-            mapType,
+            mapUnit,
             emphAreaOutPath,
         )
 
@@ -497,7 +497,7 @@ class Subject(object):
             self.maskArray,
             self.emptEmphTopoMapsHiRes[1, :, :, :],
             self.plotSliceNum,
-            mapType,
+            mapUnit,
             emptEmphAreaOutPath,
         )
 
