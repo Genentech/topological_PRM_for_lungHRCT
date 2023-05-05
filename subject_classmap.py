@@ -77,6 +77,10 @@ class Subject(object):
         self.inspRegArray, _ = io_utils.readFiles(self.config["io"]["inFileInspReg"])
         self.maskArray, _ = io_utils.readFiles(self.config["io"]["inFileMask"])
 
+        # ensure that HRCT arrays are in usable data type
+        self.expArray = self.expArray.astype(float)
+        self.inspRegArray = self.inspRegArray.astype(float)
+
         # make separate copy of expiratory HRCT to use for plotting
         self.expArrayPlotting = np.copy(self.expArray)
 
