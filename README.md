@@ -6,6 +6,8 @@ A pipeline for analyzing inspiratory and expiratory HRCT lung images through qua
 Analysis methods are adapted from methodology described in:<br />
 Hoff, B.A., Pompe, E., Galbán, S. et al. CT-Based Local Distribution Metric Improves Characterization of COPD. Sci Rep 7, 2999 (2017). https://doi.org/10.1038/s41598-017-02871-1
 
+NOTE: this pipeline calculates topology metrics from Minkowski functionals computed with the QuantImPy Python package, which may differ from Hoff et al. (2017).
+
 ## Table of contents
 1. [Installation](#1-installation)
 2. [Usage](#2-usage)
@@ -84,7 +86,10 @@ python main.py --batch --config <path-to-config-file-directory>
 
 ## 4. Authors and acknowledgment
 Sources:
->Hoff, B.A., Pompe, E., Galbán, S. et al. CT-Based Local Distribution Metric Improves Characterization of COPD. Sci Rep 7, 2999 (2017). https://doi.org/10.1038/s41598-017-02871-1
+>Hoff, B.A., Pompe, E., Galbán, S. et al. CT-Based Local   Distribution Metric Improves Characterization of COPD. Sci Rep 7, 2999 (2017). https://doi.org/10.1038/s41598-017-02871-1
+
+>Arnout M.P. Boelens, and Hamdi A. Tchelepi, QuantImPy: Minkowski functionals and functions with Python, SoftwareX, Volume 16, 2021, 100823, ISSN 2352-7110, doi: 10.1016/j.softx.2021.100823,
+
 
 Developers: Aryil Bechtel, Riqui Geng<br /> 
 Credits: Laura Bell<br /> 
