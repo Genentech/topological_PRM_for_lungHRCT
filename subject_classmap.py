@@ -181,16 +181,16 @@ class Subject(object):
         # for combined classification, set each region to different number (using IMBIO standard)
         self.prmAllArray[
             normIdx[:, 0], normIdx[:, 1], normIdx[:, 2]
-        ] = constants.proc.CLASSIFICATION_NUM_NORM
+        ] = constants.proc.PRM_NUM_NORM
         self.prmAllArray[
             fSadIdx[:, 0], fSadIdx[:, 1], fSadIdx[:, 2]
-        ] = constants.proc.CLASSIFICATION_NUM_FSAD
+        ] = constants.proc.PRM_NUM_FSAD
         self.prmAllArray[
             emphIdx[:, 0], emphIdx[:, 1], emphIdx[:, 2]
-        ] = constants.proc.CLASSIFICATION_NUM_EMPH
+        ] = constants.proc.PRM_NUM_EMPH
         self.prmAllArray[
             emptEmphIdx[:, 0], emptEmphIdx[:, 1], emptEmphIdx[:, 2]
-        ] = constants.proc.CLASSIFICATION_NUM_EMPTEMPH
+        ] = constants.proc.PRM_NUM_EMPTEMPH
 
     def calcPrmStats(self):
         """Calculate key PRM statistics."""
