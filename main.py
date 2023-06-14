@@ -148,6 +148,9 @@ def main():
             config.read(configDir)
 
             # run pipeline from registered HRCT files
+            logging.info(
+                "*****Processing subject %s*****" % config["subjInfo"]["subjID"]
+            )
             if not args.glbl:
                 # run full pipeline from registered HRCT files
                 logging.info(
