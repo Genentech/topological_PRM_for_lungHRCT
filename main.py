@@ -26,11 +26,20 @@ parser.add_argument(
     required=False,
     help="indicate to run a batch process",
 )
+parser.add_argument(
+    "--glbl",
+    action="store_true",
+    required=False,
+    help="indicate to calc only prm and global topology",
+)
 args = parser.parse_args()
 
 
 def genPrmTopoMaps(config):
-    """Run pipeline from registered HRCT files."""
+    """Run full pipeline from registered HRCT files.
+
+    Calculate PRM maps, global topology metrics, and local topology maps.
+    """
 
     # record start time for processing subject
     t1 = time.perf_counter()
@@ -70,6 +79,42 @@ def genPrmTopoMaps(config):
     logging.info(f"Program runtime: {elapsedTime} mins")
 
 
+def genPrmGlobalTopo(config):
+    """Run just PRM and global topology pipeline from registered HRCT files.
+
+    Calculate PRM maps and global topology metrics.
+    """
+    # record start time for processing subject
+    t1 = time.perf_counter()
+
+    subject = Subject(config)
+
+    # generate PRM maps
+    logging.info("Generating PRM maps")
+    subject.readCtFiles()
+    subject.dimOutsideVoxels()
+    subject.orientImages()
+    subject.applyMedFilts()
+    subject.excludeVoxels()
+    subject.classifyVoxelsPrm()
+    subject.calcPrmStats()
+    subject.savePrmNiis()
+    subject.plotPrmColor()
+
+    # calculate global topology metrics
+    logging.info("Calculating global topology metrics")
+    subject.calcTopologyGlobal()
+    subject.saveTopologyStats()
+
+    logging.info("Program complete")
+
+    # record end time for processing subject
+    t2 = time.perf_counter()
+    elapsedTime = (t2 - t1) / 60
+
+    logging.info(f"Program runtime: {elapsedTime} mins")
+
+
 def main():
     """Run PRM and topological mapping HRCT analysis.
 
@@ -84,7 +129,16 @@ def main():
 
         # run pipeline from registered HRCT files
         logging.info("*****Processing subject %s*****" % config["subjInfo"]["subjID"])
-        genPrmTopoMaps(config)
+        if not args.glbl:
+            # run full pipeline from registered HRCT files
+            logging.info(
+                "Running full pipeline: PRM maps, global topolgoy metrics, local topology maps"
+            )
+            genPrmTopoMaps(config)
+        else:
+            # run just PRM mapping and global topology metrics
+            logging.info("Running just PRM maps, global topology metrics")
+            genPrmGlobalTopo(config)
     else:
         # get list of config files in specified directory
         configList = glob.glob(join(args.config, "*.ini"))
@@ -94,10 +148,16 @@ def main():
             config.read(configDir)
 
             # run pipeline from registered HRCT files
-            logging.info(
-                "*****Processing subject %s*****" % config["subjInfo"]["subjID"]
-            )
-            genPrmTopoMaps(config)
+            if not args.glbl:
+                # run full pipeline from registered HRCT files
+                logging.info(
+                    "Running full pipeline: PRM maps, global topolgoy metrics, local topology maps"
+                )
+                genPrmTopoMaps(config)
+            else:
+                # run just PRM mapping and global topology metrics
+                logging.info("Running just PRM maps, global topology metrics")
+                genPrmGlobalTopo(config)
 
 
 if __name__ == "__main__":
