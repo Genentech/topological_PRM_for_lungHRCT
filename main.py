@@ -49,7 +49,6 @@ def genPrmTopoMaps(config):
     # generate PRM maps
     logging.info("Generating PRM maps")
     subject.readCtFiles()
-    subject.dimOutsideVoxels()
     subject.orientImages()
     subject.applyMedFilts()
     subject.excludeVoxels()
@@ -92,7 +91,6 @@ def genPrmGlobalTopo(config):
     # generate PRM maps
     logging.info("Generating PRM maps")
     subject.readCtFiles()
-    subject.dimOutsideVoxels()
     subject.orientImages()
     subject.applyMedFilts()
     subject.excludeVoxels()

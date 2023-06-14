@@ -85,7 +85,10 @@ class Subject(object):
         self.expArrayPlotting = np.copy(self.expArray)
 
     def dimOutsideVoxels(self):
-        """Dim voxels outside of thoracic cavity."""
+        """Dim voxels outside of thoracic cavity.
+
+        NOTE: currently unused.
+        """
         self.expArray[self.maskArray == 0] = constants.preProc.DIM_OUTSIDE_VAL
         self.inspRegArray[self.maskArray == 0] = constants.preProc.DIM_OUTSIDE_VAL
 
