@@ -71,6 +71,16 @@ First create a config file for each subejct and place them all in one directory.
 python main.py --batch --config <path-to-config-file-directory>
 ```
 
+### 2.4 Compute only PRM maps and global topology metrics
+Processing only PRM maps and global topology metrics significantly cuts down computation time. This is useful if local topology maps are not needed. To do this, add the following flag in the command line when processing a single subject or a batch: `--glbl`
+```bash
+python main.py --config <path-to-subject-config-file> --glbl
+```
+or
+```bash
+python main.py --batch --config <path-to-config-file-directory> --glbl
+```
+
 ## 3. Outputs
 - PRM
     -  Separate 3D PRM maps of normal lung structure, emphysema, fSAD, and emptying emphysema (.nii)
