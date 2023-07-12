@@ -104,6 +104,6 @@ Sources:
 >2. Arnout M.P. Boelens, and Hamdi A. Tchelepi, QuantImPy: Minkowski functionals and functions with Python. SoftwareX, Volume 16 100823, ISSN 2352-7110 (2021). https://doi.org/10.1016/j.softx.2021.100823
 
 
-Developers: Aryil Bechtel, Riqui Geng<br /> 
-Credits: Laura Bell<br /> 
+Developers: Aryil Bechtel (https://github.com/aryilbechtel), Ruiqi Geng<br /> 
+Credits: Laura Bell (https://github.com/lauracbell) <br /> 
 Correspondence: Aryil Bechtel (bechtel.aryil@gene.com), Laura Bell (bell.laura@gene.com)
