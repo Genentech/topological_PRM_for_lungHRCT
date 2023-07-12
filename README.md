@@ -103,6 +103,8 @@ Sources:
 
 >2. Arnout M.P. Boelens, and Hamdi A. Tchelepi, QuantImPy: Minkowski functionals and functions with Python. SoftwareX, Volume 16 100823, ISSN 2352-7110 (2021). https://doi.org/10.1016/j.softx.2021.100823
 
+Related publications:
+>1. Geng, R., Grimbaldeston, M.A., Coimbra, A., Bell, L.C. et al. PRM and Topological Imaging Features From HRCT Can Identify PRISm Patients Who Progress to COPD. Annual ATS meeting, Washington D.C., May 19-24, 2023. Oral Presentation. 
 
 Developers: Aryil Bechtel, Ruiqi Geng<br /> 
 Credits: Laura Bell <br /> 
