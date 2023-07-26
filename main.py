@@ -186,40 +186,21 @@ def main():
         config = ConfigParser()
         config.read(args.config)
 
-        # run pipeline from registered HRCT files
-        logging.info("*****Processing subject %s*****" % config["subjInfo"]["subjID"])
-        if not args.glbl:
-            # run full pipeline from registered HRCT files
-            logging.info(
-                "Running full pipeline: PRM maps, global topolgoy metrics, local topology maps"
-            )
-            genPrmTopoMaps(config)
-        else:
-            # run just PRM mapping and global topology metrics
-            logging.info("Running just PRM maps, global topology metrics")
-            genPrmGlobalTopo(config)
+        # process subject
+        processSubject(config, args)
+
     else:
         # get list of config files in specified directory
         configList = glob.glob(join(args.config, "*.ini"))
+
+        # loop over config files
         for configDir in configList:
             # read in config file
             config = ConfigParser()
             config.read(configDir)
 
-            # run pipeline from registered HRCT files
-            logging.info(
-                "*****Processing subject %s*****" % config["subjInfo"]["subjID"]
-            )
-            if not args.glbl:
-                # run full pipeline from registered HRCT files
-                logging.info(
-                    "Running full pipeline: PRM maps, global topolgoy metrics, local topology maps"
-                )
-                genPrmTopoMaps(config)
-            else:
-                # run just PRM mapping and global topology metrics
-                logging.info("Running just PRM maps, global topology metrics")
-                genPrmGlobalTopo(config)
+            # process subject
+            processSubject(config, args)
 
 
 if __name__ == "__main__":
