@@ -35,10 +35,12 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-def genPrmTopoMaps(config):
-    """Run full pipeline from registered HRCT files.
+def processSubject(config, args):
+    """Process a single subject from config file.
 
-    Calculate PRM maps, global topology metrics, and local topology maps.
+    Args:
+        config: configuration file containing input/ouput file locations
+        args: ArgumentParse object containing command line flags
     """
 
     # record start time for processing subject
@@ -46,60 +48,41 @@ def genPrmTopoMaps(config):
 
     subject = Subject(config)
 
-    # generate PRM maps
-    logging.info("Generating PRM maps")
-    subject.readCtFiles()
-    subject.orientImages()
-    subject.applyMedFilts()
-    subject.excludeVoxels()
-    subject.classifyVoxelsPrm()
+    logging.info("*****Processing subject %s*****" % subject.subjID)
+
+    if config.has_option("io", "inFileExp"):
+        # if HRCT file location is specified in config, generate PRM maps from HRCT
+
+        # generate PRM maps
+        logging.info("Generating PRM maps")
+        subject.readCtFiles()
+        subject.orientImages()
+        subject.applyMedFilts()
+        subject.excludeVoxels()
+        subject.classifyVoxelsPrm()
+        subject.savePrmNiis()
+    elif config.has_option("io", "inFilePrm"):
+        # if PRM file location is specified in config, read in PRM map
+
+        logging.info("Reading in PRM maps")
+        # subject.readPrmFile()
+        # subject.genMaskFromPrm()
+
+    # calculate PRM stats and plot representative slice of PRM map
     subject.calcPrmStats()
-    subject.savePrmNiis()
     subject.plotPrmColor()
 
-    # calculate global topology metrics
-    logging.info("Calculating global topology metrics")
-    subject.calcTopologyGlobal()
+    if not args.glbl:
+        # if 'glbl' flag not specified, process local topology
 
-    # generate PRM topology maps
-    logging.info("Generating PRM topology maps")
-    subject.genLocalTopoMaps()
-    subject.saveTopoNiis()
-    subject.calcMeanLocalTopoStats()
-    subject.plotTopoColor()
-    subject.saveTopologyStats()
+        # generate local PRM topology maps
+        logging.info("Generating PRM topology maps")
+        subject.genLocalTopoMaps()
+        subject.saveTopoNiis()
+        subject.calcMeanLocalTopoStats()
+        subject.plotTopoColor()
 
-    logging.info("Program complete")
-
-    # record end time for processing subject
-    t2 = time.perf_counter()
-    elapsedTime = (t2 - t1) / 60
-
-    logging.info(f"Program runtime: {elapsedTime} mins")
-
-
-def genPrmGlobalTopo(config):
-    """Run just PRM and global topology pipeline from registered HRCT files.
-
-    Calculate PRM maps and global topology metrics.
-    """
-    # record start time for processing subject
-    t1 = time.perf_counter()
-
-    subject = Subject(config)
-
-    # generate PRM maps
-    logging.info("Generating PRM maps")
-    subject.readCtFiles()
-    subject.orientImages()
-    subject.applyMedFilts()
-    subject.excludeVoxels()
-    subject.classifyVoxelsPrm()
-    subject.calcPrmStats()
-    subject.savePrmNiis()
-    subject.plotPrmColor()
-
-    # calculate global topology metrics
+    # calculate global topology metrics and save topology stats
     logging.info("Calculating global topology metrics")
     subject.calcTopologyGlobal()
     subject.saveTopologyStats()
@@ -111,6 +94,84 @@ def genPrmGlobalTopo(config):
     elapsedTime = (t2 - t1) / 60
 
     logging.info(f"Program runtime: {elapsedTime} mins")
+
+
+# def genPrmTopoMaps(config):
+#     """Run full pipeline from registered HRCT files.
+
+#     Calculate PRM maps, global topology metrics, and local topology maps.
+#     """
+
+#     # record start time for processing subject
+#     t1 = time.perf_counter()
+
+#     subject = Subject(config)
+
+#     # generate PRM maps
+#     logging.info("Generating PRM maps")
+#     subject.readCtFiles()
+#     subject.orientImages()
+#     subject.applyMedFilts()
+#     subject.excludeVoxels()
+#     subject.classifyVoxelsPrm()
+#     subject.calcPrmStats()
+#     subject.savePrmNiis()
+#     subject.plotPrmColor()
+
+#     # calculate global topology metrics
+#     logging.info("Calculating global topology metrics")
+#     subject.calcTopologyGlobal()
+
+#     # generate PRM topology maps
+#     logging.info("Generating PRM topology maps")
+#     subject.genLocalTopoMaps()
+#     subject.saveTopoNiis()
+#     subject.calcMeanLocalTopoStats()
+#     subject.plotTopoColor()
+#     subject.saveTopologyStats()
+
+#     logging.info("Program complete")
+
+#     # record end time for processing subject
+#     t2 = time.perf_counter()
+#     elapsedTime = (t2 - t1) / 60
+
+#     logging.info(f"Program runtime: {elapsedTime} mins")
+
+
+# def genPrmGlobalTopo(config):
+#     """Run just PRM and global topology pipeline from registered HRCT files.
+
+#     Calculate PRM maps and global topology metrics.
+#     """
+#     # record start time for processing subject
+#     t1 = time.perf_counter()
+
+#     subject = Subject(config)
+
+#     # generate PRM maps
+#     logging.info("Generating PRM maps")
+#     subject.readCtFiles()
+#     subject.orientImages()
+#     subject.applyMedFilts()
+#     subject.excludeVoxels()
+#     subject.classifyVoxelsPrm()
+#     subject.calcPrmStats()
+#     subject.savePrmNiis()
+#     subject.plotPrmColor()
+
+#     # calculate global topology metrics
+#     logging.info("Calculating global topology metrics")
+#     subject.calcTopologyGlobal()
+#     subject.saveTopologyStats()
+
+#     logging.info("Program complete")
+
+#     # record end time for processing subject
+#     t2 = time.perf_counter()
+#     elapsedTime = (t2 - t1) / 60
+
+#     logging.info(f"Program runtime: {elapsedTime} mins")
 
 
 def main():
