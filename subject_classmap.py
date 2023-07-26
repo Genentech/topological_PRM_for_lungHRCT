@@ -89,20 +89,25 @@ class Subject(object):
         self.prmAllArray, self.pixDims = io_utils.readFiles(
             self.config["io"]["inFilePrm"]
         )
+        self.prmAllArray = np.rot90(self.prmAllArray, axes=(0, 2))
 
         # extract individual PRM maps
-        self.normArray = (self.prmAllArray == constants.proc.PRM_NUM_NORM).astype(
-            int
-        ) * constants.proc.PRM_NUM_NORM
-        self.fSadArray = (self.prmAllArray == constants.proc.PRM_NUM_FSAD).astype(
-            int
-        ) * constants.proc.PRM_NUM_FSAD
-        self.emphArray = (self.prmAllArray == constants.proc.PRM_NUM_EMPH).astype(
-            int
-        ) * constants.proc.PRM_NUM_EMPH
-        self.emptEmphArray = (
-            self.prmAllArray == constants.proc.PRM_NUM_EMPTEMPH
-        ).astype(int) * constants.proc.PRM_NUM_EMPTEMPH
+        self.normArray = np.ascontiguousarray(
+            (self.prmAllArray == constants.proc.PRM_NUM_NORM).astype(int)
+            * constants.proc.PRM_NUM_NORM
+        )
+        self.fSadArray = np.ascontiguousarray(
+            (self.prmAllArray == constants.proc.PRM_NUM_FSAD).astype(int)
+            * constants.proc.PRM_NUM_FSAD
+        )
+        self.emphArray = np.ascontiguousarray(
+            (self.prmAllArray == constants.proc.PRM_NUM_EMPH).astype(int)
+            * constants.proc.PRM_NUM_EMPH
+        )
+        self.emptEmphArray = np.ascontiguousarray(
+            (self.prmAllArray == constants.proc.PRM_NUM_EMPTEMPH).astype(int)
+            * constants.proc.PRM_NUM_EMPTEMPH
+        )
 
     def genMaskFromPrm(self):
         """Generate binary mask from PRM map."""

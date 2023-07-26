@@ -53,7 +53,7 @@ def processSubject(config, args):
     if config.has_option("io", "inFilePrm"):
         # if PRM file location is specified in config, read in PRM map
 
-        logging.info("Reading in PRM maps")
+        logging.info("Reading in PRM map")
         subject.readPrmFile()
         subject.genMaskFromPrm()
 
@@ -67,9 +67,9 @@ def processSubject(config, args):
         subject.applyMedFilts()
         subject.excludeVoxels()
         subject.classifyVoxelsPrm()
-        subject.savePrmNiis()
 
-    # calculate PRM stats and plot representative slice of PRM map
+    # save PRM maps, calculate PRM stats, and plot representative slice of PRM map
+    subject.savePrmNiis()
     subject.calcPrmStats()
     subject.plotPrmColor()
 
