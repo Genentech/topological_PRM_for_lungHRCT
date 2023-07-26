@@ -104,6 +104,11 @@ class Subject(object):
             self.prmAllArray == constants.proc.PRM_NUM_EMPTEMPH
         ).astype(int) * constants.proc.PRM_NUM_EMPTEMPH
 
+    def genMaskFromPrm(self):
+        """Generate binary mask from PRM map."""
+
+        self.maskArray = (self.prmAllArray > 0).astype(int)
+
     def dimOutsideVoxels(self):
         """Dim voxels outside of thoracic cavity.
 
