@@ -266,8 +266,7 @@ class Subject(object):
             self.outDir,
             constants.outFileNames.PRM_ALL + "color_" + self.subjID + ".png",
         )
-        plot_utils.plotPrmRgbOnCt(
-            self.expArrayPlotting,
+        plot_utils.plotPrmRgb(
             self.maskArray,
             self.prmAllArray,
             self.plotSliceNum,
@@ -445,8 +444,7 @@ class Subject(object):
             + self.subjID
             + ".png",
         )
-        plot_utils.plotTopoOnCt(
-            self.expArrayPlotting,
+        plot_utils.plotTopo(
             self.maskArray,
             self.normTopoMapsHiRes[1, :, :, :],
             self.plotSliceNum,
@@ -463,8 +461,7 @@ class Subject(object):
             + self.subjID
             + ".png",
         )
-        plot_utils.plotTopoOnCt(
-            self.expArrayPlotting,
+        plot_utils.plotTopo(
             self.maskArray,
             self.fSadTopoMapsHiRes[1, :, :, :],
             self.plotSliceNum,
@@ -481,8 +478,7 @@ class Subject(object):
             + self.subjID
             + ".png",
         )
-        plot_utils.plotTopoOnCt(
-            self.expArrayPlotting,
+        plot_utils.plotTopo(
             self.maskArray,
             self.emphTopoMapsHiRes[1, :, :, :],
             self.plotSliceNum,
@@ -499,8 +495,7 @@ class Subject(object):
             + self.subjID
             + ".png",
         )
-        plot_utils.plotTopoOnCt(
-            self.expArrayPlotting,
+        plot_utils.plotTopo(
             self.maskArray,
             self.emptEmphTopoMapsHiRes[1, :, :, :],
             self.plotSliceNum,
