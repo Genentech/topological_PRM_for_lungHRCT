@@ -172,6 +172,8 @@ def plotPrmRgbOnCt(
         prmAllArray (np.array): PRM image sorted into bins denoting PRM voxel classification
         sliceNum (int): index of slice along the anterior to posterior dimension to plot
         path (str): path to save final image to
+
+    NOTE: this function is currently unused in the pipeline
     """
 
     # create custom discrete colormap and bounds
@@ -228,6 +230,8 @@ def plotTopoOnCt(
         sliceNum (int): index of slice along the anterior to posterior dimension to plot
         mapUnit (str): string specifying units of topology metric
         path (str): path to save final image to
+
+    NOTE: this function is currently unused in the pipeline
     """
 
     # take single slice of HRCT, mask, and topology map
