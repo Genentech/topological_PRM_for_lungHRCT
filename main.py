@@ -40,7 +40,7 @@ def processSubject(config, args):
 
     Args:
         config: configuration file containing input/ouput file locations
-        args: ArgumentParse object containing command line flags
+        args: ArgumentParser object containing command line flags
     """
 
     # record start time for processing subject
@@ -54,8 +54,9 @@ def processSubject(config, args):
         # if PRM file location is specified in config, read in PRM map
 
         logging.info("Reading in PRM maps")
-        # subject.readPrmFile()
-        # subject.genMaskFromPrm()
+        subject.readPrmFile()
+        subject.genMaskFromPrm()
+
     elif config.has_option("io", "inFileExp"):
         # if HRCT file location is specified in config, generate PRM maps from HRCT
 
