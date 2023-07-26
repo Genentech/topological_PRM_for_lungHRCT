@@ -50,7 +50,13 @@ def processSubject(config, args):
 
     logging.info("*****Processing subject %s*****" % subject.subjID)
 
-    if config.has_option("io", "inFileExp"):
+    if config.has_option("io", "inFilePrm"):
+        # if PRM file location is specified in config, read in PRM map
+
+        logging.info("Reading in PRM maps")
+        # subject.readPrmFile()
+        # subject.genMaskFromPrm()
+    elif config.has_option("io", "inFileExp"):
         # if HRCT file location is specified in config, generate PRM maps from HRCT
 
         # generate PRM maps
@@ -61,12 +67,6 @@ def processSubject(config, args):
         subject.excludeVoxels()
         subject.classifyVoxelsPrm()
         subject.savePrmNiis()
-    elif config.has_option("io", "inFilePrm"):
-        # if PRM file location is specified in config, read in PRM map
-
-        logging.info("Reading in PRM maps")
-        # subject.readPrmFile()
-        # subject.genMaskFromPrm()
 
     # calculate PRM stats and plot representative slice of PRM map
     subject.calcPrmStats()
