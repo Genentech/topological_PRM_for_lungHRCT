@@ -5,6 +5,7 @@ config = ConfigParser()
 config.optionxform = str  # make keys case sensitive
 config["subjInfo"] = {"subjID": "000001"}
 config["io"] = {
+    "inFilePrm": "path/to/prm_map.nii.gz",
     "inFileExp": "path/to/expiratory_image.nii.gz",
     "inFileInspReg": "path/to/inspiratory_registered_image.nii.gz",
     "inFileMask": "path/to/mask.nii.gz",
