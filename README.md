@@ -1,7 +1,7 @@
 # topological_PRM_for_lungHRCT
 
 ## Description
-A pipeline for analyzing inspiratory and expiratory HRCT lung images through quantitative metrics and 3D maps. Currently, this pipeline provides 3D parametric response maps (PRM), global topology metrics, and 3D maps of local topology metrics for regions characterized by normal lung structure, emphysema, functional small airways disease (fSAD), and emptying emphysema. Analysis methods are adapted from methodology described in Hoff et al. (2017)<sup>1</sup>.
+A pipeline for analyzing inspiratory and expiratory HRCT lung images through quantitative metrics and 3D maps. Currently, this pipeline provides 3D parametric response maps (PRM), global topology metrics, and 3D maps of local topology metrics for regions characterized by normal lung structure, emphysema, functional small airways disease (fSAD), and emptying emphysema. Pipeline can also process global and local topology for an existing PRM map. Analysis methods are adapted from methodology described in Hoff et al. (2017)<sup>1</sup>.
 
 NOTE: this pipeline calculates topology metrics from Minkowski functionals computed with the QuantImPy Python package<sup>2</sup>, which may differ from Minkowski measures in Hoff et al. (2017)<sup>1</sup>.
 
@@ -52,11 +52,15 @@ The pipeline currently takes the following required inputs:
 - Segmentation mask with positive integers denoting regions of lung parenchyma (supported file formats: .nii)
 
 ### 2.1 Create subject configuration file(s)
-Configuration (config) files (.ini) specify subject ID, inspiratory HRCT file path, expiratory file path, and the path to save out files to. 
+Configuration (config) files (.ini) specify subject ID, inspiratory HRCT file path, expiratory file path, input PRM map (if available), and the path to save output files to. If the path to an existing PRM map is specified in the config file, the pipeline will skip generation of PRM map from HRCTs.
 <br /> 
-<br />`config/config_demo.ini` shows the required config file structure and fields.
+<br />`config/config_demo.ini` shows config file structure and fields. If an existing PRM map is provided, the required fields are: subjID, inFilePrm, and outDir.
  <br />
 <br />`scripts/write_config.py` can be used to create a config file for a single subject and can be adapted to create config files for a batch of subjects.
+<br />
+<br />If an existing PRM map is provided, the required fields are: `subjID`, `inFilePrm`, and `outDir`.
+<br />
+<br />If no existing PRM map is provided, the required fields are: `subjID`, `inFileExp`, `inFileInspReg`, `inFileMask`, and `outDir`.
 
 ### 2.2 Process a single subject
 To process a single subject run, active your virtual environment, navigate to the main program directory, and run the following command.
