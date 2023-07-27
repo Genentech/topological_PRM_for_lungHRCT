@@ -77,11 +77,11 @@ python main.py --batch --config <path-to-config-file-directory>
 ### 2.4 Compute only PRM maps and global topology metrics
 Processing only PRM maps and global topology metrics significantly cuts down computation time. This is useful if local topology maps are not needed. To do this, add the following flag in the command line when processing a single subject or a batch: `--glbl`
 ```bash
-python main.py --glbl --config <path-to-subject-config-file> --glbl
+python main.py --glbl --config <path-to-subject-config-file>
 ```
 or
 ```bash
-python main.py --glbl --batch --config <path-to-config-file-directory> --glbl
+python main.py --glbl --batch --config <path-to-config-file-directory>
 ```
 
 ## 3. Outputs
