@@ -86,7 +86,6 @@ python main.py --glbl --batch --config <path-to-config-file-directory>
 
 ## 3. Outputs
 - PRM
-    -  Separate 3D PRM maps of normal lung structure, emphysema, fSAD, and emptying emphysema (.nii)
     - Combined 3D PRM map of normal lung structure, emphysema, fSAD, and emptying emphysema (.nii). PRM classifications are assigned the following values -> normal: 1, fSAD: 2, emphysema: 3, emptying emphysema: 4
     - Colorcoded PRM image of a representative slice along the anterior-posterior dimension (.png)
     - Percentage of lung parenchyma voxels in each PRM classification (.csv)
