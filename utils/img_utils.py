@@ -44,9 +44,9 @@ def medFilt(image: np.ndarray, kernelSize: int):
         imageFilt (np.array): filtered image
     """
     imageFilt = np.zeros(image.shape)
-    for s in range(0, image.shape[0]):
-        imageFilt[s, :, :] = scipy.signal.medfilt2d(
-            image[s, :, :], kernel_size=kernelSize
+    for s in range(0, image.shape[2]):
+        imageFilt[:, :, s] = scipy.signal.medfilt2d(
+            image[:, :, s], kernel_size=kernelSize
         )
 
     return imageFilt

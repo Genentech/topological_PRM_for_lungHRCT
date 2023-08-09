@@ -15,7 +15,7 @@ def readFiles(path: str):
 
     Returns:
         outArray (np.array): image contents of file
-        pixDims (np.array): pixel dimensions (in mm), if available
+        pixDims (np.array): pixel dimensions (in mm)
 
     If pixel dimensions available, extract them.
     Supported file formats: .nii
@@ -29,8 +29,16 @@ def readFiles(path: str):
 
     # check if file is .nii and read accordingly
     if ".nii" in fName:
+        # load nifti
         niiImg = nib.load(path)
+
+        # convert to RAS orientation
+        niiImg = nib.as_closest_canonical(niiImg)
+
+        # extract pixel dimensions in mm
         pixDims = niiImg.header["pixdim"][1:4]
+
+        # convert to numpy array
         outArray = np.array(niiImg.dataobj)
     else:
         logging.warning("Registered HRCT file format is unsupported, must be .nii")
