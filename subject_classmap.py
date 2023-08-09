@@ -319,6 +319,7 @@ class Subject(object):
         for classification maps of all PRM regions.
         """
 
+        # loop over each bin number
         for binNum in constants.proc.BINS:
             # generate low resolution 3D local topolgy maps
             binTopoMaps = img_utils.genLowResTopoMaps(
@@ -341,25 +342,18 @@ class Subject(object):
     def calcMeanLocalTopoStats(self):
         """Calculate whole lung mean of each topology metric in local topology maps."""
 
-        # calculate whole lung mean of each topology map
-        normMeanLocal = img_utils.meanLocalTopo(self.normTopoMapsHiRes, self.maskArray)
-        fSadMeanLocal = img_utils.meanLocalTopo(self.fSadTopoMapsHiRes, self.maskArray)
-        emphMeanLocal = img_utils.meanLocalTopo(self.emphTopoMapsHiRes, self.maskArray)
-        emptEmphMeanLocal = img_utils.meanLocalTopo(
-            self.emptEmphTopoMapsHiRes, self.maskArray
-        )
-
-        # create individual dictionaries
-        normLocalDict = io_utils.createMkFnDict(normMeanLocal, "local_norm")
-        fSadLocalDict = io_utils.createMkFnDict(fSadMeanLocal, "local_fSAD")
-        emphLocalDict = io_utils.createMkFnDict(emphMeanLocal, "local_emph")
-        emptEmphLocalDict = io_utils.createMkFnDict(emptEmphMeanLocal, "local_emptemph")
-
-        # merge indivudal dictionaries
-        self.topologyStatsLocal.update(normLocalDict)
-        self.topologyStatsLocal.update(fSadLocalDict)
-        self.topologyStatsLocal.update(emphLocalDict)
-        self.topologyStatsLocal.update(emptEmphLocalDict)
+        # loop over each bin number
+        for binNum in constants.proc.BINS:
+            # calculate whole lung mean of each topology map
+            binMeanLocal = img_utils.meanLocalTopo(
+                self.topoMapsHiResDict[binNum], self.maskArray
+            )
+            # create individual dictionary
+            binLocalDict = io_utils.createMkFnDict(
+                binMeanLocal, "local_" + self.binLabelDict[binNum]
+            )
+            # merge with main local topology stats dictionary
+            self.topologyStatsLocal.update(binLocalDict)
 
     def saveTopoNiis(self):
         """Save topology maps as niftis."""
