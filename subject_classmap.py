@@ -305,7 +305,7 @@ class Subject(object):
 
             # create dictionary from array
             binGlobalDict = io_utils.createMkFnDict(
-                binGlobal, self.binLabelDict[binNum] + "_norm"
+                binGlobal, "global_" + self.binLabelDict[binNum]
             )
 
             # merge with main global topology stats dictionary
