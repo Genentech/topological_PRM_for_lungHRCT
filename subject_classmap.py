@@ -362,57 +362,22 @@ class Subject(object):
         if not exists(join(self.outDir, constants.outFileNames.TOPO_DIR)):
             os.mkdir(join(self.outDir, constants.outFileNames.TOPO_DIR))
 
-        # loop over normal topology arrays and save them as niftis
-        for i in range(self.normTopoMapsHiRes.shape[0]):
-            outPath = join(
-                self.outDir,
-                constants.outFileNames.TOPO_DIR,
-                constants.outFileNames.PRM_NORM
-                + constants.outFileNames.TOPO[i]
-                + self.subjID,
-            )
-            io_utils.saveAsNii(
-                self.normTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
-            )
-
-        # loop over fSAD topology arrays and save them as niftis
-        for i in range(self.fSadTopoMapsHiRes.shape[0]):
-            outPath = join(
-                self.outDir,
-                constants.outFileNames.TOPO_DIR,
-                constants.outFileNames.PRM_FSAD
-                + constants.outFileNames.TOPO[i]
-                + self.subjID,
-            )
-            io_utils.saveAsNii(
-                self.fSadTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
-            )
-
-        # loop over emphysema topology arrays and save them as niftis
-        for i in range(self.emphTopoMapsHiRes.shape[0]):
-            outPath = join(
-                self.outDir,
-                constants.outFileNames.TOPO_DIR,
-                constants.outFileNames.PRM_EMPH
-                + constants.outFileNames.TOPO[i]
-                + self.subjID,
-            )
-            io_utils.saveAsNii(
-                self.emphTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
-            )
-
-        # loop over emptying emphysema topology arrays and save them as niftis
-        for i in range(self.emptEmphTopoMapsHiRes.shape[0]):
-            outPath = join(
-                self.outDir,
-                constants.outFileNames.TOPO_DIR,
-                constants.outFileNames.PRM_EMPTEMPH
-                + constants.outFileNames.TOPO[i]
-                + self.subjID,
-            )
-            io_utils.saveAsNii(
-                self.emptEmphTopoMapsHiRes[i, :, :, :], outPath, self.pixDims
-            )
+        # loop over each bin number
+        for binNum in constants.proc.BINS:
+            # loop over topology arrays and save them as niftis
+            for i in range(self.topoMapsHiResDict[binNum].shape[0]):
+                outPath = join(
+                    self.outDir,
+                    constants.outFileNames.TOPO_DIR,
+                    "prm_"
+                    + self.binLabelDict[binNum]
+                    + "_"
+                    + constants.outFileNames.TOPO[i]
+                    + self.subjID,
+                )
+                io_utils.saveAsNii(
+                    self.topoMapsHiResDict[binNum][i, :, :, :], outPath, self.pixDims
+                )
 
     def plotTopoColor(self):
         """Plot slice of select local topology maps."""
@@ -420,73 +385,27 @@ class Subject(object):
         # specify units of topology map
         mapUnit = "m$^{-1}$"
 
-        # norm surface area density
-        normAreaOutPath = join(
-            self.outDir,
-            constants.outFileNames.PRM_NORM
-            + constants.outFileNames.TOPO[1]
-            + "color_"
-            + self.subjID
-            + ".png",
-        )
-        plot_utils.plotTopo(
-            self.maskArray,
-            self.normTopoMapsHiRes[1, :, :, :],
-            self.plotSliceNum,
-            mapUnit,
-            normAreaOutPath,
-        )
-
-        # fSAD surface area density
-        fSadAreaOutPath = join(
-            self.outDir,
-            constants.outFileNames.PRM_FSAD
-            + constants.outFileNames.TOPO[1]
-            + "color_"
-            + self.subjID
-            + ".png",
-        )
-        plot_utils.plotTopo(
-            self.maskArray,
-            self.fSadTopoMapsHiRes[1, :, :, :],
-            self.plotSliceNum,
-            mapUnit,
-            fSadAreaOutPath,
-        )
-
-        # emph surface area density
-        emphAreaOutPath = join(
-            self.outDir,
-            constants.outFileNames.PRM_EMPH
-            + constants.outFileNames.TOPO[1]
-            + "color_"
-            + self.subjID
-            + ".png",
-        )
-        plot_utils.plotTopo(
-            self.maskArray,
-            self.emphTopoMapsHiRes[1, :, :, :],
-            self.plotSliceNum,
-            mapUnit,
-            emphAreaOutPath,
-        )
-
-        # emptying emphysema surface area density
-        emptEmphAreaOutPath = join(
-            self.outDir,
-            constants.outFileNames.PRM_EMPTEMPH
-            + constants.outFileNames.TOPO[1]
-            + "color_"
-            + self.subjID
-            + ".png",
-        )
-        plot_utils.plotTopo(
-            self.maskArray,
-            self.emptEmphTopoMapsHiRes[1, :, :, :],
-            self.plotSliceNum,
-            mapUnit,
-            emptEmphAreaOutPath,
-        )
+        # plot surface area density for each bin number
+        for binNum in constants.proc.BINS:
+            # norm surface area density
+            binAreaOutPath = join(
+                self.outDir,
+                constants.outFileNames.TOPO_DIR,
+                "prm_"
+                + self.binLabelDict[binNum]
+                + "_"
+                + constants.outFileNames.TOPO[1]
+                + "color_"
+                + self.subjID
+                + ".png",
+            )
+            plot_utils.plotTopo(
+                self.maskArray,
+                self.topoMapsHiResDict[binNum][1, :, :, :],
+                self.plotSliceNum,
+                mapUnit,
+                binAreaOutPath,
+            )
 
     def saveTopologyStats(self):
         """Save combined global and local topology metrics in CSV."""
