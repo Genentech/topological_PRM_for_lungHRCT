@@ -27,18 +27,12 @@ class Subject(object):
         plotSliceNum (int): slice number along anterior-posterior dimnension to use for plotting
         expArrayFilt (np.array): expiratory image with median filter applied
         inspRegArrayFilt (np.array): inspiratory image with median filter applied
-        normArray (np.array): image denoting normal regions from PRM
-        fSadArray (np.array): image denoting regions of non-emphysematous air trapping from PRM
-        emphArray (np.array): image denoting emphysema regions from PRM
-        emptEmphArray (np.array): image denoting regions of "emptying emphysema" from PRM
         prmAllArray (np.array): image denoting all four voxel classifications from PRM
         prmStats (dict): key PRM metrics/statistics
-        topologyGlobal (dict): global topology (Minkowski functionals) metrics for all prm maps
+        binArrayDict (dict): binary image array of each bin category in image
+        topoMapsHiResDict (dict): normalized 3D topological maps for each bin category in image
+        topologyStatsGlobal (dict): global topology (Minkowski functionals) metrics for all prm maps
         topologyStatsLocal (dict): mean of local topology (Minkowski functionals) metrics for all prm maps
-        self.normTopoMapsHiRes (np.array): normalized 3D topological maps of normal PRM voxels
-        self.fSadTopoMapsHiRes (np.array): normalized 3D topological maps of fSAD PRM voxels
-        self.emphTopoMapsHiRes (np.array): normalized 3D topological maps of emphysema PRM voxels
-        self.emptEmphTopoMapsHiRes (np.array): normalized 3D topological maps of emptying emphysema PRM voxels
     """
 
     def __init__(self, config):
@@ -54,23 +48,12 @@ class Subject(object):
         self.plotSliceNum = int
         self.expArrayFilt = np.array([])
         self.inspRegArrayFilt = np.array([])
-        self.normArray = np.array([])
-        self.fSadArray = np.array([])
-        self.emphArray = np.array([])
-        self.emptEmphArray = np.array([])
         self.prmAllArray = np.array([])
         self.prmStats = {}
-
-        self.binArrayDict = {}  #
-        self.binLabelDict = constants.proc.BIN_DICT  #
-        self.topoMapsHiResDict = {}  #
-
+        self.binArrayDict = {}
+        self.topoMapsHiResDict = {}
         self.topologyStatsGlobal = {}
         self.topologyStatsLocal = {}
-        self.normTopoMapsHiRes = np.array([])
-        self.fSadTopoMapsHiRes = np.array([])
-        self.emphTopoMapsHiRes = np.array([])
-        self.emptEmphTopoMapsHiRes = np.array([])
 
     def readCtFiles(self):
         """Read in files and convert to np.array.
@@ -88,43 +71,6 @@ class Subject(object):
 
         # make separate copy of expiratory HRCT to use for plotting
         self.expArrayPlotting = np.copy(self.expArray)
-
-    def readPrmFile(self):
-        """Read in PRM file and extract indvidual PRM maps."""
-        self.prmAllArray, self.pixDims = io_utils.readFiles(
-            self.config["io"]["inFilePrm"]
-        )
-        self.prmAllArray = np.rot90(self.prmAllArray, axes=(0, 2))
-
-        # extract individual PRM maps
-        self.normArray = np.ascontiguousarray(
-            (self.prmAllArray == constants.proc.PRM_NUM_NORM).astype(int)
-        )
-        self.fSadArray = np.ascontiguousarray(
-            (self.prmAllArray == constants.proc.PRM_NUM_FSAD).astype(int)
-        )
-        self.emphArray = np.ascontiguousarray(
-            (self.prmAllArray == constants.proc.PRM_NUM_EMPH).astype(int)
-        )
-        self.emptEmphArray = np.ascontiguousarray(
-            (self.prmAllArray == constants.proc.PRM_NUM_EMPTEMPH).astype(int)
-        )
-
-    def genMaskFromPrm(self):
-        """Generate binary mask from PRM map."""
-
-        self.maskArray = (self.prmAllArray > 0).astype(int)
-
-    def genDictOfImageArrays(self):
-        """Separate binned image into a list of arrays.
-
-        Each array in the list is a binary image for one of the bins.
-        """
-
-        # loop over bin numbers and extract individual binary image arrays
-        for binNum in constants.proc.BINS:
-            binArray = np.ascontiguousarray((self.prmAllArray == binNum).astype(int))
-            self.binArrayDict[binNum] = binArray
 
     def dimOutsideVoxels(self):
         """Dim voxels outside of thoracic cavity.
@@ -210,19 +156,6 @@ class Subject(object):
             & (self.maskArray >= 1)
         )
 
-        # fill arrays with zeros
-        self.normArray = np.zeros(self.expArrayFilt.shape)
-        self.fSadArray = np.zeros(self.expArrayFilt.shape)
-        self.emphArray = np.zeros(self.expArrayFilt.shape)
-        self.emptEmphArray = np.zeros(self.expArrayFilt.shape)
-        self.prmAllArray = np.zeros(self.expArrayFilt.shape)
-
-        # for individual classification arrays, set regions of interest =1
-        self.normArray[normIdx[:, 0], normIdx[:, 1], normIdx[:, 2]] = 1
-        self.fSadArray[fSadIdx[:, 0], fSadIdx[:, 1], fSadIdx[:, 2]] = 1
-        self.emphArray[emphIdx[:, 0], emphIdx[:, 1], emphIdx[:, 2]] = 1
-        self.emptEmphArray[emptEmphIdx[:, 0], emptEmphIdx[:, 1], emptEmphIdx[:, 2]] = 1
-
         # for combined classification, set each region to different number (using IMBIO standard)
         self.prmAllArray[
             normIdx[:, 0], normIdx[:, 1], normIdx[:, 2]
@@ -237,14 +170,41 @@ class Subject(object):
             emptEmphIdx[:, 0], emptEmphIdx[:, 1], emptEmphIdx[:, 2]
         ] = constants.proc.PRM_NUM_EMPTEMPH
 
-    def calcPrmStats(self):
-        """Calculate key PRM statistics."""
+    def readPrmFile(self):
+        """Read in PRM file and extract indvidual PRM maps."""
+        self.prmAllArray, self.pixDims = io_utils.readFiles(
+            self.config["io"]["inFilePrm"]
+        )
+        self.prmAllArray = np.rot90(self.prmAllArray, axes=(0, 2))
 
-        # calculate percentage of voxels in each PRM classification
-        numMaskVoxels = (self.maskArray > 0).sum()
-        self.prmStats["sid"] = self.subjID
+    def genMaskFromPrm(self):
+        """Generate binary mask from PRM map."""
+
+        self.maskArray = (self.prmAllArray > 0).astype(int)
+
+    def genDictOfImageArrays(self):
+        """Separate binned image into a list of arrays.
+
+        Each array in the list is a binary image for one of the bins.
+        """
+
+        # loop over bin numbers and extract individual binary image arrays
         for binNum in constants.proc.BINS:
-            self.prmStats[self.binLabelDict[binNum] + "_prct"] = (
+            binArray = np.ascontiguousarray((self.prmAllArray == binNum).astype(int))
+            self.binArrayDict[binNum] = binArray
+
+    def calcPrmStats(self):
+        """Calculate percentage of voxels in each PRM classification."""
+
+        # get number of voxels in thoracic cavity
+        numMaskVoxels = (self.maskArray > 0).sum()
+
+        # define subject ID into stats dictionary
+        self.prmStats["sid"] = self.subjID
+
+        # loop over each bin number and get percentage of voxels in each bin
+        for binNum in constants.proc.BINS:
+            self.prmStats[constants.proc.BIN_DICT[binNum] + "_prct"] = (
                 100 * np.count_nonzero(self.prmAllArray == binNum) / numMaskVoxels
             )
 
@@ -306,7 +266,7 @@ class Subject(object):
 
             # create dictionary from array
             binGlobalDict = io_utils.createMkFnDict(
-                binGlobal, "global_" + self.binLabelDict[binNum]
+                binGlobal, "global_" + constants.proc.BIN_DICT[binNum]
             )
 
             # merge with main global topology stats dictionary
@@ -326,7 +286,7 @@ class Subject(object):
                 self.binArrayDict[binNum], self.maskArray, self.pixDims
             )
             logging.info(
-                self.binLabelDict[binNum]
+                constants.proc.BIN_DICT[binNum]
                 + " low resolution local topology mapping complete."
             )
 
@@ -335,7 +295,7 @@ class Subject(object):
                 self.binArrayDict[binNum].shape, self.maskArray, binTopoMaps
             )
             logging.info(
-                self.binLabelDict[binNum]
+                constants.proc.BIN_DICT[binNum]
                 + " high resolution local topology mapping interpolation complete."
             )
 
@@ -350,7 +310,7 @@ class Subject(object):
             )
             # create individual dictionary
             binLocalDict = io_utils.createMkFnDict(
-                binMeanLocal, "local_" + self.binLabelDict[binNum]
+                binMeanLocal, "local_" + constants.proc.BIN_DICT[binNum]
             )
             # merge with main local topology stats dictionary
             self.topologyStatsLocal.update(binLocalDict)
@@ -370,7 +330,7 @@ class Subject(object):
                     self.outDir,
                     constants.outFileNames.TOPO_DIR,
                     "prm_"
-                    + self.binLabelDict[binNum]
+                    + constants.proc.BIN_DICT[binNum]
                     + "_"
                     + constants.outFileNames.TOPO[i]
                     + self.subjID,
@@ -390,9 +350,8 @@ class Subject(object):
             # norm surface area density
             binAreaOutPath = join(
                 self.outDir,
-                constants.outFileNames.TOPO_DIR,
                 "prm_"
-                + self.binLabelDict[binNum]
+                + constants.proc.BIN_DICT[binNum]
                 + "_"
                 + constants.outFileNames.TOPO[1]
                 + "color_"

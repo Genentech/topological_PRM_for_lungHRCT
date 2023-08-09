@@ -46,7 +46,7 @@ class proc(object):
     GRID_RES = 5
     PLOT_PAD = 40
     BINS = [1, 2, 3, 4]
-    BIN_DICT = {1: "norm", 2: "bin_2", 3: "bin_3", 4: "bin_4"}
+    BIN_DICT = {1: "norm", 2: "fsad", 3: "emph", 4: "emptemph"}
 
 
 class outFileNames(object):
@@ -69,10 +69,6 @@ class outFileNames(object):
 
     PRM_DIR = "prm"
     TOPO_DIR = "prm_topology"
-    PRM_NORM = "prm_norm_"
-    PRM_FSAD = "prm_fsad_"
-    PRM_EMPH = "prm_emph_"
-    PRM_EMPTEMPH = "prm_emptemph_"
     PRM_ALL = "prm_all_"
     TOPO = ["vol_", "area_", "curv_", "euler_"]
     PRM_STATS = "prm_stats_"
