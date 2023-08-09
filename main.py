@@ -73,7 +73,7 @@ def processSubject(config, args):
     subject.calcPrmStats()
     subject.plotPrmColor()
 
-    # calculate global topology metrics and save topology stats
+    # calculate global topology metrics
     logging.info("Calculating global topology metrics")
     subject.genDictOfImageArrays()
     subject.calcTopologyGlobal()
@@ -88,6 +88,9 @@ def processSubject(config, args):
         subject.saveTopoNiis()
         subject.calcMeanLocalTopoStats()
         subject.plotTopoColor()
+
+    # save topology stats
+    subject.saveTopologyStats()
 
     logging.info("Program complete")
 
