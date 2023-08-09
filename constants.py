@@ -32,8 +32,7 @@ class proc(object):
         WIND_RADIUS (int): half the length of one side of nxnxn moving window for calculating local topology, rounded up
         GRID_RES (int): interval (in voxels) between nxnxn moving windows for calculating local topology
         PLOT_PAD (int): number of voxels to leave around thoracic cavity for plotting single slice of PRM map
-        BINS (list): integers corresponding to bins in PRM map
-        BIN_DICT (list): labels corresponding to each bin in PRM map
+        BIN_DICT (list): bins and labels corresponding to each bin in PRM map
     """
 
     EXP_THRESH = -856
