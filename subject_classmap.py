@@ -190,7 +190,7 @@ class Subject(object):
         """
 
         # loop over bin numbers and extract individual binary image arrays
-        for binNum in constants.proc.BINS:
+        for binNum in constants.proc.BIN_DICT.keys():
             binArray = np.ascontiguousarray((self.prmAllArray == binNum).astype(int))
             self.binArrayDict[binNum] = binArray
 
@@ -204,7 +204,7 @@ class Subject(object):
         self.prmStats["sid"] = self.subjID
 
         # loop over each bin number and get percentage of voxels in each bin
-        for binNum in constants.proc.BINS:
+        for binNum in constants.proc.BIN_DICT.keys():
             self.prmStats[constants.proc.BIN_DICT[binNum] + "_prct"] = (
                 100 * np.count_nonzero(self.prmAllArray == binNum) / numMaskVoxels
             )
@@ -258,7 +258,7 @@ class Subject(object):
         """
 
         # loop over each bin number
-        for binNum in constants.proc.BINS:
+        for binNum in constants.proc.BIN_DICT.keys():
             # retrieve bin image array
             binArray = self.binArrayDict[binNum]
 
@@ -281,7 +281,7 @@ class Subject(object):
         """
 
         # loop over each bin number
-        for binNum in constants.proc.BINS:
+        for binNum in constants.proc.BIN_DICT.keys():
             # generate low resolution 3D local topolgy maps
             binTopoMaps = img_utils.genLowResTopoMaps(
                 self.binArrayDict[binNum], self.maskArray, self.pixDims
@@ -304,7 +304,7 @@ class Subject(object):
         """Calculate whole lung mean of each topology metric in local topology maps."""
 
         # loop over each bin number
-        for binNum in constants.proc.BINS:
+        for binNum in constants.proc.BIN_DICT.keys():
             # calculate whole lung mean of each topology map
             binMeanLocal = img_utils.meanLocalTopo(
                 self.topoMapsHiResDict[binNum], self.maskArray
@@ -324,7 +324,7 @@ class Subject(object):
             os.mkdir(join(self.outDir, constants.outFileNames.TOPO_DIR))
 
         # loop over each bin number
-        for binNum in constants.proc.BINS:
+        for binNum in constants.proc.BIN_DICT.keys():
             # loop over topology arrays and save them as niftis
             for i in range(self.topoMapsHiResDict[binNum].shape[0]):
                 outPath = join(
@@ -347,7 +347,7 @@ class Subject(object):
         mapUnit = "m$^{-1}$"
 
         # plot surface area density for each bin number
-        for binNum in constants.proc.BINS:
+        for binNum in constants.proc.BIN_DICT.keys():
             # norm surface area density
             binAreaOutPath = join(
                 self.outDir,
