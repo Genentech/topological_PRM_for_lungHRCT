@@ -45,6 +45,7 @@ class proc(object):
     WIND_RADIUS = 11
     GRID_RES = 5
     PLOT_PAD = 40
+    BINS = [1, 2, 3, 4]
 
 
 class outFileNames(object):

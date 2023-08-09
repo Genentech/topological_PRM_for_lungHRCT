@@ -231,6 +231,10 @@ class Subject(object):
         # calculate percentage of voxels in each PRM classification
         numMaskVoxels = (self.maskArray > 0).sum()
         self.prmStats["sid"] = self.subjID
+        for binNum in constants.proc.BINS:
+            self.prmStats["bin_" + str(binNum) + "_prct"] = (
+                100 * np.count_nonzero(self.prmAllArray == binNum) / numMaskVoxels
+            )
         self.prmStats["PRM_norm_prct"] = 100 * np.sum(self.normArray) / numMaskVoxels
         self.prmStats["PRM_fSAD_prct"] = 100 * np.sum(self.fSadArray) / numMaskVoxels
         self.prmStats["PRM_emph_prct"] = 100 * np.sum(self.emphArray) / numMaskVoxels
