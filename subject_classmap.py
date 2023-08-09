@@ -46,7 +46,6 @@ class Subject(object):
         self.config = config
         self.subjID = config["subjInfo"]["subjID"]
         self.outDir = config["io"]["outDir"]
-        self.binLabelDict = constants.proc.BIN_DICT
         self.expArray = np.array([])
         self.expArrayPlotting = np.array([])
         self.inspRegArray = np.array([])
@@ -60,9 +59,11 @@ class Subject(object):
         self.emphArray = np.array([])
         self.emptEmphArray = np.array([])
         self.prmAllArray = np.array([])
-        self.binArrayDict = {}  #
         self.prmStats = {}
-        self.topoGlobaList = []  #
+
+        self.binArrayDict = {}  #
+        self.binLabelDict = constants.proc.BIN_DICT  #
+        self.topoMapsHiResDict = {}  #
 
         self.topologyStatsGlobal = {}
         self.topologyStatsLocal = {}
@@ -295,7 +296,7 @@ class Subject(object):
         for classification maps of all PRM regions.
         """
 
-        # loop over binary image array for each bin
+        # loop over each bin number
         for binNum in constants.proc.BINS:
             # retrieve bin image array
             binArray = self.binArrayDict[binNum]
@@ -318,39 +319,24 @@ class Subject(object):
         for classification maps of all PRM regions.
         """
 
-        # generate low resolution 3D local topolgy maps
-        normTopoMaps = img_utils.genLowResTopoMaps(
-            self.normArray, self.maskArray, self.pixDims
-        )
-        logging.info("Normal low resolution local topology mapping complete.")
-        fSadTopoMaps = img_utils.genLowResTopoMaps(
-            self.fSadArray, self.maskArray, self.pixDims
-        )
-        logging.info("fSAD low resolution local topology mapping complete.")
-        emphTopoMaps = img_utils.genLowResTopoMaps(
-            self.emphArray, self.maskArray, self.pixDims
-        )
-        logging.info("Emphysema low resolution local topology mapping complete.")
-        emptEmphTopoMaps = img_utils.genLowResTopoMaps(
-            self.emptEmphArray, self.maskArray, self.pixDims
-        )
-        logging.info(
-            "Emptying emphysema low resolution local topology mapping complete."
-        )
+        for binNum in constants.proc.BINS:
+            # generate low resolution 3D local topolgy maps
+            binTopoMaps = img_utils.genLowResTopoMaps(
+                self.binArrayDict[binNum], self.maskArray, self.pixDims
+            )
+            logging.info(
+                self.binLabelDict[binNum]
+                + " low resolution local topology mapping complete."
+            )
 
-        # generate high resolution 3D maps using interpolation
-        self.normTopoMapsHiRes = img_utils.resizeTopoMaps(
-            self.normArray.shape, self.maskArray, normTopoMaps
-        )
-        self.fSadTopoMapsHiRes = img_utils.resizeTopoMaps(
-            self.fSadArray.shape, self.maskArray, fSadTopoMaps
-        )
-        self.emphTopoMapsHiRes = img_utils.resizeTopoMaps(
-            self.emphArray.shape, self.maskArray, emphTopoMaps
-        )
-        self.emptEmphTopoMapsHiRes = img_utils.resizeTopoMaps(
-            self.emptEmphArray.shape, self.maskArray, emptEmphTopoMaps
-        )
+            # generate high resolution 3D maps using interpolation
+            self.topoMapsHiResDict[binNum] = img_utils.resizeTopoMaps(
+                self.binArrayDict[binNum].shape, self.maskArray, binTopoMaps
+            )
+            logging.info(
+                self.binLabelDict[binNum]
+                + " high resolution local topology mapping interpolation complete."
+            )
 
     def calcMeanLocalTopoStats(self):
         """Calculate whole lung mean of each topology metric in local topology maps."""
