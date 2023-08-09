@@ -184,7 +184,7 @@ class Subject(object):
         self.maskArray = (self.prmAllArray > 0).astype(int)
 
     def genDictOfImageArrays(self):
-        """Separate binned image into a list of arrays.
+        """Separate binned PRM image into a list of arrays.
 
         Each array in the list is a binary image for one of the bins.
         """
