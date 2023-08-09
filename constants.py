@@ -48,7 +48,7 @@ class proc(object):
     GRID_RES = 5
     PLOT_PAD = 40
     BINS = [1, 2, 3, 4]
-    BIN_DICT = {1: "norm", 2: "fsad", 3: "emph", 4: "emptemph"}
+    BIN_DICT = {1: "norm", 2: "fSAD", 3: "emph", 4: "emptemph"}
 
 
 class outFileNames(object):
