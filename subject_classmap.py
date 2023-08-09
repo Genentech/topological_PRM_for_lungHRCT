@@ -94,19 +94,15 @@ class Subject(object):
         # extract individual PRM maps
         self.normArray = np.ascontiguousarray(
             (self.prmAllArray == constants.proc.PRM_NUM_NORM).astype(int)
-            * constants.proc.PRM_NUM_NORM
         )
         self.fSadArray = np.ascontiguousarray(
             (self.prmAllArray == constants.proc.PRM_NUM_FSAD).astype(int)
-            * constants.proc.PRM_NUM_FSAD
         )
         self.emphArray = np.ascontiguousarray(
             (self.prmAllArray == constants.proc.PRM_NUM_EMPH).astype(int)
-            * constants.proc.PRM_NUM_EMPH
         )
         self.emptEmphArray = np.ascontiguousarray(
             (self.prmAllArray == constants.proc.PRM_NUM_EMPTEMPH).astype(int)
-            * constants.proc.PRM_NUM_EMPTEMPH
         )
 
     def genMaskFromPrm(self):
