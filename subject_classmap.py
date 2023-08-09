@@ -46,6 +46,7 @@ class Subject(object):
         self.config = config
         self.subjID = config["subjInfo"]["subjID"]
         self.outDir = config["io"]["outDir"]
+        self.binLabelDict = constants.proc.BIN_DICT
         self.expArray = np.array([])
         self.expArrayPlotting = np.array([])
         self.inspRegArray = np.array([])
@@ -59,7 +60,7 @@ class Subject(object):
         self.emphArray = np.array([])
         self.emptEmphArray = np.array([])
         self.prmAllArray = np.array([])
-        self.binArrayList = []  #
+        self.binArrayDict = {}  #
         self.prmStats = {}
         self.topoGlobaList = []  #
 
@@ -113,7 +114,7 @@ class Subject(object):
 
         self.maskArray = (self.prmAllArray > 0).astype(int)
 
-    def genListOfImageArrays(self):
+    def genDictOfImageArrays(self):
         """Separate binned image into a list of arrays.
 
         Each array in the list is a binary image for one of the bins.
@@ -122,7 +123,7 @@ class Subject(object):
         # loop over bin numbers and extract individual binary image arrays
         for binNum in constants.proc.BINS:
             binArray = np.ascontiguousarray((self.prmAllArray == binNum).astype(int))
-            self.binArrayList.append(binArray)
+            self.binArrayDict[binNum] = binArray
 
     def dimOutsideVoxels(self):
         """Dim voxels outside of thoracic cavity.
@@ -242,7 +243,7 @@ class Subject(object):
         numMaskVoxels = (self.maskArray > 0).sum()
         self.prmStats["sid"] = self.subjID
         for binNum in constants.proc.BINS:
-            self.prmStats["bin_" + str(binNum) + "_prct"] = (
+            self.prmStats[self.binLabelDict[binNum] + "_prct"] = (
                 100 * np.count_nonzero(self.prmAllArray == binNum) / numMaskVoxels
             )
 
@@ -295,16 +296,16 @@ class Subject(object):
         """
 
         # loop over binary image array for each bin
-        for i in range(len(constants.proc.BINS)):
+        for binNum in constants.proc.BINS:
             # retrieve bin image array
-            binArray = self.binArrayList[i]
+            binArray = self.binArrayDict[binNum]
 
             # get array containing global mk fns for each prm region
             binGlobal = img_utils.calcMkFnsNorm(binArray, self.maskArray, self.pixDims)
 
             # create dictionary from array
             binGlobalDict = io_utils.createMkFnDict(
-                binGlobal, str(constants.proc.BINS[i]) + "_norm"
+                binGlobal, self.binLabelDict[binNum] + "_norm"
             )
 
             # merge with main global topology stats dictionary
