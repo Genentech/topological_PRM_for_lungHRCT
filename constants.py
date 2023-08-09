@@ -55,10 +55,6 @@ class outFileNames(object):
     Attributes:
         PRM_DIR (str): directory name for PRM niftis
         TOPO_DIR (str): directory name for topology niftis
-        PRM_NORM (str): file name for map of norm regions from PRM
-        PRM_FSAD (str): file name for map of fSAD regions from PRM
-        PRM_EMPH (str): file name for map of emph regions from PRM
-        PRM_EMPTEMPH (str): file name for map of emptying emph regions from PRM
         PRM_ALL (str): file name for map of all regions from PRM
         TOPO (str): list of file names for topology maps
         PRM_STATS (str): file name for csv containing prm stats
