@@ -294,36 +294,21 @@ class Subject(object):
         for classification maps of all PRM regions.
         """
 
-        for binNum in constants.proc.BINS:
-            tmpGlobal = img_utils.calcMkFnsNorm(
-                self.normArray, self.maskArray, self.pixDims
+        # loop over binary image array for each bin
+        for i in range(len(constants.proc.BINS)):
+            # retrieve bin image array
+            binArray = self.binArrayList[i]
+
+            # get array containing global mk fns for each prm region
+            binGlobal = img_utils.calcMkFnsNorm(binArray, self.maskArray, self.pixDims)
+
+            # create dictionary from array
+            binGlobalDict = io_utils.createMkFnDict(
+                binGlobal, str(constants.proc.BINS[i]) + "_norm"
             )
 
-        # get individual arrays containing global mk fns for each prm region
-        normGlobal = img_utils.calcMkFnsNorm(
-            self.normArray, self.maskArray, self.pixDims
-        )
-        fSadGlobal = img_utils.calcMkFnsNorm(
-            self.fSadArray, self.maskArray, self.pixDims
-        )
-        emphGlobal = img_utils.calcMkFnsNorm(
-            self.emphArray, self.maskArray, self.pixDims
-        )
-        emptEmphGlobal = img_utils.calcMkFnsNorm(
-            self.emptEmphArray, self.maskArray, self.pixDims
-        )
-
-        # create individual dictionaries from arrays
-        normGlobalDict = io_utils.createMkFnDict(normGlobal, "global_norm")
-        fSadGlobalDict = io_utils.createMkFnDict(fSadGlobal, "global_fSAD")
-        emphGlobalDict = io_utils.createMkFnDict(emphGlobal, "global_emph")
-        emptEmphGlobalDict = io_utils.createMkFnDict(emptEmphGlobal, "global_emptemph")
-
-        # merge indivudal dictionaries
-        self.topologyStatsGlobal.update(normGlobalDict)
-        self.topologyStatsGlobal.update(fSadGlobalDict)
-        self.topologyStatsGlobal.update(emphGlobalDict)
-        self.topologyStatsGlobal.update(emptEmphGlobalDict)
+            # merge with main global topology stats dictionary
+            self.topologyStatsGlobal.update(binGlobalDict)
 
     def genLocalTopoMaps(self):
         """Generate 3D maps of local topology features for all PRM maps.
