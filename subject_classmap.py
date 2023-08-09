@@ -59,7 +59,10 @@ class Subject(object):
         self.emphArray = np.array([])
         self.emptEmphArray = np.array([])
         self.prmAllArray = np.array([])
+        self.binArrayList = []  #
         self.prmStats = {}
+        self.topoGlobaList = []  #
+
         self.topologyStatsGlobal = {}
         self.topologyStatsLocal = {}
         self.normTopoMapsHiRes = np.array([])
@@ -109,6 +112,17 @@ class Subject(object):
         """Generate binary mask from PRM map."""
 
         self.maskArray = (self.prmAllArray > 0).astype(int)
+
+    def genListOfImageArrays(self):
+        """Separate binned image into a list of arrays.
+
+        Each array in the list is a binary image for one of the bins.
+        """
+
+        # loop over bin numbers and extract individual binary image arrays
+        for binNum in constants.proc.BINS:
+            binArray = np.ascontiguousarray((self.prmAllArray == binNum).astype(int))
+            self.binArrayList.append(binArray)
 
     def dimOutsideVoxels(self):
         """Dim voxels outside of thoracic cavity.
@@ -231,12 +245,6 @@ class Subject(object):
             self.prmStats["bin_" + str(binNum) + "_prct"] = (
                 100 * np.count_nonzero(self.prmAllArray == binNum) / numMaskVoxels
             )
-        self.prmStats["PRM_norm_prct"] = 100 * np.sum(self.normArray) / numMaskVoxels
-        self.prmStats["PRM_fSAD_prct"] = 100 * np.sum(self.fSadArray) / numMaskVoxels
-        self.prmStats["PRM_emph_prct"] = 100 * np.sum(self.emphArray) / numMaskVoxels
-        self.prmStats["PRM_emptemph_prct"] = (
-            100 * np.sum(self.emptEmphArray) / numMaskVoxels
-        )
 
         # create out path and save stats as csv
         prmStatsOutPath = join(
@@ -251,38 +259,14 @@ class Subject(object):
         if not exists(join(self.outDir, constants.outFileNames.PRM_DIR)):
             os.mkdir(join(self.outDir, constants.outFileNames.PRM_DIR))
 
-        # create path + file names
-        normArrayOutPath = join(
-            self.outDir,
-            constants.outFileNames.PRM_DIR,
-            constants.outFileNames.PRM_NORM + self.subjID,
-        )
-        fSadArrayOutPath = join(
-            self.outDir,
-            constants.outFileNames.PRM_DIR,
-            constants.outFileNames.PRM_FSAD + self.subjID,
-        )
-        emphArrayOutPath = join(
-            self.outDir,
-            constants.outFileNames.PRM_DIR,
-            constants.outFileNames.PRM_EMPH + self.subjID,
-        )
-        emptEmphArrayOutPath = join(
-            self.outDir,
-            constants.outFileNames.PRM_DIR,
-            constants.outFileNames.PRM_EMPTEMPH + self.subjID,
-        )
+        # create path + file name
         prmAllArrayOutPath = join(
             self.outDir,
             constants.outFileNames.PRM_DIR,
             constants.outFileNames.PRM_ALL + self.subjID,
         )
 
-        # save arrays as niftis
-        io_utils.saveAsNii(self.normArray, normArrayOutPath, self.pixDims)
-        io_utils.saveAsNii(self.fSadArray, fSadArrayOutPath, self.pixDims)
-        io_utils.saveAsNii(self.emphArray, emphArrayOutPath, self.pixDims)
-        io_utils.saveAsNii(self.emptEmphArray, emptEmphArrayOutPath, self.pixDims)
+        # save array as nifti
         io_utils.saveAsNii(self.prmAllArray, prmAllArrayOutPath, self.pixDims)
 
     def plotPrmColor(self):
@@ -309,6 +293,11 @@ class Subject(object):
         Calculates global volume, surface area, curvature, and the Euler characteristic
         for classification maps of all PRM regions.
         """
+
+        for binNum in constants.proc.BINS:
+            tmpGlobal = img_utils.calcMkFnsNorm(
+                self.normArray, self.maskArray, self.pixDims
+            )
 
         # get individual arrays containing global mk fns for each prm region
         normGlobal = img_utils.calcMkFnsNorm(
