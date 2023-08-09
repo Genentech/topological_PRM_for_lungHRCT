@@ -176,7 +176,6 @@ class Subject(object):
         self.prmAllArray, self.pixDims = io_utils.readFiles(
             self.config["io"]["inFilePrm"]
         )
-        self.prmAllArray = np.rot90(self.prmAllArray, axes=(0, 2))
 
     def genMaskFromPrm(self):
         """Generate binary mask from PRM map."""
