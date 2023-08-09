@@ -157,6 +157,7 @@ class Subject(object):
         )
 
         # for combined classification, set each region to different number (using IMBIO standard)
+        self.prmAllArray = np.zeros(self.expArrayFilt.shape)
         self.prmAllArray[
             normIdx[:, 0], normIdx[:, 1], normIdx[:, 2]
         ] = constants.proc.PRM_NUM_NORM
