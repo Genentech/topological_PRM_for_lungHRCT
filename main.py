@@ -75,7 +75,7 @@ def processSubject(config, args):
 
     # calculate global topology metrics and save topology stats
     logging.info("Calculating global topology metrics")
-    subject.genListOfImageArrays()
+    subject.genDictOfImageArrays()
     subject.calcTopologyGlobal()
     subject.saveTopologyStats()
 
