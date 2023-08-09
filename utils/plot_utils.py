@@ -94,6 +94,10 @@ def plotPrmRgb(
     # mask out un-binned regions
     prmAllArraySlice = np.ma.masked_where(prmAllArraySlice < 1, prmAllArraySlice)
 
+    # orient slice
+    prmAllArraySlice = np.rot90(prmAllArraySlice, k=1)
+    prmAllArraySlice = np.flip(prmAllArraySlice, axis=1)
+
     # plot image overlaid on corresponding HRCT slice
     plt.subplots()
     plt.imshow(prmAllArraySlice, cmap=cmap, norm=norm)
@@ -140,6 +144,10 @@ def plotTopo(
     # mask out regions outside of maskArray
     topoArraySlice = np.ma.masked_where(maskArraySliceK <= 0, topoArraySlice)
 
+    # orient slice
+    topoArraySlice = np.rot90(topoArraySlice, k=1)
+    topoArraySlice = np.flip(topoArraySlice, axis=1)
+
     # plot image overlaid on corresponding HRCT slice
     plt.subplots()
     plt.imshow(topoArraySlice, cmap="plasma")
@@ -173,7 +181,7 @@ def plotPrmRgbOnCt(
         sliceNum (int): index of slice along the anterior to posterior dimension to plot
         path (str): path to save final image to
 
-    NOTE: this function is currently unused in the pipeline
+    NOTE: this function is currently depricated
     """
 
     # create custom discrete colormap and bounds
@@ -231,7 +239,7 @@ def plotTopoOnCt(
         mapUnit (str): string specifying units of topology metric
         path (str): path to save final image to
 
-    NOTE: this function is currently unused in the pipeline
+    NOTE: this function is currently depricated
     """
 
     # take single slice of HRCT, mask, and topology map
