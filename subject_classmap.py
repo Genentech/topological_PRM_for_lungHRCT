@@ -84,6 +84,8 @@ class Subject(object):
         """Put HRCTs into proper orientation.
 
         Rotate 180 degrees and reflect images
+
+        NOTE: currently unused
         """
         self.expArray = np.rot90(np.swapaxes(self.expArray, 0, 2), 2)[:, ::-1, :]
         self.expArrayPlotting = np.rot90(np.swapaxes(self.expArrayPlotting, 0, 2), 2)[

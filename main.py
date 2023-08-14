@@ -63,7 +63,6 @@ def processSubject(config, args):
         # generate PRM maps
         logging.info("Generating PRM maps")
         subject.readCtFiles()
-        # subject.orientImages()
         subject.applyMedFilts()
         subject.excludeVoxels()
         subject.classifyVoxelsPrm()
