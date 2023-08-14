@@ -56,7 +56,7 @@ class Subject(object):
         self.topologyStatsLocal = {}
 
     def readCtFiles(self):
-        """Read in files and convert to np.array.
+        """Read in CT and mask files and convert to np.array.
 
         Read in files containing expiratory and inspiratory HRCTs and mask (.nii).
         Save a copy of expiratory HRCT for plotting.
@@ -175,9 +175,18 @@ class Subject(object):
 
     def readPrmFile(self):
         """Read in PRM file and extract indvidual PRM maps."""
+
         self.prmAllArray, self.pixDims = io_utils.readFiles(
             self.config["io"]["inFilePrm"]
         )
+
+    def readMaskFile(self):
+        """Read in mask file and convert to np.array.
+
+        Intended for when input PRM map and mask file are specified in config.
+        """
+
+        self.maskArray, _ = io_utils.readFiles(self.config["io"]["inFileMask"])
 
     def genMaskFromPrm(self):
         """Generate binary mask from PRM map."""

@@ -51,14 +51,20 @@ def processSubject(config, args):
     logging.info("*****Processing subject %s*****" % subject.subjID)
 
     if config.has_option("io", "inFilePrm"):
-        # if PRM file location is specified in config, read in PRM map
+        # if PRM file specified in config, read in PRM map
 
         logging.info("Reading in PRM map")
         subject.readPrmFile()
-        subject.genMaskFromPrm()
+
+        if config.has_option("io", "inFileMask"):
+            # if mask file specified in config, use it
+            subject.readMaskFile()
+        else:
+            # if nomask file in config, generate mask from binned regions in prm map
+            subject.genMaskFromPrm()
 
     elif config.has_option("io", "inFileExp"):
-        # if HRCT file location is specified in config, generate PRM maps from HRCT
+        # if HRCT file specified in config, generate PRM maps from HRCT
 
         # generate PRM maps
         logging.info("Generating PRM maps")
