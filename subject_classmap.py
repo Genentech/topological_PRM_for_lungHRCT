@@ -85,7 +85,7 @@ class Subject(object):
 
         Rotate 180 degrees and reflect images
 
-        NOTE: currently unused
+        NOTE: currently unused, depricated
         """
         self.expArray = np.rot90(np.swapaxes(self.expArray, 0, 2), 2)[:, ::-1, :]
         self.expArrayPlotting = np.rot90(np.swapaxes(self.expArrayPlotting, 0, 2), 2)[
