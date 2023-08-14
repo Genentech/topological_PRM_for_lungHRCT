@@ -61,6 +61,9 @@ def processSubject(config, args):
             subject.readMaskFile()
         else:
             # if nomask file in config, generate mask from binned regions in prm map
+            logging.info(
+                "No mask file in config, generating mask from binned voxels in input PRM"
+            )
             subject.genMaskFromPrm()
 
     elif config.has_option("io", "inFileExp"):
