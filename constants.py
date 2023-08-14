@@ -46,7 +46,8 @@ class proc(object):
     WIND_RADIUS = 11
     GRID_RES = 5
     PLOT_PAD = 40
-    BIN_DICT = {1: "norm", 2: "fSAD", 3: "emph", 4: "emptemph"}
+    # BIN_DICT = {1: "norm", 2: "fSAD", 3: "emph", 4: "emptemph"}
+    BIN_DICT = {1: "HAA"}
 
 
 class outFileNames(object):

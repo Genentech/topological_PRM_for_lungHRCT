@@ -79,7 +79,7 @@ def processSubject(config, args):
     # save PRM maps, calculate PRM stats, and plot representative slice of PRM map
     subject.savePrmNiis()
     subject.calcPrmStats()
-    subject.plotPrmColor()
+    # subject.plotPrmColor()
 
     # calculate global topology metrics
     logging.info("Calculating global topology metrics")
@@ -95,7 +95,7 @@ def processSubject(config, args):
         subject.genLocalTopoMaps()
         subject.saveTopoNiis()
         subject.calcMeanLocalTopoStats()
-        subject.plotTopoColor()
+        # subject.plotTopoColor()
 
     # save topology stats
     subject.saveTopologyStats()
