@@ -58,7 +58,7 @@ Configuration (config) files (.ini) specify subject ID, inspiratory HRCT file pa
  <br />
 <br />`scripts/write_config.py` can be used to create a config file for a single subject and can be adapted to create config files for a batch of subjects.
 <br />
-<br />If an existing PRM map is provided, the required fields are: `subjID`, `inFilePrm`, and `outDir`.
+<br />If an existing PRM map is provided, the required fields are: `subjID`, `inFilePrm`, and `outDir`. If `inFileMask` is provided, the input mask will be used. If not, a mask will be generated from binned voxels of the input PRM map.
 <br />
 <br />If no existing PRM map is provided, the required fields are: `subjID`, `inFileExp`, `inFileInspReg`, `inFileMask`, and `outDir`.
 
