@@ -203,6 +203,12 @@ def plotPrmRgbOnCt(
     # mask out un-binned regions
     prmAllArraySlice = np.ma.masked_where(prmAllArraySlice < 1, prmAllArraySlice)
 
+    # orient slices
+    prmAllArraySlice = np.rot90(prmAllArraySlice, k=1)
+    prmAllArraySlice = np.flip(prmAllArraySlice, axis=1)
+    ctArraySlice = np.rot90(ctArraySlice, k=1)
+    ctArraySlice = np.flip(ctArraySlice, axis=1)
+
     # plot image overlaid on corresponding HRCT slice
     plt.subplots()
     plt.imshow(ctArraySlice, cmap="gray")
@@ -255,6 +261,12 @@ def plotTopoOnCt(
 
     # mask out regions outside of maskArray
     topoArraySlice = np.ma.masked_where(maskArraySliceK <= 0, topoArraySlice)
+
+    # orient slices
+    topoArraySlice = np.rot90(topoArraySlice, k=1)
+    topoArraySlice = np.flip(topoArraySlice, axis=1)
+    ctArraySlice = np.rot90(ctArraySlice, k=1)
+    ctArraySlice = np.flip(ctArraySlice, axis=1)
 
     # plot image overlaid on corresponding HRCT slice
     plt.subplots()
