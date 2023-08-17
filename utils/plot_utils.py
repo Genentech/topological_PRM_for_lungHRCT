@@ -1,4 +1,6 @@
 """Utils for plotting"""
+import pdb
+
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import colors
@@ -181,7 +183,7 @@ def plotPrmRgbOnCt(
         sliceNum (int): index of slice along the anterior to posterior dimension to plot
         path (str): path to save final image to
 
-    NOTE: this function is currently depricated
+    NOTE: this function is currently unused
     """
 
     # create custom discrete colormap and bounds
@@ -245,7 +247,7 @@ def plotTopoOnCt(
         mapUnit (str): string specifying units of topology metric
         path (str): path to save final image to
 
-    NOTE: this function is currently depricated
+    NOTE: this function is currently unused
     """
 
     # take single slice of HRCT, mask, and topology map
