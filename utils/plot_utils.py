@@ -220,7 +220,7 @@ def plotPrmRgbOnCt(
     # add colorbar
     imgRatio = prmAllArraySlice.shape[0] / prmAllArraySlice.shape[1]
     cbar = plt.colorbar(ticks=[1.5, 2.5, 3.5, 4.5], fraction=0.047 * imgRatio, pad=0)
-    cbar.ax.set_yticklabels(["norm", "fSAD", "emph", "empt\nemph"])
+    cbar.ax.set_yticklabels(["norm", "fSAD", "emph", "unclassified"])
 
     # save figure and close it
     plt.tight_layout()
@@ -273,7 +273,7 @@ def plotTopoOnCt(
     # plot image overlaid on corresponding HRCT slice
     plt.subplots()
     plt.imshow(ctArraySlice, cmap="gray")
-    plt.imshow(topoArraySlice, cmap="plasma")
+    plt.imshow(topoArraySlice, cmap="plasma", vmin=0, vmax=85)
     plt.axis("off")
 
     # add colorbar
@@ -283,6 +283,6 @@ def plotTopoOnCt(
 
     # save figure and close it
     plt.tight_layout()
-    plt.savefig(path, bbox_inches="tight", dpi=600)
+    plt.savefig(path, bbox_inches="tight", dpi=800)
     plt.clf()
     plt.close()
