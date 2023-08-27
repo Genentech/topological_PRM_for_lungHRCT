@@ -114,4 +114,4 @@ Related publications:
 
 Developers: Aryil Bechtel, Ruiqi Geng<br /> 
 Credits: Laura Bell <br /> 
-Correspondence: Aryil Bechtel (bechtel.aryil@gene.com), Laura Bell (bell.laura@gene.com)
+Correspondence: Laura Bell (bell.laura@gene.com), Aryil Bechtel (aryilbechtel@gmail.com)
