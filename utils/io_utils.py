@@ -1,10 +1,14 @@
 """Import and export util functions."""
 import logging
+import os
+import shutil
+import zipfile
 from typing import Dict
 
 import nibabel as nib
 import numpy as np
 import pandas as pd
+import pydicom as dicom
 
 
 def readFiles(path: str):
@@ -44,6 +48,75 @@ def readFiles(path: str):
         logging.warning("Registered HRCT file format is unsupported, must be .nii")
 
     return outArray, pixDims
+
+
+def readDicoms(path: str):
+    """Read in zipped directory of dicoms as np.array.
+
+    Args:
+        path (str): path of zipped file
+
+    Returns:
+        imgArray (np.array): image contents of file
+        refDicom (pydicom.dataset.FileDataset): reference dicom for extracting header info
+        pixDims (np.array): pixel dimensions (in mm)
+
+    NOTE: this function is currently unused.
+    """
+
+    # retrieve parent directory name
+    parentDir, _ = os.path.split(path)
+
+    with zipfile.ZipFile(path, "r") as zipRef:
+        # extract zip file contents to parent directory
+        zipRef.extractall(parentDir)
+
+        # extract directory containing indivudal dicom files
+        dicomDir = os.path.join(parentDir, zipRef.namelist()[0].split("/")[0])
+
+        # extract list of path of all dicom files
+        dicomFiles = []
+        for dirName, subdirList, fileList in os.walk(dicomDir):
+            for filename in fileList:
+                if ".dcm" in filename.lower():
+                    dicomFiles.append(os.path.join(dirName, filename))
+        dicomFiles = sorted(dicomFiles)
+
+    # read two dicom files to extract header info and slice thickness
+    refDicom = dicom.read_file(dicomFiles[0])
+    refDicom2 = dicom.read_file(dicomFiles[1])
+    sliceThickness = np.abs(
+        refDicom.ImagePositionPatient[2] - refDicom2.ImagePositionPatient[2]
+    )
+
+    # get pixel dimensions, in mm
+    pixDims = np.array(refDicom.PixelSpacing)
+    pixDims = np.append(pixDims, sliceThickness)
+
+    # get image dimensions, in voxels
+    imgDims = (
+        int(refDicom.Rows),
+        int(refDicom.Columns),
+        len(dicomFiles),
+        int(refDicom.SamplesPerPixel),
+    )
+
+    # loop over all the DICOM files, store all image slices in one array
+    imgArray = np.squeeze(np.zeros(imgDims, dtype=refDicom.pixel_array.dtype))
+    for file in dicomFiles:
+        # read the file
+        ds = dicom.read_file(file)
+        if len(imgArray.shape) == 4:
+            # if there is an extra dimension for color channel
+            imgArray[:, :, dicomFiles.index(file), :] = ds.pixel_array
+        elif len(imgArray.shape) == 3:
+            # if there is no extra dimension for color channel
+            imgArray[:, :, dicomFiles.index(file)] = ds.pixel_array
+
+    # delete directory and files extracted from zipped input file
+    shutil.rmtree(dicomDir)
+
+    return imgArray, pixDims, refDicom
 
 
 def saveAsNii(inArray: np.ndarray, path: str, pixDims=None):
