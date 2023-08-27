@@ -47,9 +47,12 @@ pip install -r setup/requirements.txt
 ```
 
 ## 2. Usage
-The pipeline currently takes the following required inputs:
-- Registered inspiratory and expiratory HRCTs in hounsfield units (HU) (supported file formats: .nii)
-- Segmentation mask with positive integers denoting regions of lung parenchyma (supported file formats: .nii)
+The pipeline currently takes the following required inputs (supported file formats: .nii):
+- Registered inspiratory and expiratory HRCTs in hounsfield units (HU) AND segmentation mask with positive integers denoting regions of lung parenchyma.
+<br /> OR 
+- Existing PRM map with binned regions labeled as {1,2,3,4} AND segmentation mask with positive integers denoting regions of lung parenchyma.
+<br /> OR
+- Existing PRM map with binned regions labeled as {1,2,3,4} and regions outside of lung parenchyma labeled as 0.
 
 ### 2.1 Create subject configuration file(s)
 Configuration (config) files (.ini) specify subject ID, inspiratory HRCT file path, expiratory file path, input PRM map (if available), and the path to save output files to. If the path to an existing PRM map is specified in the config file, the pipeline will skip generation of PRM map from HRCTs.
