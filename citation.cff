@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: Bechtel
+  given-names: Aryil
+- family-names: Geng
+  given-names: Ruiqi
+  
+title: “Topological Parametric Response Mapping for Lung HRCT”  
+version: 1.0
+date-released: 2023-07-27
+url: "https://github.com/Genentech/topological_PRM_for_lungHRCT"
