@@ -1,4 +1,4 @@
-# topological_PRM_for_lungHRCT
+# Topological Parametric Response Mapping for Lung HRCT
 
 ## Description
 A pipeline for analyzing inspiratory and expiratory HRCT lung images through quantitative metrics and 3D maps. Currently, this pipeline provides 3D parametric response maps (PRM), global topology metrics, and 3D maps of local topology metrics for regions characterized by normal lung structure, emphysema, functional small airways disease (fSAD), and emptying emphysema. Pipeline can also process global and local topology for an existing PRM map. Analysis methods are adapted from methodology described in Hoff et al. (2017)<sup>1</sup>.
